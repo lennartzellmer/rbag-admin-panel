@@ -1,6 +1,24 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  modules: [
+    'radix-vue/nuxt',
+    'nuxt-auth-utils',
+    '@nuxt/eslint',
+    '@nuxtjs/tailwindcss'
+  ],
   devtools: { enabled: true },
-  modules: ['radix-vue/nuxt', 'nuxt-auth-utils']
+  future: { compatibilityVersion: 4 },
+  compatibilityDate: '2024-11-01',
+  eslint: {
+    config: {
+      stylistic: {
+        quotes: 'single',
+        commaDangle: 'never'
+      }
+    }
+  },
+  tailwindcss: {
+    exposeConfig: true,
+    viewer: true
+  }
 })
