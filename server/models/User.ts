@@ -1,4 +1,18 @@
+import type { IOrganisation } from './Organisation'
 import { defineMongooseModel } from '#nuxt/mongoose'
+
+export interface IUser {
+  _id: string
+  email: string
+  cognitoId: string
+  firstname: string
+  lastname: string
+  createdAt: Date
+  lastModifiedAt: Date
+  _class?: string
+  organisationId?: string
+  organization?: IOrganisation
+}
 
 export const User = defineMongooseModel({
   name: 'User',
@@ -36,10 +50,7 @@ export const User = defineMongooseModel({
     },
     organisationId: {
       type: String,
-      required: false
-    },
-    trailPeriodExpiresAt: {
-      type: Date,
+      ref: 'Organisation',
       required: false
     }
   },
@@ -48,6 +59,21 @@ export const User = defineMongooseModel({
     timestamps: false,
     versionKey: false,
     collection: 'users',
-    _id: false
+    _id: false,
+    toJSON: {
+      virtuals: true
+    },
+    toObject: {
+      virtuals: true
+    }
+  },
+  hooks(schema) {
+    // Define the virtual on the schema
+    schema.virtual('organisation', {
+      ref: 'Organisation', // Which model to link to
+      localField: 'organisationId', // Field in this schema
+      foreignField: '_id', // Field in the Organisation schema
+      justOne: true // Whether it's a single doc or an array
+    })
   }
 })

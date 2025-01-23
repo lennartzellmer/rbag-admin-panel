@@ -7,11 +7,10 @@ export default defineEventHandler(async (event) => {
     id: z.string()
   })
 
-  // Perform a paginated query
-  const hubUser = await User.findById(id)
+  const hubUser = await User.findById(id).populate('organisation').exec()
 
   if (!hubUser) {
-    createError({
+    throw createError({
       status: 404
     })
   }
