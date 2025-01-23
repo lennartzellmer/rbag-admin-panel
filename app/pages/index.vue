@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { user } = useUserSession()
-
 const { data, error, status } = await useFetch('/api/users')
 </script>
 

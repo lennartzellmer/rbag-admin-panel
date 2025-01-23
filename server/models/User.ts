@@ -3,6 +3,10 @@ import { defineMongooseModel } from '#nuxt/mongoose'
 export const User = defineMongooseModel({
   name: 'User',
   schema: {
+    _id: {
+      type: String,
+      required: true
+    },
     email: {
       type: String,
       required: true
@@ -43,6 +47,7 @@ export const User = defineMongooseModel({
     // We have our own createdAt/lastModifiedAt fields, so no need for Mongoose timestamps
     timestamps: false,
     versionKey: false,
-    collection: 'users'
+    collection: 'users',
+    _id: false
   }
 })

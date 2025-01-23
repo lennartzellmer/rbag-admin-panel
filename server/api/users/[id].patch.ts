@@ -3,15 +3,7 @@ import { defineEventHandler } from 'h3'
 import { useValidatedParams, z, useValidatedBody } from 'h3-zod'
 
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
-
-  if (!user) {
-    throw createError({
-      status: 401,
-      statusMessage: 'Access denied',
-      message: 'Please log in'
-    })
-  }
+  await requireUserSession(event)
 
   const { id } = await useValidatedParams(event, {
     id: z.string()
@@ -22,9 +14,6 @@ export default defineEventHandler(async (event) => {
     cognitoId: z.string().optional(),
     firstname: z.string().optional(),
     lastname: z.string().optional(),
-    createdAt: z.preprocess(val => val && new Date(val as string), z.date().optional()),
-    lastModifiedAt: z.preprocess(val => val && new Date(val as string), z.date().optional()),
-    _class: z.string().optional(),
     organisationId: z.string().optional()
   })
 

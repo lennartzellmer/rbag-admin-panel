@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'nuxt-mongoose'
   ],
+  ssr: false,
   devtools: { enabled: true },
   future: { compatibilityVersion: 4 },
   compatibilityDate: '2024-11-01',
