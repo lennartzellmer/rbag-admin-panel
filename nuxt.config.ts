@@ -4,7 +4,8 @@ export default defineNuxtConfig({
     'radix-vue/nuxt',
     'nuxt-auth-utils',
     '@nuxt/eslint',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    'nuxt-mongoose'
   ],
   devtools: { enabled: true },
   future: { compatibilityVersion: 4 },
@@ -15,6 +16,11 @@ export default defineNuxtConfig({
         quotes: 'single',
         commaDangle: 'never'
       }
+    }
+  },
+  mongoose: {
+    options: {
+      dbName: 'org_management_service'
     }
   },
   tailwindcss: {

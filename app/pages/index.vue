@@ -1,10 +1,14 @@
 <script setup lang="ts">
 const { user } = useUserSession()
+
+const { data, error, status } = await useFetch('/api/users')
 </script>
 
 <template>
   <main>
-    <pre>user {{ user }}</pre>
+    <pre>{{ status }}</pre>
+    <pre>{{ error }}</pre>
+    <pre>{{ data }}</pre>
     <AuthState v-slot="{ loggedIn, clear }">
       <button
         v-if="loggedIn"
