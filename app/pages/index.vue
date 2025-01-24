@@ -5,20 +5,13 @@ import type { PaginatedRequestParams } from '~/types/base.types.js'
 
 const getUsers = (paginationParams: PaginatedRequestParams) => {
   return fetch('/api/users', {
-    params: {
-      ...paginationParams
-    }
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(paginationParams)
   })
 }
-
-const { state, service, send } = useMachine(createGenericPaginatedDataMachine({
-  fetchDataFunction: getChargeSessionGroups,
-  initialLimit: 5,
-  initialOffset: 0,
-  append: false
-}), {
-  devTools: import.meta.env.DEV
-})
 </script>
 
 <template>
