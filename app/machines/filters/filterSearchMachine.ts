@@ -1,16 +1,16 @@
 import { createFilterMachine } from '../genericFilter/genericFilter.machine'
 
-const URL_KEY = 'searchTerm'
-const FILTER_PARAMS_KEY = 'searchTerm'
+const FILTER_URL_KEY = 'searchTerm'
+const FILTER_PARAMS_KEY = 'searchTerm2'
 
-function getSearchFromUrl(URLKey: string): Record<typeof URL_KEY, string> | null {
+function getSearchFromUrl(URLKey: string): Record<typeof FILTER_PARAMS_KEY, string> | null {
   const params = new URLSearchParams(window.location.search)
   const paramValue = params.get(URLKey)
-  return paramValue ? { [URL_KEY]: paramValue } : null
+  return paramValue ? { [FILTER_PARAMS_KEY]: paramValue } : null
 }
 
 export const filterSearchMachine = createFilterMachine({
-  filterUrlKey: URL_KEY,
+  filterUrlKey: FILTER_URL_KEY,
   filterParamsKeys: [FILTER_PARAMS_KEY],
-  filterValueGetter: getSearchFromUrl,
+  filterValueGetter: getSearchFromUrl
 })

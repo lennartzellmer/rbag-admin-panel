@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createMachine, interpret } from 'xstate'
+import { createActor, assign, setup } from 'xstate'
 import { createFilterMachine } from '../genericFilter.machine'
 
 const URL_KEY = 'foo'
@@ -8,151 +8,113 @@ const TEST_VALUE = 'firstEvent'
 const filterTestMachine = createFilterMachine({
   filterUrlKey: URL_KEY,
   filterParamsKeys: [URL_KEY],
-  filterValueGetter: () => ({ [URL_KEY]: TEST_VALUE }),
+  filterValueGetter: () => ({ [URL_KEY]: TEST_VALUE })
+})
+
+const parentMachine = setup({
+  actors: {
+    filterTestMachine
+  }
+}).createMachine({
+  initial: 'idle',
+  context: {
+    receivedInitialFilter: false
+  },
+  states: {
+    idle: {
+      invoke: {
+        id: 'filterTestMachine',
+        src: 'filterTestMachine'
+      },
+      on: {
+        FILTER_UPDATED: {
+          actions: assign({
+            receivedInitialFilter: true
+          })
+        }
+      }
+    }
+  }
 })
 
 describe('filterMachineStoresInternally', () => {
-  const parentMachine = createMachine({
-    predictableActionArguments: true,
-    invoke: {
-      src: filterTestMachine,
-      id: 'filterTestMachine',
-    },
-  })
-
   it('stores initial filter value internally on creation', () => new Promise((done) => {
-    const service = interpret(parentMachine)
+    const actor = createActor(parentMachine)
+    actor.start()
 
-    service.start()
-
-    service.children.get('filterTestMachine')?.subscribe((state) => {
-      expect(state.context.filterValue).toStrictEqual({ [URL_KEY]: TEST_VALUE })
-      done('')
-    })
+    expect(actor.getSnapshot().children.filterTestMachine?.getSnapshot().context.filterValue).toStrictEqual({ [URL_KEY]: TEST_VALUE })
+    done('')
   }))
 
   it('update stored filter on SET_FILTER', () => new Promise((done) => {
     const UPDATED_VALUE = 'updatedValue'
 
-    const service = interpret(parentMachine)
+    const actor = createActor(parentMachine)
+    actor.start()
 
-    service.start()
-
-    service.children.get('filterTestMachine')?.subscribe((state) => {
-      if (state.event.type === 'SET_FILTER') {
-        expect(state.context.filterValue).toStrictEqual({ [URL_KEY]: UPDATED_VALUE })
-        done('')
-      }
-    })
-
-    service.children.get('filterTestMachine')?.send({ type: 'SET_FILTER', payload: { [URL_KEY]: UPDATED_VALUE } })
+    actor.getSnapshot().children.filterTestMachine?.send({ type: 'SET_FILTER', payload: { [URL_KEY]: UPDATED_VALUE } })
+    expect(actor.getSnapshot().children.filterTestMachine?.getSnapshot().context.filterValue).toStrictEqual({ [URL_KEY]: UPDATED_VALUE })
+    done('')
   }))
 })
 
 describe('filterMachineCommunicatesToParent', () => {
   it('sends FILTER_UPDATED event to parent on creation', () => new Promise((done) => {
-    let eventReceived = false
-
-    const parentMachine = createMachine({
-      id: 'test',
-      initial: 'awaitingInitial',
-      predictableActionArguments: true,
-      invoke: {
-        src: filterTestMachine,
-      },
-      states: {
-        awaitingInitial: {
-          on: {
-            FILTER_UPDATED: {
-              actions: () => {
-                eventReceived = true
-              },
-            },
-          },
-        },
-      },
-    })
-
-    const service = interpret(parentMachine).onTransition((state) => {
-      if (state.event.type === 'FILTER_UPDATED') {
-        expect(eventReceived).toBeTruthy()
-        done('')
+    const actor = createActor(parentMachine, {
+      // Use inspect to check if the FILTER_UPDATED event is received on the parent
+      inspect: (inspEvent) => {
+        if (inspEvent.type === '@xstate.event') {
+          if (inspEvent.event.type === 'FILTER_UPDATED') {
+            expect(inspEvent.event).toEqual({ type: 'FILTER_UPDATED', filter: { foo: 'firstEvent' } })
+            done('')
+          }
+        }
       }
     })
 
-    service.start()
+    actor.start()
   }))
 
   it('sends FILTER_UPDATED event to parent when filter is updated', () => new Promise((done) => {
-    let eventReceived = false
-
-    const parentMachine = createMachine({
-      id: 'test',
-      initial: 'awaitingInitial',
-      predictableActionArguments: true,
-      invoke: {
-        src: filterTestMachine,
-        id: 'filterTestMachine',
-      },
-      states: {
-        awaitingInitial: {
-          on: {
-            FILTER_UPDATED: 'idle',
-          },
-        },
-        idle: {
-          on: {
-            FILTER_UPDATED: {
-              internal: true,
-              actions: () => {
-                eventReceived = true
-              },
-            },
-          },
-        },
-      },
-    })
-
-    const service = interpret(parentMachine).onTransition((state) => {
-      if (state._event.data.filter?.foo === 'secondEvent') {
-        expect(eventReceived).toBeTruthy()
-        done('')
+    const actor = createActor(parentMachine, {
+      // Use inspect to check if the FILTER_UPDATED event is received on the parent
+      inspect: (inspEvent) => {
+        // Only respond to actual XState events
+        if (inspEvent.type === '@xstate.event') {
+          // Only respond to FILTER_UPDATED events
+          if (inspEvent.event.type === 'FILTER_UPDATED') {
+            // Check if it has the specific data we want
+            if (inspEvent.event.filter?.foo === 'secondEvent') {
+              expect(inspEvent.event).toEqual({ type: 'FILTER_UPDATED', filter: { foo: 'secondEvent' } })
+              done('')
+            }
+          }
+        }
       }
     })
 
-    service.start()
+    actor.start()
 
-    service.children.get('filterTestMachine')?.send({ type: 'SET_FILTER', payload: { [URL_KEY]: 'secondEvent' } })
+    actor.getSnapshot().children.filterTestMachine?.send({ type: 'SET_FILTER', payload: { foo: 'secondEvent' } })
   }))
 
   it('sends FILTER_RESET event to parent when filter is removed', () => new Promise((done) => {
-    const parentMachine = createMachine({
-      id: 'test',
-      initial: 'awaitingInitial',
-      predictableActionArguments: true,
-      invoke: {
-        src: filterTestMachine,
-        id: 'filterTestMachine',
-      },
-      states: {
-        awaitingInitial: {
-          on: {
-            FILTER_RESET: 'idle',
-          },
-        },
-        idle: {},
-      },
-    })
-
-    const service = interpret(parentMachine).onTransition((state) => {
-      if (state._event.data.type === 'FILTER_RESET') {
-        expect(state._event.data).toStrictEqual({ type: 'FILTER_RESET', filterParamsKeys: [URL_KEY] })
-        done('Event received')
+    const actor = createActor(parentMachine, {
+      // Use inspect to check if the FILTER_UPDATED event is received on the parent
+      inspect: (inspEvent) => {
+        // Only respond to actual XState events
+        if (inspEvent.type === '@xstate.event') {
+          // Only respond to FILTER_UPDATED events
+          if (inspEvent.event.type === 'FILTER_RESET') {
+            expect(inspEvent.event).toEqual({ type: 'FILTER_RESET', filterParamsKeys: [URL_KEY] })
+            done('')
+          }
+        }
       }
     })
 
-    service.start()
+    actor.start()
 
-    service.children.get('filterTestMachine')?.send({ type: 'SET_FILTER', payload: null })
+    actor.getSnapshot().children.filterTestMachine?.send({ type: 'SET_FILTER', payload: null })
   }))
 })

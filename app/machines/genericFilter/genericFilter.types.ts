@@ -6,7 +6,7 @@ export type InboundMachineEvents<FilterType extends GetterReturnType> =
   { type: 'CONFIRM' } |
   {
     type: 'SET_FILTER'
-    payload: FilterType
+    payload: FilterType | null
   }
 
 export type OutboundMachineEvents<FilterType extends GetterReturnType> =
@@ -21,11 +21,11 @@ export type OutboundMachineEvents<FilterType extends GetterReturnType> =
 
 export type MachineContext<
   TGetterReturnType extends GetterReturnType,
-  TUrlKey extends string,
+  TUrlKey extends string
 > = {
   URLKey: TUrlKey
   filterValue: TGetterReturnType | null
   filterParamsKeys: Array<keyof NonNullable<TGetterReturnType>>
 }
 
-export type GetterReturnType = { [key: string]: any } | null
+export type GetterReturnType = Record<string, string> | null
