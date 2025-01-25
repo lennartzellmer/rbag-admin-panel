@@ -1,7 +1,7 @@
 import { createFilterMachine } from '../genericFilter/genericFilter.machine'
 
 const FILTER_URL_KEY = 'searchTerm'
-const FILTER_PARAMS_KEY = 'searchTerm2'
+const FILTER_PARAMS_KEY = 'search'
 
 function getSearchFromUrl(URLKey: string): Record<typeof FILTER_PARAMS_KEY, string> | null {
   const params = new URLSearchParams(window.location.search)
