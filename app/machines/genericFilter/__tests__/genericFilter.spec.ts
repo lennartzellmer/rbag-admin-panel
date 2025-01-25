@@ -16,6 +16,7 @@ const parentMachine = setup({
     filterTestMachine
   }
 }).createMachine({
+  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOlwgBswBiAMQEkAZAFQFEAlAfQFUAFAEQCCbfgG0ADAF1EoAA4B7WLgAuuefhkgAHogCMAZn0kALLvG6AbBfHndxgEwAaEAE9EADl0mAnL+8B2M3F7d3d7AFYAX2jnfHkIOE00LDxCIk0FJVV1TR0EAFpdZzcC8JI-CsrffRiQZJwCYjJKMAzFFTUNJG1EY39ivTDy8P1dXXt-ez73Yyto6KA */
   initial: 'idle',
   context: {
     receivedInitialFilter: false

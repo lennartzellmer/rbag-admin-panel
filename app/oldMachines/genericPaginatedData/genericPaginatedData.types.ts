@@ -2,9 +2,9 @@
 import type { AxiosResponse } from 'axios'
 import type { ActorRefFrom } from 'xstate'
 import type { CollectionResponseList, PaginatedRequestParams } from '../../types/base.types'
-import type { createPaginationOffsetLimitMachine } from '../paginationOffsetLimit/paginationOffsetLimit.machine'
-import type { GetterReturnType, OutboundMachineEvents as OutboundFilterMachineEvents } from '../genericFilter/genericFilter.types'
-import type { createFilterMachine } from '../genericFilter/genericFilter.machine'
+import type { createPaginationOffsetLimitMachine } from '../pagination/paginationOffsetLimit.machine'
+import type { GetterReturnType, OutboundMachineEvents as OutboundFilterMachineEvents } from '../../machines/genericFilter/genericFilter.types'
+import type { createFilterMachine } from '../../machines/genericFilter/genericFilter.machine'
 import type { FetchResult } from '#app'
 
 /**

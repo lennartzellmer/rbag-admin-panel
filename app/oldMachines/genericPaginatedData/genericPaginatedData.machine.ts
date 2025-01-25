@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { StatesConfig } from 'xstate'
 import { assign, createMachine, spawn } from 'xstate'
-import { createPaginationOffsetLimitMachine } from '../paginationOffsetLimit/paginationOffsetLimit.machine'
+import { createPaginationOffsetLimitMachine } from '../pagination/paginationOffsetLimit.machine'
 import type {
   FetchDataFilterParams,
   FetchDataFunction,

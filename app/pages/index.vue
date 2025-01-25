@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMachine } from '@xstate/vue'
-import { createGenericPaginatedDataMachine } from '../machines/genericPaginatedData/genericPaginatedData.machine.js'
+import { createGenericPaginatedDataMachine } from '../oldMachines/genericPaginatedData/genericPaginatedData.machine.js'
 import type { PaginatedRequestParams } from '~/types/base.types.js'
 
 const getUsers = (paginationParams: PaginatedRequestParams) => {

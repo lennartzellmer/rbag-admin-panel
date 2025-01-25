@@ -1,5 +1,5 @@
 import { assign, sendParent, setup, assertEvent } from 'xstate'
-import type { MachineContext, MachineEvents, MachineInput } from './paginationMachine.types'
+import type { MachineContext, MachineEvents, MachineInput } from './pagination.types'
 
 const totalPages = (totalCount: number, limit: number) =>
   Math.ceil((totalCount || 0) / limit)
@@ -7,7 +7,7 @@ const totalPages = (totalCount: number, limit: number) =>
 const currentPage = (offset: number, limit: number) =>
   Math.ceil(offset / limit) + 1
 
-export const paginationOffsetLimitMachine = setup({
+export const paginationMachine = setup({
   types: {
     input: {} as MachineInput,
     context: {} as MachineContext,
@@ -40,27 +40,20 @@ export const paginationOffsetLimitMachine = setup({
       totalCount: ({ event }) => {
         assertEvent(event, 'UPDATE_TOTAL_COUNT')
         return event.totalCount
-      },
-      offset: ({ context, event }) => {
-        assertEvent(event, 'UPDATE_TOTAL_COUNT')
-        // We need to check if the new totalCount is eliminating a page
-        // and we jump out of bounce with the current limit
-        const currentPageAboveNewTotalPages = currentPage(context.offset, context.limit) > Math.ceil(event.totalCount / context.limit) + 1
-
-        if (currentPageAboveNewTotalPages) {
-          sendParent({
-            type: 'PAGE_UPDATED',
-            limit: context.limit,
-            offset: (context.totalPages || 1 - 1) * context.limit
-          })
-          return 0
-        }
-        return context.offset
       }
+    }),
+    resetOffset: assign({
+      offset: 0
     })
   },
   guards: {
-    newTotalCountIsValidValue: ({ event }) => {
+    newTotalCountIsValid: ({ event, context }) => {
+      assertEvent(event, 'UPDATE_TOTAL_COUNT')
+      const currentPageAboveNewTotalPages = currentPage(context.offset, context.limit) > Math.ceil(event.totalCount / context.limit) + 1
+      const valueIsPositive = event.totalCount >= 0
+      return valueIsPositive && !currentPageAboveNewTotalPages
+    },
+    newTotalCountIsPositive: ({ event }) => {
       assertEvent(event, 'UPDATE_TOTAL_COUNT')
       return event.totalCount >= 0
     },
@@ -82,7 +75,7 @@ export const paginationOffsetLimitMachine = setup({
     }
   }
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QAcCGUCWA7VAXDA9lgLKoDGAFtmAMQCqACgCICCAKgKID6bA8mywAyXAMK86AOTYBtAAwBdRCgKwM+IkpAAPRAFoAjLICsAOgDsZ-QCYAzGYAs+gBxWzANhsBOADQgAnohONiaesh76Nm6h9k76bmYAvgm+aJg46iTkVFhgJhgQADa0EhwAGmxcDCwA4hxyikggyCpqhFiaOgheViayZnZmVm5OTm76Rja+AQhWhr1ubhOW9laeTp4eSSno2HhtpJTUeYW0DABKHABqlTV1CprNqhkdiDYrJkOyXmGyxm-2U0QblsJicRg2NisRlsRnGNi2TR26X2WSO+SKNGqvB42IEZ1qFSqtXqDxaz0anQMznmNmsExsdiMgycgIQZiMbg++ncNlk9ksYUsSWSICwBAgcAeSL2RAO2TApKebReCF09gWJii+k89k8Orc-PsAP8emC4MiYLMTlknl5o08CNSuwycqOqAA7qhWlgoGwCLhUAURAQAK5YXCK1oaCl6RxOTWebW6-WG43TDag8H2IzqhbZuyO6Uu1E5Y5FSPk0CdRbmP6woauKzGMys+w2kwxNZ2KyrRZ9eHCoA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAcCGUCWA7VAXDA9lgLKoDGAFtmAMQCqACgCICCAKgKID6bA8mywAyXAMK86AOTYBtAAwBdRCgKwM+IkpAAPRAFoAjACYA7ADoAnIYDMsgBzmAbABZbx81YdWANCACeifVlZU0MHAFZjYzD9c31jcKsnAF8knzRMHHUSciosWkZWTh5+IVFxKWl9RSQQZBU1QixNHQRdJ30wkPd4xyNjIzCffwRrW1MHezc420CZpzCUtPRsPEbSSmpTDAgAG1oJDgANNi4GFgBxDjlq5VUs5sRE4PNZQKDDGdsw9qHEQ1kHKY4s5ZN0XoYOrZFrVlpk1jlNts9jQGAAlDgANVOFyuCk0dTujQeCEShhCDlkVheFNkYUSTl+CAc1lMX0cVkMYWs0Tp0PSKyy61yYC2u1o514xR4LFRlxOZ0u13x9XuNRaukSnX0NKsVmMtnm-QBjOZVlZYXZnO5HSsKVSICwBAgcHxsNWRCF1GVhI0ar0TmMZNk1lk7Wpnn0+kZRlM8QixisYVstkpHkpfLdgoReVMqAA7qgGlgoGwCLhUDsRAQAK5YXDehq+0DqpyGJymYM2MMAiNRvwBfRmiHJmbmb4UhwOYwZjLu7IbHNIsAN1XNxDhWO0xNGZmB2nGRlOUGmFzmWx6wyGRxhWQJu1JIA */
   id: 'paginationMachine',
   initial: 'awaitingTotalCount',
   context: ({ input }) => ({
@@ -92,16 +85,21 @@ export const paginationOffsetLimitMachine = setup({
     totalCount: 0
   }),
   on: {
-    UPDATE_TOTAL_COUNT: {
-      guard: 'newTotalCountIsValidValue',
+    UPDATE_TOTAL_COUNT: [{
+      guard: 'newTotalCountIsValid',
       actions: ['assignTotalCount', 'assignPagesToContext'],
-      target: 'idle'
-    }
+      target: '.idle'
+    }, {
+      target: '.idle',
+      guard: 'newTotalCountIsPositive',
+      actions: ['assignTotalCount', 'resetOffset', 'assignPagesToContext', 'sendPageUpdated']
+    }]
   },
   states: {
     awaitingTotalCount: {
       exit: ['assignPagesToContext']
     },
+
     idle: {
       on: {
         NEXT_PAGE: {
