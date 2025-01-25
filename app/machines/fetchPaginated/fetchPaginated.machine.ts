@@ -46,16 +46,12 @@ export function createFetchPaginatedMachine<TFetchedDataFunction extends FetchDa
     },
     actions: {
       spawnPaginationActor: assign({
-        paginationMachineRef: ({ context, spawn }) => {
-          if (context.paginationMachineRef?.stop)
-            context.paginationMachineRef.stop()
-          return spawn(paginationMachine, {
-            input: {
-              initialOffset: 0,
-              initialLimit: 10
-            }
-          })
-        }
+        paginationMachineRef: ({ spawn }) => spawn(paginationMachine, {
+          input: {
+            initialOffset: 0,
+            initialLimit: 10
+          }
+        })
       }),
       spawnFilterMachines: assign({
         filterMachineRefs: ({ spawn }) => {
@@ -64,7 +60,8 @@ export function createFetchPaginatedMachine<TFetchedDataFunction extends FetchDa
           const spawnedFilterMachines = filterMachines?.map((filterMachine) => {
             return {
               machine: spawn(filterMachine),
-              URLKey: filterMachine
+              // @ts-expect-error - The context is not typed correctly by xstate
+              URLKey: filterMachine.config.context.URLKey
             }
           }) as SpawnedFilterMachines<TFilterMachines>
           return spawnedFilterMachines
