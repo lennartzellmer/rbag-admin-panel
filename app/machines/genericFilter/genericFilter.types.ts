@@ -1,31 +1,34 @@
-export type InboundMachineEvents<FilterType extends GetterReturnType> =
+export type InboundMachineEvents<TFilterConfig extends FilterConfig<string>> =
   {
     type: 'SET_FILTER_DEBOUNCED'
-    payload: FilterType
+    payload: TFilterConfig
   } |
   { type: 'CONFIRM' } |
   {
     type: 'SET_FILTER'
-    payload: FilterType | null
+    payload: TFilterConfig | null
   }
 
-export type OutboundMachineEvents<FilterType extends GetterReturnType> =
+export type OutboundMachineEvents<TFilterConfig extends FilterConfig<string>> =
   {
     type: 'FILTER_UPDATED'
-    filter: NonNullable<FilterType>
+    filter: TFilterConfig
   } |
   {
     type: 'FILTER_RESET'
-    filterParamsKeys: Array<keyof NonNullable<FilterType>>
+    filterParamsKey: TFilterConfig['filterParamsKey']
   }
 
 export type MachineContext<
-  TGetterReturnType extends GetterReturnType,
+  TFilterConfig extends FilterConfig<string>,
   TUrlKey extends string
 > = {
   URLKey: TUrlKey
-  filterValue: TGetterReturnType | null
-  filterParamsKeys: Array<keyof NonNullable<TGetterReturnType>>
+  filterParamsKey: NonNullable<TFilterConfig>['filterParamsKey']
+  filterState: TFilterConfig | null
 }
 
-export type GetterReturnType = Record<string, string> | null
+export type FilterConfig<TFilterParamsKey extends string> = {
+  ['filterParamsKey']: TFilterParamsKey
+  ['filterValue']: URLSearchParams
+}

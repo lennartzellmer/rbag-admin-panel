@@ -1,27 +1,36 @@
-import { describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { createActor } from 'xstate'
 import { createFetchPaginatedMachine } from '../fetchPaginated.machine'
-import { filterSearchMachine } from '../../../machines/filters/filterSearch.machine'
+import { createFilterMachine } from '../../genericFilter/genericFilter.machine'
+
+const firstTestFilterMachine = createFilterMachine({
+  filterUrlKey: 'testUrlKey1',
+  filterParamsKey: 'testParamsKey1',
+  filterValueGetter: () => ({
+    filterParamsKey: 'testParamsKey1',
+    filterValue: new URLSearchParams('foo=testValue1')
+  })
+})
+
+const secondTestFilterMachine = createFilterMachine({
+  filterUrlKey: 'testUrlKey2',
+  filterParamsKey: 'testParamsKey2',
+  filterValueGetter: () => ({
+    filterParamsKey: 'testParamsKey2',
+    filterValue: new URLSearchParams('foo=testValue2')
+  })
+})
 
 describe('fetchPaginatedMachine', () => {
-  it('stores ininally on creation', () => new Promise((done) => {
-    global.window = Object.create(window)
-    const url = new URL('https://www.example.com')
-    url.searchParams.set('searchTerm', 'test')
-    Object.defineProperty(window, 'location', {
-      value: url
-    })
-
-    const actor = createActor(createFetchPaginatedMachine({
-      filterMachines: [filterSearchMachine]
-    }), {
-      inspect(inspectionEvent) {
-        if (inspectionEvent.type === '@xstate.event') {
-          console.log('inspectionEvent', inspectionEvent.event)
-        }
-      }
-    })
+  it('stores ininal filter values on creation', () => new Promise((done) => {
+    const actor = createActor(createFetchPaginatedMachine({ filterMachines: [firstTestFilterMachine, secondTestFilterMachine] }))
     actor.start()
+    // check if the filter values are stored in the context are the correct map of
+
+    expect(actor.getSnapshot().context.filter).toEqual([
+      { testParamsKey1: 'testValue1' },
+      { testParamsKey2: 'testValue2' }
+    ])
     done('')
   }))
 })
