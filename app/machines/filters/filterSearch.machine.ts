@@ -9,7 +9,7 @@ function getSearchFromUrl(URLKey: string): FilterConfig<typeof FILTER_PARAMS_KEY
   const paramValue = params.get(URLKey)
   const searchParams = new URLSearchParams()
   if (paramValue) {
-    searchParams.set(FILTER_PARAMS_KEY, 'paramValue')
+    searchParams.set(FILTER_PARAMS_KEY, paramValue)
     return { filterParamsKey: FILTER_PARAMS_KEY, filterValue: searchParams }
   }
   return null

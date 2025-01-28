@@ -14,10 +14,12 @@ describe('filterSearchMachine', () => {
 
   it('stores filter from URL on creation', () => new Promise((done) => {
     const parent = createEmptyActor()
-    const actor = createActor(filterSearchMachine.machine, { parent })
-    actor.start()
+    const actor = createActor(filterSearchMachine.machine, { parent }).start()
 
-    expect(actor.getSnapshot().context.filterState).toEqual({ filterParamsKey: 'search', filterValue: 'test' })
+    const filterValue = new URLSearchParams()
+    filterValue.set('search', 'test')
+    console.log(actor.getSnapshot().context.filterState?.filterValue.toString())
+    expect(actor.getSnapshot().context.filterState).toEqual({ filterParamsKey: 'search', filterValue: filterValue })
     done('')
   }))
 })
