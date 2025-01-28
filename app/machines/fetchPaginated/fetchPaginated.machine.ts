@@ -2,7 +2,7 @@ import { assign, fromPromise, setup, type ActorRefFrom } from 'xstate'
 import { paginationMachine } from '../pagination/pagination.machine'
 import type { CollectionResponseList, PaginatedRequestParams } from '../../types/base.types'
 
-type FetchDataFunction = (paginationParams: PaginatedRequestParams) => ReturnType<typeof useFetch<CollectionResponseList<unknown>>>
+export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => ReturnType<typeof useFetch<CollectionResponseList<unknown>>>
 
 type SpawnedPaginationMachine = ActorRefFrom<typeof paginationMachine>
 
@@ -42,7 +42,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
     actors: {
       paginationMachine,
       fetchDataActor: fromPromise(async ({ input }: { input: { url: string, pagination: PaginatedRequestParams } }) => {
-        const { data, error } = await fetchDataFunction(input.pagination)
+        const { data, error } = await fetchDataFunction({ paginationParams: input.pagination })
         if (error) {
           throw new Error(error.value?.message)
         }
