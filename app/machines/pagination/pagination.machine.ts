@@ -57,7 +57,7 @@ export const paginationMachine = setup({
     })
   },
   guards: {
-    newTotalCountIsValid: ({ event, context }) => {
+    currentPageAboveNewTotalPages: ({ event, context }) => {
       assertEvent(event, 'UPDATE_TOTAL_COUNT')
       const currentPageAboveNewTotalPages = currentPage(context.offset!, context.limit!) > Math.ceil(event.totalCount / context.limit!) + 1
       const valueIsPositive = event.totalCount >= 0
@@ -94,7 +94,7 @@ export const paginationMachine = setup({
   ],
   on: {
     UPDATE_TOTAL_COUNT: [{
-      guard: 'newTotalCountIsValid',
+      guard: 'currentPageAboveNewTotalPages',
       actions: ['assignTotalCount', 'assignPagesToContext'],
       target: '.idle'
     }, {
