@@ -44,7 +44,6 @@ export function createFilterMachine<TUrlKey extends string, TFilterConfig extend
             } satisfies OutboundMachineEvents<TFilterConfig>
           }
         }),
-
         setOrDeleteURLParam: ({ context }) => {
           const url = new URL(window.location.href)
           const filterValue = context.filterState?.filterValue

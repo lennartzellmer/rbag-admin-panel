@@ -2,7 +2,7 @@ import { assign, fromPromise, setup, type ActorRefFrom } from 'xstate'
 import { paginationMachine } from '../pagination/pagination.machine'
 import type { CollectionResponseList, PaginatedRequestParams } from '../../types/base.types'
 
-export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => ReturnType<typeof useFetch<CollectionResponseList<unknown>>>
+export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => Promise<CollectionResponseList<unknown>>
 
 type SpawnedPaginationMachine = ActorRefFrom<typeof paginationMachine>
 
@@ -17,7 +17,7 @@ export type MachineEvents =
   | { type: 'PAGE_UPDATED', limit: number, offset: number }
 
 export type MachineContext<TFetchDataFunction extends FetchDataFunction> = {
-  data: Awaited<ReturnType<TFetchDataFunction>>['data']['value']['data']
+  data: Awaited<ReturnType<TFetchDataFunction>>['data']
   errorMessage?: string
   paginationMachineRef?: SpawnedPaginationMachine
   pagination: {
@@ -25,10 +25,9 @@ export type MachineContext<TFetchDataFunction extends FetchDataFunction> = {
     offset: number
   }
   append: boolean
-  filter?: Partial<Parameters<TFetchDataFunction>[1]>
 }
 
-export function createFetchPaginatedMachine<TFetchDataFunction extends FetchDataFunction>( //  TFetchDataFilterParams extends FetchDataFilterParams
+export function createFetchPaginatedMachine<TFetchDataFunction extends FetchDataFunction>(
   {
     fetchDataFunction,
     append = false
@@ -41,12 +40,8 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
     },
     actors: {
       paginationMachine,
-      fetchDataActor: fromPromise(async ({ input }: { input: { url: string, pagination: PaginatedRequestParams } }) => {
-        const { data, error } = await fetchDataFunction({ paginationParams: input.pagination })
-        if (error) {
-          throw new Error(error.value?.message)
-        }
-        return data.value
+      fetchDataActor: fromPromise(async ({ input }: { input: { pagination: PaginatedRequestParams } }) => {
+        return await fetchDataFunction({ paginationParams: input.pagination })
       })
     },
     actions: {
@@ -57,8 +52,8 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
           // Spawn a new pagination machine
           return spawn(paginationMachine, {
             input: {
-              initialOffset: 0,
-              initialLimit: 10
+              initialOffset: context.pagination.offset,
+              initialLimit: context.pagination.limit
             }
           })
         }
@@ -87,7 +82,15 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
           type: 'UPDATE_TOTAL_COUNT',
           totalCount: params.totalCount || 0
         })
-      }
+      },
+      assignLimitAndOffsetToContext: assign({
+        pagination: (_, params: { offset: number, limit: number }) => {
+          return {
+            offset: params.offset,
+            limit: params.limit
+          }
+        }
+      })
     },
     guards: {
       isDataAvailable: ({ context }, params: CollectionResponseList<unknown>) => {
@@ -109,8 +112,8 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
     }
   }).createMachine({
     /** @xstate-layout N4IgpgJg5mDOIC5gF8A0IB2B7CdGhgzACcBLAYwDEwAXcgC0tIBsaTIAFAQylIy7YQAIgK4BZLgz5h8IAA5ZYpGqSwZZAD0QAGdAE8dyNCEIkK1OoxZtinHnwGQRNcZPrSAdKQjMZSeYrKqur+WggALAAc+ogAjACsAJwe4YlpkeEA7OGxAEyx2onhRkZAA */
-    id: 'genericFetchFilteredPaginatedDataMachine',
-    initial: 'fetching',
+    id: 'fetchPaginatedMachine',
+    initial: 'waitForInitialPagination',
     context: {
       data: [],
       append,
@@ -121,6 +124,19 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
     },
     entry: ['spawnPaginationActor'],
     states: {
+      waitForInitialPagination: {
+        on: {
+          PAGE_UPDATED: {
+            target: 'fetching',
+            actions: [
+              {
+                type: 'assignLimitAndOffsetToContext',
+                params: ({ event }) => ({ limit: event.offset, offset: event.limit })
+              }
+            ]
+          }
+        }
+      },
       fetching: {
         invoke: {
           src: 'fetchDataActor',
@@ -163,6 +179,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
         }
       },
       idle: {
+        initial: 'dataAvailable',
         states: {
           dataAvailable: {
           },

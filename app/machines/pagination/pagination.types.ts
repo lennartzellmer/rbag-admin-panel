@@ -1,15 +1,10 @@
-export type MachineInput = {
-  initialOffset: number
-  initialLimit: number
-}
-
 export type MachineContext = {
-  offset: number
-  limit: number
-  currentPage: number
+  offset?: number
+  limit?: number
+  currentPage?: number
   // for convenience this machine also holds the human readable pages data
   // currentPage is one-indexed
-  totalCount: number
+  totalCount?: number
   totalPages?: number
 }
 
