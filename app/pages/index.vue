@@ -22,7 +22,7 @@ const paginationMachineRef = useSelector(actorRef, state => state.context.pagina
         <CardHeader>
           <CardTitle>{{ user.firstname }} {{ user.lastname }}</CardTitle>
           <CardDescription>{{ user.email }}</CardDescription>
-          <CardDescription>{{ user.organisation?.name }}</CardDescription>
+          <CardDescription>{{ user.organization?.name }}</CardDescription>
         </CardHeader>
       </Card>
     </template>

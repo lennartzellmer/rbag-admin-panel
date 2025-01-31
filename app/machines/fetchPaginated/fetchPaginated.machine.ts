@@ -1,24 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { assign, fromPromise, setup, type ActorRefFrom } from 'xstate'
 import { paginationMachine } from '../pagination/pagination.machine'
 import type { CollectionResponseList, PaginatedRequestParams } from '../../types/base.types'
 
-export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => Promise<CollectionResponseList<any>>
+export type FetchDataFunction<T> = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => Promise<CollectionResponseList<T>>
 
 type SpawnedPaginationMachine = ActorRefFrom<typeof paginationMachine>
-
-// Define the shape of the paginated data machine
-type PaginatedDataFactoryParams<TFetchDataFunction extends FetchDataFunction> = {
-  fetchDataFunction: TFetchDataFunction
-  append?: boolean
-}
 
 export type MachineEvents =
   | { type: 'RETRY' }
   | { type: 'PAGE_UPDATED', pagination: PaginatedRequestParams }
 
-export type MachineContext<TFetchDataFunction extends FetchDataFunction> = {
-  data: Awaited<ReturnType<TFetchDataFunction>>['data']
+export type MachineContext<T> = {
+  data: T[]
   errorMessage?: string
   paginationMachineRef?: SpawnedPaginationMachine
   pagination: {
@@ -26,23 +19,25 @@ export type MachineContext<TFetchDataFunction extends FetchDataFunction> = {
     offset: number
   }
   append: boolean
+  fetchDataFunction: FetchDataFunction<T>
 }
 
-export function createFetchPaginatedMachine<TFetchDataFunction extends FetchDataFunction>(
-  {
-    fetchDataFunction,
-    append = false
-  }: PaginatedDataFactoryParams<TFetchDataFunction>
-) {
+export type MachineInput<T> = {
+  append?: boolean
+  fetchDataFunction: FetchDataFunction<T>
+}
+
+export function createFetchPaginatedMachine<T>() {
   return setup({
     types: {
-      context: {} as MachineContext<TFetchDataFunction>,
-      events: {} as MachineEvents
+      context: {} as MachineContext<T>,
+      events: {} as MachineEvents,
+      input: {} as MachineInput<T>
     },
     actors: {
       paginationMachine,
-      fetchDataActor: fromPromise(async ({ input }: { input: { pagination: PaginatedRequestParams } }) => {
-        return await fetchDataFunction({ paginationParams: input.pagination })
+      fetchDataActor: fromPromise(async ({ input }: { input: { pagination: PaginatedRequestParams, fetchDataFunction: FetchDataFunction<T> } }) => {
+        return await input.fetchDataFunction({ paginationParams: input.pagination })
       })
     },
     actions: {
@@ -69,8 +64,8 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
         data: []
       }),
       appendOrAssignDataToContext: assign({
-        data: ({ context }, params: CollectionResponseList<any>) => {
-          if (append) {
+        data: ({ context }, params: CollectionResponseList<T>) => {
+          if (context.append) {
             if (context.data === null || context.data === undefined)
               return params.data
             return context.data.concat(params.data)
@@ -78,7 +73,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
           return params.data
         }
       }),
-      sendTotalCountToPaginationMachine: ({ context }, params: CollectionResponseList<any>) => {
+      sendTotalCountToPaginationMachine: ({ context }, params: CollectionResponseList<T>) => {
         context.paginationMachineRef?.send({
           type: 'UPDATE_TOTAL_COUNT',
           totalCount: params.totalCount || 0
@@ -94,9 +89,9 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
       })
     },
     guards: {
-      isDataAvailable: ({ context }, params: CollectionResponseList<any>) => {
+      isDataAvailable: ({ context }, params: CollectionResponseList<T>) => {
         // If we are in append mode and data is available in context, return true
-        if (append && context.data && context.data.length > 0)
+        if (context.append && context.data && context.data.length > 0)
           return true
 
         // If fetch delivered no data (undefined or null), return false
@@ -115,14 +110,15 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
     /** @xstate-layout N4IgpgJg5mDOIC5QDMwBcDGALACgQygEsA7PNSAWT2xLADoB3PQtAMQHsAnASWJcLwAbfEVJpC7YgGIcAQQDiAUQD6AVRwARWQBVFGgNoAGALqJQAB3ax+ksyAAeiAEyHDdAKyGALE4CcADgA2AEZ3f2D-fwAaEABPZ383fwBmQ38fL18nJ0CvQIBffJjUTFwCEjJKaixaOhKaYigpCEl6EgA3dgBrenqy0UqIKgbe9AaoBA72DDIJYiNjBbtLa3FbJAdEAFonZKc6AK93YIB2Qz9k90vkmPiEMP8D32ffE99k09cTwuKx-oryENqrU+iQmi1iG1iJ0enU-iIAVURnDSmDJtDprNJAt9MFTBsVjZiHZHAgdhE6MFDO5Ak5gvScgFkidbogTslfB4qdTmU5-Gc9j8QH0EWIkTVISjxlIwJxOFw6OZBGRkFwALZS-5ioHI0GNdGdGZreYmJYEqxEknbJxHOjpdKBfxXdxZLzeVkIVLuOipE5uzJZHJ5IUi8ra4YS+iy+WcKQAJUU2jjAE0zRYLcarWSOZTvIEXfnkskvGdgh7Usk7YZ2eEjtlTukQ-Cw4MI7VCBBBGAZAoVOotLoDCZlhm5ln6Sc6IFni4UgLXMcPcdK3lgr5jl5wo6IoUiiBiOwIHA7KGBoC25CR6sxxtSTt3nbN3knZdXe64ttHXRdilgoFHY6dZNqUoqtsCkpMCwHA8Hw4hCKBmbmte6ygKSTgnJOnhXCktIYe4zoev+34hIBJx+IYez+E4wHYAh4ogn8YJXpat7bBEwQ+mRHJep8uwsh+CBHIE367E4Vw+P466hDRWpgci0ZcMxiGoWxwSVsu5zoRcfInGWAnZJWrjvDSQS+D4gTMjJdE6pGdAdl2Sk3ipnrrnQbyOskgQnPyFnBDkS45AcVx+X+OSeZJVktue4FtJ29AQGQeCyO0zDKgARg5SEsc5XheJW7k4d5Jy+f5AkhF4dBHB8wR5HlLp+ZFZ70ZK9n0AeGiJY5KGbIJtozmc+HscVNwCTWdCGNy+FFqEYm7vkQA */
     id: 'fetchPaginatedMachine',
     initial: 'waitForInitialPagination',
-    context: {
+    context: ({ input }) => ({
       data: [],
-      append,
+      append: input.append || false,
       pagination: {
         offset: 0,
         limit: 10
-      }
-    },
+      },
+      fetchDataFunction: input.fetchDataFunction
+    }),
     entry: ['spawnPaginationActor'],
     states: {
       waitForInitialPagination: {
@@ -143,7 +139,8 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
           src: 'fetchDataActor',
           input: ({ context }) => ({
             url: 'url',
-            pagination: context.pagination
+            pagination: context.pagination,
+            fetchDataFunction: context.fetchDataFunction
           }),
           onDone: [
             {

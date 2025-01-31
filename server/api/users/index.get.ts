@@ -1,6 +1,5 @@
 // server/api/users.get.ts
 import { defineEventHandler, getQuery } from 'h3'
-import type { UserDocument } from '~~/server/models/User'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)
@@ -34,6 +33,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     totalCount: total,
-    data: users as UserDocument[]
+    data: users
   }
 })
