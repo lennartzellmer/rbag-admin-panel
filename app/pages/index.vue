@@ -8,6 +8,7 @@ const { inspect } = createBrowserInspector()
 
 const machine = createFetchPaginatedMachine({ fetchDataFunction: getUsers })
 const { actorRef, snapshot } = useActor(machine, { inspect })
+console.log(snapshot.value.context.data)
 const paginationMachineRef = useSelector(actorRef, state => state.context.paginationMachineRef)
 </script>
 

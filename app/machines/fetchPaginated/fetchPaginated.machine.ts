@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { assign, fromPromise, setup, type ActorRefFrom } from 'xstate'
 import { paginationMachine } from '../pagination/pagination.machine'
 import type { CollectionResponseList, PaginatedRequestParams } from '../../types/base.types'
 
-export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => Promise<CollectionResponseList<unknown>>
+export type FetchDataFunction = ({ paginationParams }: { paginationParams: PaginatedRequestParams }) => Promise<CollectionResponseList<any>>
 
 type SpawnedPaginationMachine = ActorRefFrom<typeof paginationMachine>
 
@@ -68,7 +69,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
         data: []
       }),
       appendOrAssignDataToContext: assign({
-        data: ({ context }, params: CollectionResponseList<unknown>) => {
+        data: ({ context }, params: CollectionResponseList<any>) => {
           if (append) {
             if (context.data === null || context.data === undefined)
               return params.data
@@ -77,7 +78,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
           return params.data
         }
       }),
-      sendTotalCountToPaginationMachine: ({ context }, params: CollectionResponseList<unknown>) => {
+      sendTotalCountToPaginationMachine: ({ context }, params: CollectionResponseList<any>) => {
         context.paginationMachineRef?.send({
           type: 'UPDATE_TOTAL_COUNT',
           totalCount: params.totalCount || 0
@@ -93,7 +94,7 @@ export function createFetchPaginatedMachine<TFetchDataFunction extends FetchData
       })
     },
     guards: {
-      isDataAvailable: ({ context }, params: CollectionResponseList<unknown>) => {
+      isDataAvailable: ({ context }, params: CollectionResponseList<any>) => {
         // If we are in append mode and data is available in context, return true
         if (append && context.data && context.data.length > 0)
           return true
