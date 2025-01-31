@@ -16,8 +16,10 @@ export const paginationMachine = setup({
     sendPageUpdated: sendParent(({ context }) => ({
       type: 'PAGE_UPDATED',
       description: 'If a pagination machine is used as a child we inform the partent so that it can react on it. e.g. by fetching a new page',
-      offset: context.offset,
-      limit: context.limit
+      pagination: {
+        offset: context.offset,
+        limit: context.limit
+      }
     })),
     goToPrevPage: assign({
       offset: ({ context }) => context.offset! - context.limit!

@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
-    'nuxt-mongoose'
+    'nuxt-mongoose',
+    'shadcn-nuxt'
   ],
   ssr: false,
   devtools: { enabled: true },
@@ -24,8 +25,12 @@ export default defineNuxtConfig({
       dbName: 'org_management_service'
     }
   },
+  shadcn: {
+    componentDir: './app/components/ui'
+  },
   tailwindcss: {
     exposeConfig: true,
-    viewer: true
+    viewer: true,
+    cssPath: ['./app/assets/css/tailwind.css', { injectPosition: 'first' }]
   }
 })

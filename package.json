@@ -11,16 +11,24 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@iconify/vue": "4.3.0",
     "@nuxt/eslint": "0.7.5",
     "@nuxtjs/tailwindcss": "6.13.1",
+    "@radix-ui/colors": "3.0.0",
     "@xstate/vue": "4.0.2",
     "axios": "1.7.9",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
     "eslint": "^8.57.0 || ^9.0.0",
     "h3-zod": "^0.5.3",
+    "lucide-vue-next": "0.474.0",
     "nuxt": "^3.15.2",
     "nuxt-auth-utils": "0.5.9",
     "nuxt-mongoose": "1.0.6",
-    "radix-vue": "^1.9.12",
+    "radix-vue": "1.9.13",
+    "shadcn-nuxt": "0.11.3",
+    "tailwind-merge": "3.0.1",
+    "tailwindcss-animate": "1.0.7",
     "typescript": "^5.7.3",
     "vitest": "3.0.4",
     "vue": "latest",
@@ -29,6 +37,7 @@
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
   "devDependencies": {
+    "@statelyai/inspect": "0.4.0",
     "jsdom": "26.0.0",
     "vitest-mock-extended": "2.0.2"
   }

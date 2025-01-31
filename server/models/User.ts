@@ -1,12 +1,16 @@
+import type { Document } from 'mongoose'
 import type { IOrganisation } from './Organisation'
 import { defineMongooseModel } from '#nuxt/mongoose'
 
-export interface IUser {
+export interface UserInput {
+  firstname: string
+  lastname: string
+}
+
+export interface UserDocument extends UserInput, Document {
   _id: string
   email: string
   cognitoId: string
-  firstname: string
-  lastname: string
   createdAt: Date
   lastModifiedAt: Date
   _class?: string
@@ -14,7 +18,7 @@ export interface IUser {
   organization?: IOrganisation
 }
 
-export const User = defineMongooseModel({
+export const User = defineMongooseModel<UserDocument>({
   name: 'User',
   schema: {
     _id: {
