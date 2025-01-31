@@ -13,21 +13,23 @@ describe('fetchPaginatedMachine', () => {
   }
 
   it('waits on initial pagination as first state', () => new Promise((done) => {
-    const machine = createFetchPaginatedMachine()
-    const actor = createActor(machine, { input: { fetchDataFunction: mockFetchDataFunction } })
+    const machine = createFetchPaginatedMachine({ fetchDataFunction: mockFetchDataFunction })
+    const actor = createActor(machine)
     expect(actor.getSnapshot().value).toEqual('waitForInitialPagination')
     done('')
   }))
 
   it('fetches initial data with default pagination', async () => {
-    const actor = createActor(createFetchPaginatedMachine(), { input: { fetchDataFunction: mockFetchDataFunction } }).start()
+    const machine = createFetchPaginatedMachine({ fetchDataFunction: mockFetchDataFunction })
+    const actor = createActor(machine).start()
     const state = await waitFor(actor, state => state.matches('idle'))
     expect(state.matches({ idle: 'dataAvailable' })).toBe(true)
     expect(state.context.data).toEqual(['test_0', 'test_1', 'test_2', 'test_3', 'test_4', 'test_5', 'test_6', 'test_7', 'test_8', 'test_9'])
   })
 
   it('fetches data with updated pagination', async () => {
-    const actor = createActor(createFetchPaginatedMachine(), { input: { fetchDataFunction: mockFetchDataFunction } }).start()
+    const machine = createFetchPaginatedMachine({ fetchDataFunction: mockFetchDataFunction })
+    const actor = createActor(machine).start()
     await waitFor(actor, state => state.matches({ idle: 'dataAvailable' }))
     actor.send({ type: 'PAGE_UPDATED', pagination: { offset: 10, limit: 10 } })
     const state = await waitFor(actor, state => state.matches({ idle: 'dataAvailable' }))
@@ -36,13 +38,15 @@ describe('fetchPaginatedMachine', () => {
   })
 
   it('goes to error state if fetchDataFunction throws', async () => {
-    const actor = createActor(createFetchPaginatedMachine(), { input: { fetchDataFunction: () => Promise.reject(new Error('test')) } }).start()
+    const machine = createFetchPaginatedMachine({ fetchDataFunction: () => Promise.reject(new Error('test')) })
+    const actor = createActor(machine).start()
     await waitFor(actor, state => state.matches('error'))
     expect(actor.getSnapshot().value).toEqual('error')
   })
 
   it('goes to fetching after error on retry ', async () => {
-    const actor = createActor(createFetchPaginatedMachine(), { input: { fetchDataFunction: () => Promise.reject(new Error('test')) } }).start()
+    const machine = createFetchPaginatedMachine({ fetchDataFunction: () => Promise.reject(new Error('test')) })
+    const actor = createActor(machine).start()
     await waitFor(actor, state => state.matches('error'))
     actor.send({ type: 'RETRY' })
     const state = await waitFor(actor, state => state.matches('fetching'))

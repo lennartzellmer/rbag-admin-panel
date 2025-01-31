@@ -19,20 +19,20 @@ export type MachineContext<T> = {
     offset: number
   }
   append: boolean
-  fetchDataFunction: FetchDataFunction<T>
 }
 
-export type MachineInput<T> = {
+export type MachineParams<T> = {
   append?: boolean
   fetchDataFunction: FetchDataFunction<T>
 }
 
-export function createFetchPaginatedMachine<T>() {
+export function createFetchPaginatedMachine<T>(
+  machineParams: MachineParams<T>
+) {
   return setup({
     types: {
       context: {} as MachineContext<T>,
-      events: {} as MachineEvents,
-      input: {} as MachineInput<T>
+      events: {} as MachineEvents
     },
     actors: {
       paginationMachine,
@@ -110,14 +110,13 @@ export function createFetchPaginatedMachine<T>() {
     /** @xstate-layout N4IgpgJg5mDOIC5QDMwBcDGALACgQygEsA7PNSAWT2xLADoB3PQtAMQHsAnASWJcLwAbfEVJpC7YgGIcAQQDiAUQD6AVRwARWQBVFGgNoAGALqJQAB3ax+ksyAAeiAEyHDdAKyGALE4CcADgA2AEZ3f2D-fwAaEABPZ383fwBmQ38fL18nJ0CvQIBffJjUTFwCEjJKaixaOhKaYigpCEl6EgA3dgBrenqy0UqIKgbe9AaoBA72DDIJYiNjBbtLa3FbJAdEAFonZKc6AK93YIB2Qz9k90vkmPiEMP8D32ffE99k09cTwuKx-oryENqrU+iQmi1iG1iJ0enU-iIAVURnDSmDJtDprNJAt9MFTBsVjZiHZHAgdhE6MFDO5Ak5gvScgFkidbogTslfB4qdTmU5-Gc9j8QH0EWIkTVISjxlIwJxOFw6OZBGRkFwALZS-5ioHI0GNdGdGZreYmJYEqxEknbJxHOjpdKBfxXdxZLzeVkIVLuOipE5uzJZHJ5IUi8ra4YS+iy+WcKQAJUU2jjAE0zRYLcarWSOZTvIEXfnkskvGdgh7Usk7YZ2eEjtlTukQ-Cw4MI7VCBBBGAZAoVOotLoDCZlhm5ln6Sc6IFni4UgLXMcPcdK3lgr5jl5wo6IoUiiBiOwIHA7KGBoC25CR6sxxtSTt3nbN3knZdXe64ttHXRdilgoFHY6dZNqUoqtsCkpMCwHA8Hw4hCKBmbmte6ygKSTgnJOnhXCktIYe4zoev+34hIBJx+IYez+E4wHYAh4ogn8YJXpat7bBEwQ+mRHJep8uwsh+CBHIE367E4Vw+P466hDRWpgci0ZcMxiGoWxwSVsu5zoRcfInGWAnZJWrjvDSQS+D4gTMjJdE6pGdAdl2Sk3ipnrrnQbyOskgQnPyFnBDkS45AcVx+X+OSeZJVktue4FtJ29AQGQeCyO0zDKgARg5SEsc5XheJW7k4d5Jy+f5AkhF4dBHB8wR5HlLp+ZFZ70ZK9n0AeGiJY5KGbIJtozmc+HscVNwCTWdCGNy+FFqEYm7vkQA */
     id: 'fetchPaginatedMachine',
     initial: 'waitForInitialPagination',
-    context: ({ input }) => ({
+    context: () => ({
       data: [],
-      append: input.append || false,
+      append: machineParams.append || false,
       pagination: {
         offset: 0,
         limit: 10
-      },
-      fetchDataFunction: input.fetchDataFunction
+      }
     }),
     entry: ['spawnPaginationActor'],
     states: {
@@ -140,7 +139,7 @@ export function createFetchPaginatedMachine<T>() {
           input: ({ context }) => ({
             url: 'url',
             pagination: context.pagination,
-            fetchDataFunction: context.fetchDataFunction
+            fetchDataFunction: machineParams.fetchDataFunction
           }),
           onDone: [
             {

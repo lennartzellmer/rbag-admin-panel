@@ -15,7 +15,7 @@ export interface UserDocument extends UserInput, Document {
   lastModifiedAt: Date
   _class?: string
   organisationId?: string
-  organization?: IOrganisation
+  organisation?: IOrganisation
 }
 
 export const User = defineMongooseModel<UserDocument>({
