@@ -21,13 +21,7 @@ export const paginationMachine = setup({
         limit: context.limit
       }
     })),
-    goToPrevPage: assign({
-      offset: ({ context }) => context.offset! - context.limit!
-    }),
-    goToNextPage: assign({
-      offset: ({ context }) => context.offset! + context.limit!
-    }),
-    goToTargetPage: assign({
+    assignOffsetWithTargetPage: assign({
       offset: ({ context, event }) => {
         assertEvent(event, 'GO_TO_TARGET_PAGE')
         return (event.targetPage - 1) * context.limit!
@@ -43,8 +37,9 @@ export const paginationMachine = setup({
         return event.totalCount
       }
     }),
-    resetOffset: assign({
-      offset: 0
+    resetOffsetAndCurrentPage: assign({
+      offset: 0,
+      currentPage: 1
     }),
     assignInitialStateFromURLParam: assign(() => {
       const url = new URL(window.location.href)
@@ -56,7 +51,13 @@ export const paginationMachine = setup({
         limit,
         currentPage: currentPageNumber
       }
-    })
+    }),
+    updateURLParams: ({ context }) => {
+      const url = new URL(window.location.href)
+      url.searchParams.set('offset', context.offset!.toString())
+      url.searchParams.set('limit', context.limit!.toString())
+      window.history.pushState({}, '', url.toString())
+    }
   },
   guards: {
     currentPageAboveNewTotalPages: ({ event, context }) => {
@@ -79,11 +80,7 @@ export const paginationMachine = setup({
     },
     targetPageIsWithinBounds: ({ context, event }) => {
       assertEvent(event, 'GO_TO_TARGET_PAGE')
-      if (totalPages(context.totalCount!, context.limit!) === 0)
-        return true
-      return (
-        event.targetPage >= 1 && event.targetPage <= totalPages(context.totalCount!, context.limit!)
-      )
+      return event.targetPage >= 1 && event.targetPage <= totalPages(context.totalCount!, context.limit!)
     }
   }
 }).createMachine({
@@ -102,7 +99,7 @@ export const paginationMachine = setup({
     }, {
       target: '.idle',
       guard: 'newTotalCountIsPositive',
-      actions: ['assignTotalCount', 'resetOffset', 'assignPagesToContext', 'sendPageUpdated']
+      actions: ['assignTotalCount', 'resetOffsetAndCurrentPage', 'sendPageUpdated']
     }]
   },
   states: {
@@ -111,22 +108,17 @@ export const paginationMachine = setup({
     },
 
     idle: {
+
       on: {
-        NEXT_PAGE: {
-          guard: 'canGoToNextPage',
-          actions: ['goToNextPage', 'sendPageUpdated', 'assignPagesToContext']
-        },
-        PREV_PAGE: {
-          guard: 'canGoToPrevPage',
-          actions: ['goToPrevPage', 'sendPageUpdated', 'assignPagesToContext']
-        },
         GO_TO_TARGET_PAGE: {
           guard: 'targetPageIsWithinBounds',
           actions: [
-            'goToTargetPage',
+            'assignOffsetWithTargetPage',
             'sendPageUpdated',
-            'assignPagesToContext'
-          ]
+            'assignPagesToContext',
+            'updateURLParams'
+          ],
+          reenter: true
         }
       }
     }

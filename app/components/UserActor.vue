@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  user: IUser
+  user: UserDocument
 }>()
 </script>
 

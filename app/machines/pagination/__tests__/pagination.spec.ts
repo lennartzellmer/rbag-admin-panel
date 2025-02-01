@@ -1,16 +1,17 @@
-import { beforeEach, describe, expect, it } from 'vitest'
-import { createActor, createMachine } from 'xstate'
+import { beforeEach, afterEach, describe, expect, it } from 'vitest'
+import { createActor, createMachine, waitFor } from 'xstate'
 import { paginationMachine } from '../pagination.machine.js'
+import { mockWindowHistory, mockWindowLocation, restoreWindowHistory, restoreWindowLocation } from './mockWindowLocation'
 
 describe('paginationMachine', () => {
   beforeEach(() => {
-    global.window = Object.create(window)
-    const url = new URL('https://www.example.com')
-    url.searchParams.set('limit', '10')
-    url.searchParams.set('offset', '0')
-    Object.defineProperty(window, 'location', {
-      value: url
-    })
+    mockWindowLocation('http://localhost:3000?limit=10&offset=0')
+    mockWindowHistory()
+  })
+
+  afterEach(() => {
+    restoreWindowLocation()
+    restoreWindowHistory()
   })
 
   it('stores initial input and calculates current page and awaits totalCount', () => new Promise((done) => {
@@ -30,51 +31,15 @@ describe('paginationMachine', () => {
     done('')
   }))
 
-  it('increments page and informs parent on next page', () => new Promise((done) => {
-    let receivedEvent = null
-    const parent = createActor(createMachine({ id: 'parent' }), {
-      inspect(inspectionEvent) {
-        if (inspectionEvent.type === '@xstate.event' && inspectionEvent.event.type === 'PAGE_UPDATED')
-          receivedEvent = inspectionEvent.event
-      }
-    })
-    const actor = createActor(paginationMachine, { parent }).start()
-
-    actor.send({ type: 'UPDATE_TOTAL_COUNT', totalCount: 100 })
-    actor.send({ type: 'NEXT_PAGE' })
-    expect(receivedEvent!.type).toEqual('PAGE_UPDATED')
-    expect(receivedEvent!.pagination.offset).toEqual(10)
-    expect(receivedEvent!.pagination.limit).toEqual(10)
-    done('')
-  }))
-
-  it('decrements page and informs parent on prev page', () => new Promise((done) => {
-    let receivedEvent = null
-    const parent = createActor(createMachine({ id: 'parent' }), {
-      inspect(inspectionEvent) {
-        if (inspectionEvent.type === '@xstate.event' && inspectionEvent.event.type === 'PAGE_UPDATED')
-          receivedEvent = inspectionEvent.event
-      }
-    })
-    const actor = createActor(paginationMachine, { parent }).start()
-    actor.send({ type: 'UPDATE_TOTAL_COUNT', totalCount: 100 })
-    actor.send({ type: 'NEXT_PAGE' })
-    actor.send({ type: 'PREV_PAGE' })
-    expect(receivedEvent!.type).toEqual('PAGE_UPDATED')
-    expect(receivedEvent!.pagination.offset).toEqual(0)
-    expect(receivedEvent!.pagination.limit).toEqual(10)
-    done('')
-  }))
-
-  it('handles go to target page', () => new Promise((done) => {
+  it('handles go to target page', async () => {
     const parent = createActor(createMachine({ id: 'parent' }))
     const actor = createActor(paginationMachine, { parent }).start()
     actor.send({ type: 'UPDATE_TOTAL_COUNT', totalCount: 100 })
+    await waitFor(actor, state => state.matches('idle'))
     actor.send({ type: 'GO_TO_TARGET_PAGE', targetPage: 5 })
     expect(actor.getSnapshot().context).toEqual({ limit: 10, offset: 40, currentPage: 5, totalCount: 100, totalPages: 10 })
     expect(actor.getSnapshot().value).toEqual('idle')
-    done('')
-  }))
+  })
 
   it('does not go to target page if it is out of bounds', () => new Promise((done) => {
     const parent = createActor(createMachine({ id: 'parent' }))
@@ -101,6 +66,15 @@ describe('paginationMachine', () => {
     expect(receivedEvent!.type).toEqual('PAGE_UPDATED')
     expect(receivedEvent!.pagination.offset).toEqual(0)
     expect(receivedEvent!.pagination.limit).toEqual(10)
+    done('')
+  }))
+
+  it('stores updated offset and limit in URL', () => new Promise((done) => {
+    const parent = createActor(createMachine({ id: 'parent' }))
+    const actor = createActor(paginationMachine, { parent }).start()
+    actor.send({ type: 'UPDATE_TOTAL_COUNT', totalCount: 100 })
+    actor.send({ type: 'GO_TO_TARGET_PAGE', targetPage: 2 })
+    expect(window.location.search).toEqual('?limit=10&offset=10')
     done('')
   }))
 })

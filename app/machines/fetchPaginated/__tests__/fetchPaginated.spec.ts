@@ -12,12 +12,11 @@ describe('fetchPaginatedMachine', () => {
     })
   }
 
-  it('waits on initial pagination as first state', () => new Promise((done) => {
+  it('waits on initial pagination as first state', async () => {
     const machine = createFetchPaginatedMachine({ fetchDataFunction: mockFetchDataFunction })
     const actor = createActor(machine)
     expect(actor.getSnapshot().value).toEqual('waitForInitialPagination')
-    done('')
-  }))
+  })
 
   it('fetches initial data with default pagination', async () => {
     const machine = createFetchPaginatedMachine({ fetchDataFunction: mockFetchDataFunction })

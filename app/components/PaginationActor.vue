@@ -18,6 +18,7 @@ const send = props.paginationActorRef.send
     v-slot="{ page }"
     :sibling-count="1"
     show-edges
+    :default-page="state.context.currentPage"
     :total="state.context.totalCount"
     :items-per-page="state.context.limit"
     @update:page="send({ type: 'GO_TO_TARGET_PAGE', targetPage: $event })"

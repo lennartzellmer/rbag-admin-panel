@@ -14,12 +14,6 @@ export type MachineEvents =
     totalCount: number
   }
   | {
-    type: 'NEXT_PAGE'
-  }
-  | {
-    type: 'PREV_PAGE'
-  }
-  | {
     type: 'GO_TO_TARGET_PAGE'
     targetPage: number
   }
