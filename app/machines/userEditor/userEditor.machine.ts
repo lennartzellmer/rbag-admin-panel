@@ -11,49 +11,39 @@ export const userEditorMachine = setup({
       user: UserDocument
     },
     events: {} as {
-      type: 'UPDATE_USER'
+      type: 'SAVE_USER'
       payload: {
         user: Partial<UserDocument>
       }
-    } | {
-      type: 'SAVE_USER'
     }
   },
   actions: {
     assignUserWithPartial: assign({
       user: ({ context, event }) => {
-        assertEvent(event, 'UPDATE_USER')
+        assertEvent(event, 'SAVE_USER')
         return Object.assign({}, context.user, event.payload.user)
       }
     })
   },
   actors: {
-    patchUser: fromPromise(async ({ input }: { input: UserDocument }) => await patchUser(input))
+    patchUser: fromPromise(async ({ input }: { input: UserDocument }) => await patchUser(input._id, input))
   }
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QFdZgE4FEIEsAuA9ugHQ4QA2YAxAKoAKAIgIIAqmA+jQMqYBKA2gAYAuolAAHArHw4CAOzEgAHogAsATgAcxLaoDMAVj2DNB9QDYAjOoA0IAJ6IAtJr3EDHvZYDsmrec1VA1UAXxC7VAxsfCJiSBk5KCouJgA1Dm4+IVEkEElpPFkFXJUEACZ1b2JBdUM9SsEDMss9VXM7RwRLQVUddX7NUwDVb29rMIi0LFxCElgAQwA3HESqCHkwUjlFggBrTcjpmLmllagEFZ2AY3nC+WzsxXyZeUVS829BYhGDb36K0zqNodRCudxlVplVSaXyuQyWMLhEByAgQOCKQ7RWZPKQvYqgUotMrEKF6cwWYKfVQ+VQghBOHyWaqeGrQ4x-XwTECYmaxMiUHEFIpvUFjYjkpqaKzGD7tByIbq9fr9UZtIyuTQIpE845xGZnQV4kVdTRfUnk8yUno0umKvrKixjX6Ccx6Lk62bEBbLRKGu745RqD7VU1tD5lDwR7wGOma74OywGQL1JoGREhIA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QFdZgE4FEIEsAuA9ugHST44B2UAxAMoCCAapgPoCqtmASgNoAMAXUSgADgVjkCFYSAAeiAIwA2AMzEAHEtV8ALAt0BWAEzqDBgDQgAnoiNG1SowHZ1Lp0oCcdr0oC+vy1QMbHwiYlgAQwA3ShoIKTBiSiiCAGtEoKxcQhJImKoEZIIAYwi8HCl+ASqZMQlyqRl5BGUdYg8+IwUFIyUDJx1+gyVLGwQAWhUlduGVAz4nFQ8Ooz45-wCQCgIIOBlMkJza8UlpJDlEcZHrS562wdUdDoUPV1WDf0C0LNCSMnKqMd6hUzqBmjojKNFHwPMQ+AZXup1DoVL11B51psDtkwnlYkDTk1EHNYciVO4nvpBktrmMPAYNBi7PD1CpWaiNr4gA */
   id: 'userEditor',
 
-  initial: 'idle',
+  initial: 'editing',
 
   context: ({ input }) => ({
     user: input.user
   }),
 
   states: {
-    idle: {
-      on: {
-        UPDATE_USER: {
-          target: 'editing',
-          actions: ['assignUserWithPartial'],
-          reenter: true
-        }
-      }
-    },
     editing: {
       on: {
         SAVE_USER: {
-          target: 'saving'
+          target: 'saving',
+          actions: ['assignUserWithPartial']
         }
       }
     },
@@ -62,7 +52,7 @@ export const userEditorMachine = setup({
         src: 'patchUser',
         input: ({ context }) => context.user,
         onDone: {
-          target: 'idle',
+          target: 'editing',
           actions: assign({
             user: ({ event }) => event.output
           })

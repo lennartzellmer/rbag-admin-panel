@@ -12,12 +12,9 @@ export function getUsers({ paginationParams }: { paginationParams: PaginatedRequ
   return request as Promise<CollectionResponseList<UserDocument>>
 }
 
-export function patchUser(user: UserDocument) {
-  const request = useRequestFetch()('/api/users/:id', {
+export function patchUser(id: string, user: UserDocument) {
+  const request = useRequestFetch()(`/api/users/${id}`, {
     method: 'PATCH',
-    query: {
-      id: user._id
-    },
     body: user
   })
   return request as Promise<UserDocument>

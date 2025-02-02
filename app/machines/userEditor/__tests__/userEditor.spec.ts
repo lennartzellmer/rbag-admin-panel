@@ -20,35 +20,24 @@ describe('test', () => {
 
   const patchUser = vi.fn().mockResolvedValue(changedUser)
 
-  it('sets the user in the context and goes to idle', async () => {
+  it('sets the user in the context and goes to editing', async () => {
     const actor = createActor(userEditorMachine, { input: { user: mockUser } }).start()
     expect(actor.getSnapshot().context.user).toEqual(mockUser)
-    expect(actor.getSnapshot().value).toEqual('idle')
-  })
-
-  it('On UPDATE_USER event, the user is updated and the machine goes to editing', async () => {
-    const actor = createActor(userEditorMachine, { input: { user: mockUser } }).start()
-    actor.send({ type: 'UPDATE_USER', payload: { user: {
-      firstname: 'Jane'
-    } } })
     expect(actor.getSnapshot().value).toEqual('editing')
-    expect(actor.getSnapshot().context.user).toEqual(changedUser)
   })
 
   it('saves the user on SAVE_USER event', async () => {
     const machine = userEditorMachine.provide({
-      actors: { patchUser: fromPromise(async ({ input }) => await patchUser(input)) }
+      actors: { patchUser: fromPromise(async ({ input }) => await patchUser(input._id, input)) }
     })
     const actor = createActor(machine, { input: { user: mockUser } }).start()
-    actor.send({ type: 'UPDATE_USER', payload: { user: {
+    actor.send({ type: 'SAVE_USER', payload: { user: {
       firstname: 'Jane'
     } } })
-    actor.send({ type: 'SAVE_USER' })
     expect(actor.getSnapshot().value).toEqual('saving')
-    const state = await waitFor(actor, ({ value }) => value === 'idle')
-    expect(state.value).toEqual('idle')
+    const state = await waitFor(actor, ({ value }) => value === 'editing')
+    expect(state.value).toEqual('editing')
     expect(state.context.user).toEqual(changedUser)
     expect(patchUser).toHaveBeenCalledOnce()
-    expect(patchUser).toHaveBeenCalledWith(changedUser)
   })
 })

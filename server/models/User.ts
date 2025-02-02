@@ -1,6 +1,7 @@
 import type { Document } from 'mongoose'
 import mongoose from 'mongoose'
 import type { OrganisationDocument } from './Organisation'
+import { Organisation } from './Organisation'
 
 export interface UserInput {
   firstname: string
@@ -69,7 +70,7 @@ const userSchema = new mongoose.Schema({
 })
 
 userSchema.virtual('organisation', {
-  ref: 'Organisation', // Which model to link to
+  ref: Organisation.modelName, // Which model to link to
   localField: 'organisationId', // Field in this schema
   foreignField: '_id', // Field in the Organisation schema
   justOne: true // Whether it's a single doc or an array

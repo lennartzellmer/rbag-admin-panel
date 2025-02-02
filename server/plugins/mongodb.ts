@@ -1,7 +1,6 @@
-import type { Nitro } from 'nitropack'
 import mongoose from 'mongoose'
 
-export default async (_nitroApp: Nitro) => {
+export default defineNitroPlugin(async () => {
   const config = useRuntimeConfig()
   try {
     await mongoose.connect(config.mongodbUri, {
@@ -12,4 +11,4 @@ export default async (_nitroApp: Nitro) => {
   catch (e) {
     console.error(e)
   }
-}
+})

@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useActor, useSelector } from '@xstate/vue'
-import { createBrowserInspector } from '@statelyai/inspect'
 import { createFetchPaginatedMachine } from '~/machines/fetchPaginated/fetchPaginated.machine.js'
 import { getUsers } from '~/services/api.js'
 
-const { inspect } = createBrowserInspector()
-
 const machine = createFetchPaginatedMachine({ fetchDataFunction: getUsers })
-const { actorRef, snapshot } = useActor(machine, { inspect })
+const { actorRef, snapshot } = useActor(machine)
 const paginationMachineRef = useSelector(actorRef, state => state.context.paginationMachineRef)
 </script>
 
@@ -17,13 +14,7 @@ const paginationMachineRef = useSelector(actorRef, state => state.context.pagina
       v-for="user in snapshot.context.data"
       :key="user._id"
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>{{ user.firstname }} {{ user.lastname }}</CardTitle>
-          <CardDescription>{{ user.email }}</CardDescription>
-          <CardDescription>{{ user.organisation?.name }}</CardDescription>
-        </CardHeader>
-      </Card>
+      <UserActor :user="user" />
     </template>
     <PaginationActor
       v-if="paginationMachineRef"
