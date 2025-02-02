@@ -1,6 +1,7 @@
-import { defineMongooseModel } from '#nuxt/mongoose'
+import type { Document } from 'mongoose'
+import mongoose from 'mongoose'
 
-export interface IOrganisation {
+export interface OrganisationDocument extends Document {
   _id: string
   name?: string
   phone?: string
@@ -12,44 +13,48 @@ export interface IOrganisation {
   trailPeriodExpiresAt?: Date
 }
 
-export const Organisation = defineMongooseModel({
-  name: 'Organisation',
-  schema: {
-    _id: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String
-    },
-    phone: {
-      type: String
-    },
-    createdAt: {
-      type: Date
-    },
-    status: {
-      enum: ['PENDING', 'CONFIRMED']
-    },
-    evseIds: {
-      strings: [String]
-    },
-    lastModifiedAt: {
-      type: Date
-    },
-    _class: {
-      type: String
-    },
-    trailPeriodExpiresAt: {
-      type: Date,
-      required: false
-    }
+const organisationSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
   },
-  options: {
-    // We have our own createdAt/lastModifiedAt fields, so no need for Mongoose timestamps
-    timestamps: false,
-    versionKey: false,
-    collection: 'organisations',
-    _id: false
+  name: {
+    type: String
+  },
+  phone: {
+    type: String
+  },
+  createdAt: {
+    type: Date
+  },
+  status: {
+    enum: ['PENDING', 'CONFIRMED']
+  },
+  evseIds: {
+    strings: [String]
+  },
+  lastModifiedAt: {
+    type: Date
+  },
+  _class: {
+    type: String
+  },
+  trailPeriodExpiresAt: {
+    type: Date,
+    required: false
+  }
+}, {
+  // We have our own createdAt/lastModifiedAt fields, so no need for Mongoose timestamps
+  timestamps: false,
+  versionKey: false,
+  collection: 'organisations',
+  _id: false,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
   }
 })
+
+export const Organisation = mongoose.model<OrganisationDocument>('Organisation', organisationSchema)

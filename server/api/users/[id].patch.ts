@@ -19,12 +19,11 @@ export default defineEventHandler(async (event) => {
 
   const body = await useValidatedBody(event, userPatchSchema)
 
-  // 4. Perform the partial update in MongoDB
   const updatedUser = await User.findByIdAndUpdate(
     id,
     body,
     { new: true } // returns the updated document
-  )
+  ).lean()
 
   if (!updatedUser) {
     // If no user is found for the given ID, throw a 404

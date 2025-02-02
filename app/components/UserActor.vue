@@ -1,15 +1,20 @@
 <script setup lang="ts">
-defineProps<{
+import { useActor } from '@xstate/vue'
+import { userEditorMachine } from '~/machines/userEditor/userEditor.machine'
+
+const props = defineProps<{
   user: UserDocument
 }>()
+
+const { snapshot } = useActor(userEditorMachine, { input: { user: props.user } })
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardTitle>{{ user.firstname }} {{ user.lastname }}</CardTitle>
-      <CardDescription>{{ user.email }}</CardDescription>
-      <CardDescription>{{ user.organisation?.name }}</CardDescription>
+      <CardTitle>{{ snapshot.context.user.firstname }} {{ snapshot.context.user.lastname }}</CardTitle>
+      <CardDescription>{{ snapshot.context.user.email }}</CardDescription>
+      <CardDescription>{{ snapshot.context.user.organisation?.name }}</CardDescription>
     </CardHeader>
   </Card>
 </template>

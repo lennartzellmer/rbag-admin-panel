@@ -5,24 +5,24 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
-    'nuxt-mongoose',
     'shadcn-nuxt'
   ],
   ssr: false,
   devtools: { enabled: true },
+  runtimeConfig: {
+    mongodbUri: process.env.NUXT_MONGODB_URI
+  },
   future: { compatibilityVersion: 4 },
   compatibilityDate: '2024-11-01',
+  nitro: {
+    plugins: ['../server/plugins/mongodb.ts']
+  },
   eslint: {
     config: {
       stylistic: {
         quotes: 'single',
         commaDangle: 'never'
       }
-    }
-  },
-  mongoose: {
-    options: {
-      dbName: 'org_management_service'
     }
   },
   shadcn: {

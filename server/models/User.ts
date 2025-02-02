@@ -1,6 +1,6 @@
 import type { Document } from 'mongoose'
-import type { IOrganisation } from './Organisation'
-import { defineMongooseModel } from '#nuxt/mongoose'
+import mongoose from 'mongoose'
+import type { OrganisationDocument } from './Organisation'
 
 export interface UserInput {
   firstname: string
@@ -15,69 +15,64 @@ export interface UserDocument extends UserInput, Document {
   lastModifiedAt: Date
   _class?: string
   organisationId?: string
-  organisation?: IOrganisation
+  organisation?: OrganisationDocument
 }
 
-export const User = defineMongooseModel<UserDocument>({
-  name: 'User',
-  schema: {
-    _id: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true
-    },
-    cognitoId: {
-      type: String,
-      required: true
-    },
-    firstname: {
-      type: String,
-      required: true
-    },
-    lastname: {
-      type: String,
-      required: true
-    },
-    createdAt: {
-      type: Date,
-      required: true
-    },
-    lastModifiedAt: {
-      type: Date,
-      required: true
-    },
-    _class: {
-      type: String
-    },
-    organisationId: {
-      type: String,
-      ref: 'Organisation',
-      required: false
-    }
+const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true
   },
-  options: {
-    // We have our own createdAt/lastModifiedAt fields, so no need for Mongoose timestamps
-    timestamps: false,
-    versionKey: false,
-    collection: 'users',
-    _id: false,
-    toJSON: {
-      virtuals: true
-    },
-    toObject: {
-      virtuals: true
-    }
+  email: {
+    type: String,
+    required: true
   },
-  hooks(schema) {
-    // Define the virtual on the schema
-    schema.virtual('organisation', {
-      ref: 'Organisation', // Which model to link to
-      localField: 'organisationId', // Field in this schema
-      foreignField: '_id', // Field in the Organisation schema
-      justOne: true // Whether it's a single doc or an array
-    })
+  cognitoId: {
+    type: String,
+    required: true
+  },
+  firstname: {
+    type: String,
+    required: true
+  },
+  lastname: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    required: true
+  },
+  lastModifiedAt: {
+    type: Date,
+    required: true
+  },
+  _class: {
+    type: String
+  },
+  organisationId: {
+    type: String,
+    ref: 'Organisation',
+    required: false
+  }
+}, {
+  timestamps: false,
+  versionKey: false,
+  collection: 'users',
+  id: false,
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
   }
 })
+
+userSchema.virtual('organisation', {
+  ref: 'Organisation', // Which model to link to
+  localField: 'organisationId', // Field in this schema
+  foreignField: '_id', // Field in the Organisation schema
+  justOne: true // Whether it's a single doc or an array
+})
+
+export const User = mongoose.model<UserDocument>('User', userSchema)
