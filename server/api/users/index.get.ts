@@ -1,7 +1,7 @@
 // server/api/users.get.ts
 import { defineEventHandler, getQuery } from 'h3'
 import { User } from '../../models/User'
-import type { OrganisationDocument, Organisation } from '../../models/Organisation'
+import type { OrganisationDocument } from '../../models/Organisation'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     User.find({})
       .skip(offsetNum)
       .limit(limitNum)
-      .populate<Organisation>('organisation')
+      .populate<OrganisationDocument>('organisation')
       .exec(),
     User.countDocuments()
   ])

@@ -3,9 +3,8 @@ import { useActor } from '@xstate/vue'
 import { createBrowserInspector } from '@statelyai/inspect'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { h } from 'vue'
 import * as z from 'zod'
-import { toast } from './ui/toast'
+import { toast, ToastAction } from './ui/toast'
 import { Input } from './ui/input'
 import type { UserDocument } from '~~/server/models/User'
 import { userEditorMachine } from '~/machines/userEditor/userEditor.machine'
@@ -24,11 +23,48 @@ const props = defineProps<{
 // add inspector to the user machine
 const { inspect } = createBrowserInspector()
 
-const { snapshot, send } = useActor(userEditorMachine, { input: { user: props.user }, inspect })
+const { snapshot, send } = useActor(userEditorMachine.provide({
+  actions: {
+    onSaved: ({ context }, params: { user: UserDocument }) => {
+      toast({
+        description: `User details for ${params.user.firstname} (${context.user.organisation?.name || 'no organisation'}) updated`
+      })
+    },
+    onError: ({ context }) => {
+      toast({
+        description: `User ${context.user.firstname} (${context.user.organisation?.name || 'no organisation'}) not saved`,
+        variant: 'destructive',
+        action: h(ToastAction, {
+          altText: 'Try again',
+          onClick: () => send({ type: 'RETRY' })
+        }, {
+          default: () => 'Try again'
+        })
+      })
+    }
+  }
+}),
+{
+  input: { user: props.user },
+  inspect
+}
+)
+
+const formData = ref({
+  firstname: props.user.firstname,
+  lastname: props.user.lastname,
+  email: props.user.email
+})
+
+// watch formData and send touch event when it changes
+watch(formData, () => {
+  send({ type: 'TOUCH' })
+}, { deep: true })
 
 const formSchema = toTypedSchema(z.object({
   firstname: z.string().min(2).max(50),
-  lastname: z.string().min(2).max(50)
+  lastname: z.string().min(2).max(50),
+  email: z.string().email()
 }))
 
 const { handleSubmit } = useForm({
@@ -37,27 +73,21 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit((values) => {
   send({ type: 'SAVE_USER', payload: { user: values } })
-  toast({
-    title: 'You submitted the following values:',
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2)))
-  })
 })
 </script>
 
 <template>
   <Card>
     <CardHeader>
-      <CardDescription>{{ snapshot.context.user.email }}</CardDescription>
-      <CardDescription>{{ snapshot.context.user.organisation?.name }}</CardDescription>
       <CardContent>
         <form
-          class="w-2/3 space-y-6"
+          class="w-full space-y-3"
           @submit="onSubmit"
         >
           <FormField
             v-slot="{ componentField }"
+            v-model="formData.firstname"
             name="firstname"
-            :model-value="snapshot.context.user.firstname"
           >
             <FormItem>
               <FormLabel>First name</FormLabel>
@@ -73,8 +103,8 @@ const onSubmit = handleSubmit((values) => {
           </FormField>
           <FormField
             v-slot="{ componentField }"
+            v-model="formData.lastname"
             name="lastname"
-            :model-value="snapshot.context.user.lastname"
           >
             <FormItem>
               <FormLabel>Last name</FormLabel>
@@ -88,10 +118,29 @@ const onSubmit = handleSubmit((values) => {
               <FormMessage />
             </FormItem>
           </FormField>
+          <FormField
+            v-slot="{ componentField }"
+            v-model="formData.email"
+            name="email"
+          >
+            <FormItem>
+              <FormLabel>eMail</FormLabel>
+              <FormControl>
+                <Input
+                  disabled
+                  type="email"
+                  placeholder="email@email.com"
+                  v-bind="componentField"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </FormField>
           <Button
+            v-if="snapshot.matches({ idle: 'touched' })"
             type="submit"
           >
-            Submit
+            Save
           </Button>
         </form>
       </CardContent>

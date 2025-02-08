@@ -1,5 +1,6 @@
 // server/api/users.get.ts
 import { defineEventHandler, getQuery } from 'h3'
+import { Organisation } from '~~/server/models/Organisation'
 
 export default defineEventHandler(async (event) => {
   // await requireUserSession(event)

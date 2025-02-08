@@ -1,6 +1,7 @@
 // server/api/users.get.ts
 import { defineEventHandler } from 'h3'
 import { useValidatedParams, z, useValidatedBody } from 'h3-zod'
+import { User } from '../../models/User'
 
 export default defineEventHandler(async (event) => {
   await requireUserSession(event)
@@ -19,17 +20,16 @@ export default defineEventHandler(async (event) => {
 
   const body = await useValidatedBody(event, userPatchSchema)
 
+  console.log('body', body)
+
   const updatedUser = await User.findByIdAndUpdate(
     id,
     body,
-    { new: true } // returns the updated document
-  ).lean()
+    { new: true }
+  )
 
   if (!updatedUser) {
-    // If no user is found for the given ID, throw a 404
     throw createError({ statusCode: 404, statusMessage: 'User not found' })
   }
-
-  // 5. Return the updated user
   return updatedUser
 })
