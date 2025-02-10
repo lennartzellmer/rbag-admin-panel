@@ -8,15 +8,15 @@ const querySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = await requireUserSession(event)
+  // const { user } = await requireUserSession(event)
 
-  if (!user) {
-    throw createError({
-      status: 401,
-      statusMessage: 'Access denied',
-      message: 'Please log in'
-    })
-  }
+  // if (!user) {
+  //   throw createError({
+  //     status: 401,
+  //     statusMessage: 'Access denied',
+  //     message: 'Please log in'
+  //   })
+  // }
 
   try {
     // Validate and parse query parameters

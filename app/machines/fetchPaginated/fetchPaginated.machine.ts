@@ -76,7 +76,7 @@ export function createFetchPaginatedMachine<T>(
       sendTotalCountToPaginationMachine: ({ context }, params: CollectionResponseList<T>) => {
         context.paginationMachineRef?.send({
           type: 'UPDATE_TOTAL_COUNT',
-          totalCount: params.totalCount || 0
+          totalCount: params.meta.total || 0
         })
       },
       assignLimitAndOffsetToContext: assign({

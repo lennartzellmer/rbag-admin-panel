@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
+import { useValidatedParams, useValidatedBody } from 'h3-zod'
 import mongoose from 'mongoose'
 import { EventModel } from '../../models/Event'
 
@@ -16,7 +17,7 @@ const locationSchema = z.object({
   line1: z.string().min(1),
   line2: z.string().optional(),
   postalCode: z.string().min(1),
-  countryCode: z.string().min(1)
+  countryCode: z.string().length(3)
 })
 
 const websiteContentSchema = z.object({
@@ -45,23 +46,23 @@ const performanceSchema = z.object({
   showOnEventPage: z.boolean()
 }).optional()
 
-const eventSchema = z.object({
-  name: z.string().min(1),
-  abbreviation: z.string().min(1),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  published: z.boolean(),
-  targetGroupDescription: z.string().min(1),
+const eventPatchSchema = z.object({
+  name: z.string().min(1).optional(),
+  abbreviation: z.string().min(1).optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+  published: z.boolean().optional(),
+  targetGroupDescription: z.string().min(1).optional(),
   category: z.string().refine((val) => {
     return mongoose.Types.ObjectId.isValid(val)
-  }), // MongoDB ObjectId as string
-  location: locationSchema,
+  }).optional(),
+  location: locationSchema.optional(),
   workshopOffer: z.array(z.string().refine((val) => {
     return mongoose.Types.ObjectId.isValid(val)
-  })).optional(), // MongoDB ObjectId as string
+  })).optional(),
   alternativeProgram: z.array(z.string().refine((val) => {
     return mongoose.Types.ObjectId.isValid(val)
-  })).optional(), // MongoDB ObjectId as string
+  })).optional(),
   status: z.enum([
     'SAVE_THE_DATE',
     'REGISTRATION_SCHEDULED',
@@ -69,10 +70,10 @@ const eventSchema = z.object({
     'REGISTRATION_CLOSED',
     'COMPLETED',
     'CANCELED'
-  ]),
-  performance: performanceSchema,
-  websiteContent: websiteContentSchema,
-  registration: registrationSchema
+  ]).optional(),
+  performance: performanceSchema.optional(),
+  websiteContent: websiteContentSchema.optional(),
+  registration: registrationSchema.optional()
 })
 
 export default defineEventHandler(async (event) => {
@@ -87,16 +88,26 @@ export default defineEventHandler(async (event) => {
   // }
 
   try {
-    const body = await readBody(event)
-    const validatedData = eventSchema.parse(body)
-
-    const newEvent = await EventModel.create({
-      ...validatedData
+    const { id } = await useValidatedParams(event, {
+      id: z.string().refine(val => mongoose.Types.ObjectId.isValid(val))
     })
 
-    return {
-      data: newEvent
+    const body = await useValidatedBody(event, eventPatchSchema)
+
+    const updatedEvent = await EventModel.findByIdAndUpdate(
+      id,
+      body,
+      { new: true }
+    )
+
+    if (!updatedEvent) {
+      throw createError({
+        statusCode: 404,
+        message: 'Event not found'
+      })
     }
+
+    return updatedEvent
   }
   catch (error) {
     if (error instanceof z.ZodError) {
@@ -108,7 +119,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 500,
-      message: 'Error creating event'
+      message: 'Error updating event'
     })
   }
 })

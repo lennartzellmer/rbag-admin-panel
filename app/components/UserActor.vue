@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@/components/ui/form'
+} from '~/components/ui/form'
 
 const props = defineProps<{
   user: UserDocument

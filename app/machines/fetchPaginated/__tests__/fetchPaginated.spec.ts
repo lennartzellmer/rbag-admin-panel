@@ -8,7 +8,11 @@ describe('fetchPaginatedMachine', () => {
     const mockData = Array.from({ length: 40 }, (_, index) => `test_${index}`)
     return Promise.resolve({
       data: mockData.slice(paginationParams.offset, paginationParams.offset + paginationParams.limit),
-      totalCount: mockData.length
+      meta: {
+        total: mockData.length,
+        offset: paginationParams.offset,
+        limit: paginationParams.limit
+      }
     })
   }
 

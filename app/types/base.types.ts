@@ -1,6 +1,10 @@
 export interface CollectionResponseList<T> {
   data: T[]
-  totalCount: number
+  meta: {
+    total: number
+    offset: number
+    limit: number
+  }
 }
 
 export interface Response<T> {

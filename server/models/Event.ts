@@ -1,4 +1,4 @@
-import type { Document, InferSchemaType, Model, Types } from 'mongoose'
+import type { Document, Types } from 'mongoose'
 import { Schema, model } from 'mongoose'
 
 /**
@@ -66,8 +66,8 @@ export interface IEvent {
   targetGroupDescription: string
   category: Types.ObjectId
   location?: ILocation
-  workshopOffer: Types.ObjectId[]
-  alternativeProgram: Types.ObjectId[]
+  workshopOffer?: Types.ObjectId[]
+  alternativeProgram?: Types.ObjectId[]
   status: EventStatus
   performance?: IPerformance
   websiteContent?: IWebsiteContent
@@ -94,6 +94,9 @@ const LocationSchema = new Schema<ILocation>({
   line2: { type: String },
   postalCode: { type: String, required: true },
   countryCode: { type: String, required: true }
+}, {
+  versionKey: false,
+  _id: false
 })
 
 const WebsiteContentSchema = new Schema<IWebsiteContent>({
@@ -141,13 +144,11 @@ const EventSchema = new Schema({
   location: { type: LocationSchema },
   workshopOffer: [{
     type: Schema.Types.ObjectId,
-    ref: 'WorkshopOffer',
-    required: true
+    ref: 'WorkshopOffer'
   }],
   alternativeProgram: [{
     type: Schema.Types.ObjectId,
-    ref: 'WorkshopOffer',
-    required: true
+    ref: 'WorkshopOffer'
   }],
   status: {
     type: String,

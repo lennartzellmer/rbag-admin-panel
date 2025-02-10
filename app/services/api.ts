@@ -1,21 +1,21 @@
 import type { CollectionResponseList, PaginatedRequestParams } from '~/types/base.types'
-import type { UserDocument } from '~~/server/models/User'
+import type { IEventDocument } from '~~/server/models/Event'
 
-export function getUsers({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
-  const request = useRequestFetch()('/api/users', {
+export function getEvents({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
+  const request = useRequestFetch()('/api/events', {
     method: 'GET',
     params: {
       offset: paginationParams.offset,
       limit: paginationParams.limit
     }
   })
-  return request as Promise<CollectionResponseList<UserDocument>>
+  return request as Promise<CollectionResponseList<IEventDocument>>
 }
 
-export function patchUser(id: string, user: UserDocument) {
-  const request = useRequestFetch()(`/api/users/${id}`, {
+export function patchEvent(id: string, event: IEventDocument) {
+  const request = useRequestFetch()(`/api/events/${id}`, {
     method: 'PATCH',
-    body: user
+    body: event
   })
-  return request as Promise<UserDocument>
+  return request as Promise<IEventDocument>
 }
