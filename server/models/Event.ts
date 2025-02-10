@@ -1,22 +1,9 @@
-import type { Document, Model } from 'mongoose'
-import mongoose, { Schema } from 'mongoose'
-import type { ICategory } from './Category'
-import type { UserDocument } from './User'
+import type { Document, InferSchemaType, Model, Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 /**
  * TypeScript interfaces for each “class” in the diagram.
  */
-
-export interface IParticipantInput {
-  name: string
-  fieldType: string
-}
-
-export interface IWorkshopOffer {
-  title: string
-  participantInputs: IParticipantInput[]
-  referent: UserDocument
-}
 
 export interface IParticipationFees {
   childrenAndYouth: number
@@ -70,38 +57,28 @@ export type EventStatus =
   | 'COMPLETED'
   | 'CANCELED'
 
-export interface IEvent extends Document {
+export interface IEvent {
   name: string
   abbreviation: string
   startDate: Date
   endDate: Date
   published: boolean
   targetGroupDescription: string
-  category: ICategory
-  location: ILocation
-  workshopOffer: IWorkshopOffer[]
-  alternativeProgram: IWorkshopOffer[]
+  category: Types.ObjectId
+  location?: ILocation
+  workshopOffer: Types.ObjectId[]
+  alternativeProgram: Types.ObjectId[]
   status: EventStatus
-  participationFees: IParticipationFees
-  performance?: IPerformance // optional
-  websiteContent: IWebsiteContent
-  registration: IRegistration
+  performance?: IPerformance
+  websiteContent?: IWebsiteContent
+  registration?: IRegistration
 }
+
+export interface IEventDocument extends Document, IEvent {}
 
 /**
  * Mongoose sub-schemas for embedded documents.
  */
-
-const ParticipantInputSchema = new Schema<IParticipantInput>({
-  name: { type: String, required: true },
-  fieldType: { type: String, required: true }
-})
-
-const WorkshopOfferSchema = new Schema<IWorkshopOffer>({
-  title: { type: String, required: true },
-  participantInputs: { type: [ParticipantInputSchema], default: [] },
-  referent: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
-})
 
 const ParticipationFeesSchema = new Schema<IParticipationFees>({
   childrenAndYouth: { type: Number, required: true },
@@ -149,7 +126,7 @@ const PerformanceSchema = new Schema<IPerformance>({
  * The main Event schema.
  */
 
-const EventSchema = new Schema<IEvent>({
+const EventSchema = new Schema({
   name: { type: String, required: true },
   abbreviation: { type: String, required: true },
   startDate: { type: Date, required: true },
@@ -157,13 +134,21 @@ const EventSchema = new Schema<IEvent>({
   published: { type: Boolean, required: true },
   targetGroupDescription: { type: String, required: true },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Category',
     required: true
   },
-  location: { type: LocationSchema, required: true },
-  workshopOffer: { type: [WorkshopOfferSchema], required: true },
-  alternativeProgram: { type: [WorkshopOfferSchema], required: true },
+  location: { type: LocationSchema },
+  workshopOffer: [{
+    type: Schema.Types.ObjectId,
+    ref: 'WorkshopOffer',
+    required: true
+  }],
+  alternativeProgram: [{
+    type: Schema.Types.ObjectId,
+    ref: 'WorkshopOffer',
+    required: true
+  }],
   status: {
     type: String,
     enum: [
@@ -176,15 +161,22 @@ const EventSchema = new Schema<IEvent>({
     ],
     required: true
   },
-  participationFees: { type: ParticipationFeesSchema, required: true },
-  performance: { type: PerformanceSchema, required: false },
-  websiteContent: { type: WebsiteContentSchema, required: true },
-  registration: { type: RegistrationSchema, required: true }
+  performance: { type: PerformanceSchema },
+  websiteContent: { type: WebsiteContentSchema },
+  registration: { type: RegistrationSchema }
+}, {
+  versionKey: false,
+  collection: 'events',
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  }
 })
 
 /**
  * Export the Event model.
  */
 
-const EventModel: Model<IEvent> = mongoose.model<IEvent>('Event', EventSchema)
-export default EventModel
+export const EventModel = model<IEventDocument>('Event', EventSchema)

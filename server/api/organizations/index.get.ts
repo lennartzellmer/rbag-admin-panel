@@ -1,33 +1,43 @@
 // server/api/users.get.ts
+import { z } from 'zod'
 import { defineEventHandler, getQuery } from 'h3'
 import { Organisation } from '~~/server/models/Organisation'
 
-export default defineEventHandler(async (event) => {
-  // await requireUserSession(event)
+const querySchema = z.object({
+  limit: z.string().transform(Number).default('10'),
+  offset: z.string().transform(Number).default('0')
+})
 
-  // Extract query params for pagination (default: page=1, limit=10)
-  const { page = '1', limit = '10' } = getQuery(event) as {
-    page?: string
-    limit?: string
+export default defineEventHandler(async (event) => {
+  const { user } = await requireUserSession(event)
+
+  if (!user) {
+    throw createError({
+      status: 401,
+      statusMessage: 'Access denied',
+      message: 'Please log in'
+    })
   }
 
-  const pageNum = parseInt(page, 10) || 1
-  const limitNum = parseInt(limit, 10) || 10
-  const skipCount = (pageNum - 1) * limitNum
+  // Validate and parse query parameters
+  const query = await getQuery(event)
+  const { limit, offset } = querySchema.parse(query)
 
   // Perform a paginated query
-  const [users, total] = await Promise.all([
+  const [organisations, total] = await Promise.all([
     Organisation.find({})
-      .skip(skipCount)
-      .limit(limitNum)
+      .skip(offset)
+      .limit(limit)
       .exec(),
     Organisation.countDocuments()
   ])
 
   return {
-    page: pageNum,
-    limit: limitNum,
-    total,
-    data: users
+    meta: {
+      total,
+      limit: limit,
+      offset: offset
+    },
+    data: organisations
   }
 })
