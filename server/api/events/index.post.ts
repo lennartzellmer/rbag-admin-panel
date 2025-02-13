@@ -16,7 +16,11 @@ const locationSchema = z.object({
   line1: z.string().min(1),
   line2: z.string().optional(),
   postalCode: z.string().min(1),
-  countryCode: z.string().min(1)
+  countryCode: z.string().min(1),
+  geoLocation: z.object({
+    type: z.literal('Point'),
+    coordinates: z.array(z.number())
+  }).optional()
 })
 
 const websiteContentSchema = z.object({

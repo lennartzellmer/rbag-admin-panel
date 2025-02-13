@@ -1,3 +1,4 @@
+import type { Point } from 'geojson'
 import type { Document, Types } from 'mongoose'
 import { Schema, model } from 'mongoose'
 
@@ -21,6 +22,7 @@ export interface ILocation {
   line2?: string
   postalCode: string
   countryCode: string
+  geoLocation?: Point
 }
 
 export interface IWebsiteContent {

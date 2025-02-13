@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
+    'nuxt-seo-utils'
   ],
   ssr: false,
   devtools: { enabled: true },

@@ -116,7 +116,6 @@ export default defineEventHandler(async (event) => {
         message: 'Invalid event data'
       })
     }
-
     throw createError({
       statusCode: 500,
       message: 'Error updating event'
