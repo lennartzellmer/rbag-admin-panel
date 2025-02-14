@@ -1,11 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, getQuery, createError } from 'h3'
-import { EventModel, type IEventDocument } from '../../models/Event'
-
-const querySchema = z.object({
-  limit: z.string().transform(Number).default('10'),
-  offset: z.string().transform(Number).default('0')
-})
+import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
+import prisma from '~~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   // const { user } = await requireUserSession(event)
@@ -21,18 +17,18 @@ export default defineEventHandler(async (event) => {
   try {
     // Validate and parse query parameters
     const query = await getQuery(event)
-    const { limit, offset } = querySchema.parse(query)
+    const { limit, offset } = paginationQuerySchema.parse(query)
 
     const [events, total] = await Promise.all([
-      EventModel.find()
-        .skip(offset)
-        .limit(limit)
-        .exec(),
-      EventModel.countDocuments()
+      prisma.event.findMany({
+        skip: offset,
+        take: limit
+      }),
+      prisma.event.count()
     ])
 
     return {
-      data: events as IEventDocument[],
+      data: events,
       meta: {
         total,
         limit,

@@ -1,18 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
-import mongoose from 'mongoose'
-import { EventModel } from '../../models/Event'
-
-const eventSchema = z.object({
-  name: z.string().min(1),
-  abbreviation: z.string().min(1),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  targetGroupDescription: z.string().min(1),
-  category: z.string().refine((val) => {
-    return mongoose.Types.ObjectId.isValid(val)
-  }) // MongoDB ObjectId as string
-})
+import { eventSchema } from '~~/validation/eventSchema'
+import prisma from '~~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   // const { user } = await requireUserSession(event)
@@ -27,10 +16,12 @@ export default defineEventHandler(async (event) => {
 
   try {
     const body = await readBody(event)
-    const validatedData = eventSchema.parse(body)
+    const validatedData = eventSchema.strict().parse(body)
 
-    const newEvent = await EventModel.create({
-      ...validatedData
+    const newEvent = await prisma.event.create({
+      data: {
+        ...validatedData
+      }
     })
 
     return {

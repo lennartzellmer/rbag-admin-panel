@@ -13,7 +13,7 @@ const locationSchema = z.object({
   line1: z.string().min(1),
   line2: z.string().optional(),
   postalCode: z.string().min(1),
-  countryCode: z.string().length(3),
+  countryCode: z.string().length(2),
   geoLocation: z.array(z.number())
 })
 
@@ -39,30 +39,30 @@ const performanceSchema = z.object({
 }).optional()
 
 export const eventSchema = z.object({
-  name: z.string().min(1).optional(),
-  abbreviation: z.string().min(1).optional(),
-  startDate: z.coerce.date().optional(),
-  endDate: z.coerce.date().optional(),
-  published: z.boolean().optional(),
-  targetGroupDescription: z.string().min(1).optional(),
-  category: z.string().refine((val) => {
-    return val.match(/^[0-9a-fA-F]{24}$/)
-  }).optional(),
-  location: locationSchema.optional(),
-  workshopOffer: z.array(z.string().refine((val) => {
-    return val.match(/^[0-9a-fA-F]{24}$/)
-  })).optional(),
-  alternativeProgram: z.array(z.string().refine((val) => {
-    return val.match(/^[0-9a-fA-F]{24}$/)
-  })).optional(),
+  name: z.string().min(1),
   status: z.enum([
+    'DRAFT',
     'SAVE_THE_DATE',
     'REGISTRATION_SCHEDULED',
     'REGISTRATION_OPEN',
     'REGISTRATION_CLOSED',
     'COMPLETED',
     'CANCELED'
-  ]).optional(),
+  ]),
+  abbreviation: z.string().min(1),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  targetGroupDescription: z.string().min(1),
+  categoryId: z.string().refine((val) => {
+    return val.match(/^[0-9a-fA-F]{24}$/)
+  }),
+  location: locationSchema,
+  workshopOffer: z.array(z.string().refine((val) => {
+    return val.match(/^[0-9a-fA-F]{24}$/)
+  })).optional(),
+  alternativeProgram: z.array(z.string().refine((val) => {
+    return val.match(/^[0-9a-fA-F]{24}$/)
+  })).optional(),
   performance: performanceSchema.optional(),
   registration: registrationSchema.optional()
 })

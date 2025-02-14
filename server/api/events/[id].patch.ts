@@ -2,7 +2,8 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useValidatedParams, useValidatedBody } from 'h3-zod'
 import mongoose from 'mongoose'
-import { EventModel } from '../../models/Event'
+import { eventSchema } from '~~/validation/eventSchema'
+import prisma from '~~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   // const { user } = await requireUserSession(event)
@@ -20,13 +21,14 @@ export default defineEventHandler(async (event) => {
       id: z.string().refine(val => mongoose.Types.ObjectId.isValid(val))
     })
 
-    const body = await useValidatedBody(event, eventPatchSchema)
+    const body = await useValidatedBody(event, eventSchema.partial())
 
-    const updatedEvent = await EventModel.findByIdAndUpdate(
-      id,
-      body,
-      { new: true }
-    )
+    const updatedEvent = await prisma.event.update({
+      where: {
+        id: id
+      },
+      data: body
+    })
 
     if (!updatedEvent) {
       throw createError({

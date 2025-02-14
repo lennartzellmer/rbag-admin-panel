@@ -1,12 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
-import type { ICategory } from '../../models/Category'
 import prisma from '~~/lib/prisma'
-
-const categorySchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1)
-})
+import { categorySchema } from '~~/validation/categorySchema'
 
 export default defineEventHandler(async (event) => {
   // const { user } = await requireUserSession(event)
@@ -21,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const body = await readBody(event)
-    const validatedData = categorySchema.parse(body) satisfies ICategory
+    const validatedData = categorySchema.parse(body)
 
     const newCategory = await prisma.category.create({
       data: {
