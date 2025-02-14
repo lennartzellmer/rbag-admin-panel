@@ -6,3 +6,9 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
   <Toaster />
   <NuxtPage />
 </template>
+
+<style>
+html {
+  font-family: Geist, sans-serif;
+}
+</style>

@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
     'nuxt-seo-utils',
+    '@nuxt/fonts',
     '@prisma/nuxt'
   ],
   ssr: false,

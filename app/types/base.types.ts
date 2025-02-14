@@ -1,4 +1,5 @@
 export interface CollectionResponseList<T> {
+
   data: T[]
   meta: {
     total: number

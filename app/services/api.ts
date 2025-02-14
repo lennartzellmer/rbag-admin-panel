@@ -1,5 +1,5 @@
-import type { CollectionResponseList, PaginatedRequestParams } from '~/types/base.types'
-import type { IEventDocumentFrontend } from '~~/server/models/Event'
+import type { Event } from '@prisma/client'
+import type { PaginatedRequestParams } from '~/types/base.types'
 
 export async function getEvents({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
   const request = useRequestFetch()('/api/events', {
@@ -8,14 +8,14 @@ export async function getEvents({ paginationParams }: { paginationParams: Pagina
       offset: paginationParams.offset,
       limit: paginationParams.limit
     }
-  }) as Promise<CollectionResponseList<IEventDocumentFrontend>>
+  })
   return request
 }
 
-export function patchEvent(id: string, event: IEventDocumentFrontend) {
+export function patchEvent(id: string, event: Partial<Event>) {
   const request = useRequestFetch()(`/api/events/${id}`, {
     method: 'PATCH',
     body: event
   })
-  return request as Promise<IEventDocumentFrontend>
+  return request
 }
