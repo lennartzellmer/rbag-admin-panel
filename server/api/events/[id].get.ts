@@ -2,7 +2,7 @@ import { z } from 'zod'
 import mongoose from 'mongoose'
 import { useValidatedParams } from 'h3-zod'
 import { defineEventHandler, createError } from 'h3'
-import { EventModel } from '../../models/Event'
+import prisma from '~~/lib/prisma'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -10,7 +10,11 @@ export default defineEventHandler(async (event) => {
       id: z.string().refine(val => mongoose.Types.ObjectId.isValid(val))
     })
 
-    const foundEvent = await EventModel.findById(id)
+    const foundEvent = await prisma.event.findUnique({
+      where: {
+        id
+      }
+    })
 
     if (!foundEvent) {
       throw createError({

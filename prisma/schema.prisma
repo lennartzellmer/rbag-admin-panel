@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("NUXT_MONGODB_URI")
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  events      Event[]
+}
+
+type Location {
+  name        String
+  line1       String
+  line2       String?
+  postalCode  String
+  countryCode String
+  geoLocation Float[]
+}
+
+type Performance {
+  startDate         DateTime
+  endDate           DateTime
+  description       String
+  location          Location
+  posterDownloadUrl String?
+}
+
+type Registration {
+  fromPDFDownloadLink String
+  startDate           DateTime
+  endDate             DateTime
+  confirmationText    String
+  checkinOpen         Boolean
+  externalLink        String
+  lateRegistration    Boolean
+  singleRoomSurcharge Float
+  participationFees   ParticipationFees
+}
+
+type ParticipationFees {
+  childrenAndYouth      Float
+  youngAdults           Float
+  youngAdultsMultiplier Float
+  adults                Float
+  adultsMultiplier      Float
+}
+
+enum EventStatus {
+  DRAFT
+  SAVE_THE_DATE
+  REGISTRATION_SCHEDULED
+  REGISTRATION_OPEN
+  REGISTRATION_CLOSED
+  COMPLETED
+  CANCELED
+}
+
+model WorkshopOffer {
+  id                             String      @id @default(auto()) @map("_id") @db.ObjectId
+  eventId                        String      @db.ObjectId
+  name                           String
+  description                    String
+  facilitatorId                  String      @db.ObjectId
+  facilitator                    Facilitator @relation(fields: [facilitatorId], references: [id])
+  eventAlternativeWorkshopOffers Event       @relation("WorkshopOffers", fields: [eventId], references: [id])
+  eventWorkshopOffers            Event       @relation("AlternativeWorkshopOffers", fields: [eventId], references: [id])
+}
+
+model Facilitator {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String?
+  description    String
+  workshopOffers WorkshopOffer[]
+}
+
+model Event {
+  id                        String          @id @default(auto()) @map("_id") @db.ObjectId
+  name                      String
+  status                    EventStatus
+  abbreviation              String
+  startDate                 DateTime
+  endDate                   DateTime
+  targetGroupDescription    String
+  category                  Category        @relation(fields: [categoryId], references: [id])
+  categoryId                String          @db.ObjectId
+  location                  Location?
+  performance               Performance?
+  registration              Registration?
+  workshopOffers            WorkshopOffer[] @relation("WorkshopOffers")
+  alternativeWorkshopOffers WorkshopOffer[] @relation("AlternativeWorkshopOffers")
+}

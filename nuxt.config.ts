@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
-    'nuxt-seo-utils'
+    'nuxt-seo-utils',
+    '@prisma/nuxt'
   ],
   ssr: false,
   devtools: { enabled: true },

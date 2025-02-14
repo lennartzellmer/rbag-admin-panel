@@ -3,80 +3,15 @@ import { defineEventHandler, readBody, createError } from 'h3'
 import mongoose from 'mongoose'
 import { EventModel } from '../../models/Event'
 
-const participationFeesSchema = z.object({
-  childrenAndYouth: z.number(),
-  youngAdults: z.number(),
-  youngAdultsMultiplier: z.number(),
-  adults: z.number(),
-  adultsMultiplier: z.number()
-})
-
-const locationSchema = z.object({
-  name: z.string().min(1),
-  line1: z.string().min(1),
-  line2: z.string().optional(),
-  postalCode: z.string().min(1),
-  countryCode: z.string().min(1),
-  geoLocation: z.object({
-    type: z.literal('Point'),
-    coordinates: z.array(z.number())
-  }).optional()
-})
-
-const websiteContentSchema = z.object({
-  image: z.string().min(1),
-  description: z.string().min(1)
-}).optional()
-
-const registrationSchema = z.object({
-  fromPDFDownloadLink: z.string().min(1),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime(),
-  confirmationText: z.string().min(1),
-  checkinOpen: z.boolean(),
-  externalLink: z.string().min(1),
-  lateRegistration: z.boolean(),
-  singleRoomSurcharge: z.number(),
-  participationFees: participationFeesSchema
-}).optional()
-
-const performanceSchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  description: z.string().min(1),
-  location: locationSchema,
-  posterDownloadUrl: z.string().min(1),
-  showOnEventPage: z.boolean()
-}).optional()
-
 const eventSchema = z.object({
   name: z.string().min(1),
   abbreviation: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  published: z.boolean(),
   targetGroupDescription: z.string().min(1),
   category: z.string().refine((val) => {
     return mongoose.Types.ObjectId.isValid(val)
-  }), // MongoDB ObjectId as string
-  location: locationSchema,
-  workshopOffer: z.array(z.string().refine((val) => {
-    return mongoose.Types.ObjectId.isValid(val)
-  })).optional(), // MongoDB ObjectId as string
-  alternativeProgram: z.array(z.string().refine((val) => {
-    return mongoose.Types.ObjectId.isValid(val)
-  })).optional(), // MongoDB ObjectId as string
-  status: z.enum([
-    'SAVE_THE_DATE',
-    'REGISTRATION_SCHEDULED',
-    'REGISTRATION_OPEN',
-    'REGISTRATION_CLOSED',
-    'COMPLETED',
-    'CANCELED'
-  ]),
-  performance: performanceSchema,
-  websiteContent: websiteContentSchema,
-  registration: registrationSchema
+  }) // MongoDB ObjectId as string
 })
 
 export default defineEventHandler(async (event) => {

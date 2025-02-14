@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
 import type { ICategory } from '../../models/Category'
-import { CategoryModel } from '../../models/Category'
+import prisma from '~~/lib/prisma'
 
 const categorySchema = z.object({
   name: z.string().min(1),
@@ -23,8 +23,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const validatedData = categorySchema.parse(body) satisfies ICategory
 
-    const newCategory = await CategoryModel.create({
-      ...validatedData
+    const newCategory = await prisma.category.create({
+      data: {
+        ...validatedData
+      }
     })
 
     return {
@@ -32,6 +34,7 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
+    console.error(error)
     if (error instanceof z.ZodError) {
       console.error(error)
       throw createError({
