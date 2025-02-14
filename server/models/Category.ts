@@ -16,4 +16,4 @@ const CategorySchema = new Schema<ICategoryDocument>({
   versionKey: false
 })
 
-export const CategoryModel = model<ICategoryDocument>('Category', CategorySchema)
+export const CategoryModel = model<ICategory>('Category', CategorySchema)

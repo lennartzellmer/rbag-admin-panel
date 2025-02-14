@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { parseAbsoluteToLocal } from '@internationalized/date'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,19 +14,12 @@ defineProps<{
 <template>
   <Card class="max-w-md mx-auto shadow-lg">
     <CardHeader>
-      <CardTitle class="text-2xl font-bold">
+      <CardTitle class="text-xl font-bold text-slate-800">
         {{ event.name }}
       </CardTitle>
       <CardDescription class="text-sm text-muted-foreground">
         <!-- Abbreviation with tooltip -->
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <span class="cursor-help underline">{{ event.abbreviation }}</span>
-          </TooltipTrigger>
-          <TooltipContent side="top">
-            Event Abbreviation
-          </TooltipContent>
-        </Tooltip>
+        <span class="p-1 bg-muted rounded-md font-mono text-xs">{{ event.abbreviation }}</span>
       </CardDescription>
     </CardHeader>
 
@@ -42,10 +36,10 @@ defineProps<{
         </Tooltip>
       </p>
       <p>
-        <strong>Start Date:</strong> {{ event.startDate }}
+        <strong>Start Date:</strong> {{ parseAbsoluteToLocal(event.startDate) }}
       </p>
       <p>
-        <strong>End Date:</strong> {{ event.endDate }}
+        <strong>End Date:</strong> {{ parseAbsoluteToLocal(event.endDate) }}
       </p>
       <p>
         <strong>Target Group:</strong> {{ event.targetGroupDescription }}
@@ -71,7 +65,7 @@ defineProps<{
     <CardFooter>
       <Button
         :as="NuxtLink"
-        :to="`/events/${event._id}`"
+        :to="`/${event._id}`"
       >
         Details
       </Button>

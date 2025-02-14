@@ -20,6 +20,30 @@ yarn install
 bun install
 ```
 
+## Docker
+
+```bash
+docker-compose -f dev_docker/docker-compose.yml up -d
+```
+Set up mongo replica set
+
+```bash
+docker exec -it mongodb mongosh -u root -p root --authenticationDatabase admin --eval "rs.initiate({
+ _id: \"rs0\",
+ members: [
+   {_id: 0, host: \"localhost:27017\"}
+ ]
+})"
+```
+
+use this connection string to connect to the mongo replica set
+
+```bash
+mongodb://root:root@localhost:27017/admin?authSource=admin&replicaSet=rs0&readPreference=primary
+```
+
+
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`:

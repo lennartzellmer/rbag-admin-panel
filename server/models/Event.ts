@@ -1,6 +1,6 @@
 import type { Point } from 'geojson'
-import type { Document, Types } from 'mongoose'
-import { Schema, model } from 'mongoose'
+import type { Types, Document } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 /**
  * TypeScript interfaces for each “class” in the diagram.
@@ -76,8 +76,6 @@ export interface IEvent {
   registration?: IRegistration
 }
 
-export interface IEventDocument extends Document, IEvent {}
-
 /**
  * Mongoose sub-schemas for embedded documents.
  */
@@ -131,7 +129,7 @@ const PerformanceSchema = new Schema<IPerformance>({
  * The main Event schema.
  */
 
-const EventSchema = new Schema({
+const EventSchema = new mongoose.Schema<IEvent>({
   name: { type: String, required: true },
   abbreviation: { type: String, required: true },
   startDate: { type: Date, required: true },
@@ -180,6 +178,28 @@ const EventSchema = new Schema({
 
 /**
  * Export the Event model.
- */
-
-export const EventModel = model<IEventDocument>('Event', EventSchema)
+*/
+export interface IEventDocument extends Document, IEvent {}
+export interface IEventDocumentFrontend extends Document, Omit<IEvent, 'startDate' | 'endDate' | 'performance' | 'registration'> {
+  startDate: string
+  endDate: string
+  registration: {
+    startDate: string
+    endDate: string
+    confirmationText: string
+    checkinOpen: boolean
+    externalLink: string
+    lateRegistration: boolean
+    singleRoomSurcharge: number
+    participationFees: IParticipationFees
+  }
+  performance: {
+    startDate: string
+    endDate: string
+    description: string
+    location: ILocation
+    posterDownloadUrl: string
+    showOnEventPage: boolean
+  }
+}
+export const EventModel = mongoose.model<IEvent>('Event', EventSchema)

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { defineEventHandler, getQuery, createError } from 'h3'
-import { EventModel } from '../../models/Event'
+import { EventModel, type IEventDocument } from '../../models/Event'
 
 const querySchema = z.object({
   limit: z.string().transform(Number).default('10'),
@@ -23,18 +23,16 @@ export default defineEventHandler(async (event) => {
     const query = await getQuery(event)
     const { limit, offset } = querySchema.parse(query)
 
-    // Get total count and fetch events with pagination in parallel
-    const [total, events] = await Promise.all([
-      EventModel.countDocuments(),
+    const [events, total] = await Promise.all([
       EventModel.find()
         .skip(offset)
         .limit(limit)
-        .lean()
-        .exec()
+        .exec(),
+      EventModel.countDocuments()
     ])
 
     return {
-      data: events,
+      data: events as IEventDocument[],
       meta: {
         total,
         limit,

@@ -14,6 +14,7 @@ const paginationMachineRef = useSelector(actorRef, state => state.context.pagina
       v-for="event in snapshot.context.data"
       :key="event._id"
     >
+      <pre>{{ event }}</pre>
       <RbagEventCard :event="event" />
     </template>
     <PaginationActor

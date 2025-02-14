@@ -1,16 +1,22 @@
 services:
   mongodb:
-    image: mongodb/mongodb-community-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: mongodb
+    hostname: mongodb
     restart: always
     environment:
-      - MONGO_INITDB_ROOT_PASSWORD=pass
-      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=root
+    command: mongod --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all --port 27017
     ports:
       - "27017:27017"
     volumes:
       # Mount a named volume to persist database files
       - mongo-data:/data/db
+      - mongo-config:/data/configdb
 
 volumes:
   mongo-data:
+  mongo-config:
