@@ -52,11 +52,13 @@ export const paginationMachine = setup({
         currentPage: currentPageNumber
       }
     }),
-    updateURLParams: ({ context }) => {
+    updateURLParams: async ({ context }) => {
       const url = new URL(window.location.href)
       url.searchParams.set('offset', context.offset!.toString())
       url.searchParams.set('limit', context.limit!.toString())
-      window.history.pushState({}, '', url.toString())
+      const router = useRouter()
+      await router.push(url)
+      history.replaceState({ ...history.state }, '', url.toString())
     }
   },
   guards: {
