@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useValidatedParams, useValidatedBody } from 'h3-zod'
-import mongoose from 'mongoose'
 import { eventSchema } from '~~/validation/eventSchema'
 import prisma from '~~/lib/prisma'
 
@@ -18,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { id } = await useValidatedParams(event, {
-      id: z.string().refine(val => mongoose.Types.ObjectId.isValid(val))
+      id: z.string()
     })
 
     const body = await useValidatedBody(event, eventSchema.partial())
