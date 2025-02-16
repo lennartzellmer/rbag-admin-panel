@@ -2,11 +2,11 @@
 const route = useRoute()
 const id = computed(() => route.params.id)
 
-const { data } = await useFetch(`/api/events/${id.value}`)
+const { data } = await useFetch(`/api/admin/events/${id.value}`)
 </script>
 
 <template>
   <div>
-    <pre>{{ data }}</pre>
+    <pre>{{ data?.registration }}</pre>
   </div>
 </template>

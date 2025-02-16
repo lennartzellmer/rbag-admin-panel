@@ -16,6 +16,7 @@
   },
   // Controls whether the editor shows CodeLens.
   "editor.codeLens": true,
+  "emmet.triggerExpansionOnTab": true,
   // Silent the stylistic rules in you IDE, but still auto fix them
   "eslint.rules.customizations": [
     {
