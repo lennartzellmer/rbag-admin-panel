@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { cn } from '@/lib/utils'
 import { useId } from 'radix-vue'
 import { type HTMLAttributes, provide } from 'vue'
 import { FORM_ITEM_INJECTION_KEY } from './injectionKeys'
+import { cn } from '@/lib/utils'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -13,7 +13,7 @@ provide(FORM_ITEM_INJECTION_KEY, id)
 </script>
 
 <template>
-  <div :class="cn('space-y-2', props.class)">
+  <div :class="cn('space-y-1', props.class)">
     <slot />
   </div>
 </template>

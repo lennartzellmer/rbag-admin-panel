@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="relative flex grow flex-col px-4 sm:px-6 md:px-10">
+  <div class="relative flex grow flex-col">
     <table
       aria-label="Veranstaltungen"
       class="border-separate border-spacing-y-2 self-stretch "

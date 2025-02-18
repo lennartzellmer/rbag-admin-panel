@@ -99,11 +99,5 @@ const stepsWithDoneState = computed(() => {
         />
       </div>
     </div>
-    <Badge
-      v-if="eventStatus === EventStatus.CANCELED"
-      variant="red"
-    >
-      Abgesagt
-    </Badge>
   </div>
 </template>

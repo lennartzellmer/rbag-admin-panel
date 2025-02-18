@@ -18,7 +18,7 @@ export const badgeVariants = cva(
         blue: 'bg-blue-100 border-blue-500 text-blue-800',
         purple: 'bg-purple-100 border-purple-500 text-purple-800',
         pink: 'bg-pink-100 border-pink-500 text-pink-800',
-        gray: 'bg-gray-100 border-gray-500 text-gray-800'
+        gray: 'bg-white border-gray-300 text-gray-500'
       }
     },
     defaultVariants: {

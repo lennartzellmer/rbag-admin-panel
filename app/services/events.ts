@@ -1,5 +1,6 @@
 import type { Event } from '@prisma/client'
 import type { PaginatedRequestParams } from '~/types/base.types'
+import { eventSchema } from '~~/validation/eventSchema'
 
 export async function getEvents({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
   const request = useRequestFetch()('/api/admin/events', {
@@ -17,6 +18,14 @@ export async function getEvent(id: string) {
     method: 'GET'
   })
   return request
+}
+
+export async function getEventParsed(id: string) {
+  const request = await useRequestFetch()(`/api/admin/events/${id}`, {
+    method: 'GET'
+  })
+  const validatedData = eventSchema.strict().parse(request)
+  return validatedData
 }
 
 export async function createEvent(event: Partial<Event>) {

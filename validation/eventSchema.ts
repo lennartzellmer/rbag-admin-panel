@@ -11,7 +11,7 @@ const participationFeesSchema = z.object({
 const locationSchema = z.object({
   name: z.string().min(1),
   line1: z.string().min(1),
-  line2: z.string().optional(),
+  line2: z.string().nullable(),
   postalCode: z.string().min(1),
   countryCode: z.string().length(2),
   geoLocation: z.array(z.number())
@@ -19,15 +19,15 @@ const locationSchema = z.object({
 
 const registrationSchema = z.object({
   fromPDFDownloadLink: z.string().min(1),
-  startDate: z.string().datetime(),
-  endDate: z.string().datetime(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
   confirmationText: z.string().min(1),
   checkinOpen: z.boolean(),
   externalLink: z.string().min(1),
   lateRegistration: z.boolean(),
   singleRoomSurcharge: z.number(),
   participationFees: participationFeesSchema
-}).optional()
+}).nullable()
 
 const performanceSchema = z.object({
   startDate: z.coerce.date(),
@@ -36,10 +36,14 @@ const performanceSchema = z.object({
   location: locationSchema,
   posterDownloadUrl: z.string().min(1),
   showOnEventPage: z.boolean()
-}).optional()
+}).nullable()
 
 export const eventSchema = z.object({
-  name: z.string().min(1),
+  id: z.string().refine((val) => {
+    return val.match(/^[0-9a-fA-F]{24}$/)
+  }).nullable(),
+  name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
+  abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
   status: z.enum([
     'DRAFT',
     'SAVE_THE_DATE',
@@ -49,7 +53,6 @@ export const eventSchema = z.object({
     'COMPLETED',
     'CANCELED'
   ]),
-  abbreviation: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   targetGroupDescription: z.string().min(1),
@@ -63,6 +66,6 @@ export const eventSchema = z.object({
   alternativeProgram: z.array(z.string().refine((val) => {
     return val.match(/^[0-9a-fA-F]{24}$/)
   })).optional(),
-  performance: performanceSchema.optional(),
-  registration: registrationSchema.optional()
+  performance: performanceSchema.nullable(),
+  registration: registrationSchema.nullable()
 })

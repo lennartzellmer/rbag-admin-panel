@@ -1,12 +1,15 @@
 <script setup lang="ts">
-const route = useRoute()
-const id = computed(() => route.params.id)
+import { getEventParsed } from '~/services/events'
 
-const { data } = await useFetch(`/api/admin/events/${id.value}`)
+const route = useRoute()
+const { data } = await useAsyncData('hdjakshdkjas', () => getEventParsed(route.params.id!.toString()))
 </script>
 
 <template>
-  <div>
-    <pre>{{ data?.registration }}</pre>
+  <div class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">
+    <RbagEventForm
+      v-if="data"
+      :initial-event-data="data"
+    />
   </div>
 </template>

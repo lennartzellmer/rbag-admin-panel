@@ -9,22 +9,24 @@ export function useFormField() {
   if (!fieldContext)
     throw new Error('useFormField should be used within <FormField>')
 
-  const { name } = fieldContext
+  const { name, errors, handleChange } = fieldContext
   const id = fieldItemContext
 
   const fieldState = {
     valid: useIsFieldValid(name),
     isDirty: useIsFieldDirty(name),
     isTouched: useIsFieldTouched(name),
-    error: useFieldError(name),
+    error: useFieldError(name)
   }
 
   return {
     id,
     name,
+    errors,
+    handleChange,
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
-    ...fieldState,
+    ...fieldState
   }
 }

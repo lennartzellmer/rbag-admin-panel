@@ -22,6 +22,8 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    console.log(foundEvent.endDate.toISOString())
+
     return foundEvent
   }
   catch (error) {

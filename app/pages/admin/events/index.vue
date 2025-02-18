@@ -9,7 +9,7 @@ const paginationMachineRef = useSelector(actorRef, state => state.context.pagina
 </script>
 
 <template>
-  <main class="flex flex-col gap-4 mx-auto py-10">
+  <main class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">
     <RbagEventTable :events="snapshot.context.data" />
     <PaginationActor
       v-if="paginationMachineRef"
