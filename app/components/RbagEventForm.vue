@@ -9,9 +9,12 @@ import { Label } from '~/components/ui/label'
 import { DateRangePicker } from '~/components/ui/date-range-picker'
 import { eventSchema } from '~~/validation/eventSchema'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import type { categorySchema } from '~~/validation/categorySchema'
 
 const props = defineProps<{
   initialEventData: z.infer<typeof eventSchema>
+  eventCategories: z.infer<typeof categorySchema>[]
 }>()
 
 const formSchema = toTypedSchema(eventSchema)
@@ -68,7 +71,7 @@ const statusOptions = Object.values(EventStatus).map((status) => {
 
 <template>
   <form
-    class="flex flex-col gap-4 items-start"
+    class="flex flex-col gap-4"
     @submit="onSubmit"
   >
     <FormField
@@ -116,7 +119,7 @@ const statusOptions = Object.values(EventStatus).map((status) => {
           <Select v-bind="componentField">
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder="Select a verified email to display" />
+                <SelectValue placeholder="Status wählen" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -150,7 +153,50 @@ const statusOptions = Object.values(EventStatus).map((status) => {
         }"
       />
     </div>
-
+    <FormField
+      v-slot="{ componentField }"
+      name="targetGroupDescription"
+      :validate-on-model-update="false"
+    >
+      <FormItem>
+        <FormLabel>Zielgruppe</FormLabel>
+        <FormControl dynamic-vaidation>
+          <Textarea
+            v-bind="componentField"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+    <FormField
+      v-slot="{ componentField }"
+      name="categoryId"
+    >
+      <FormItem>
+        <FormLabel>Kategorie</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger>
+                <SelectValue placeholder="Kategorie wählen" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem
+                    v-for="eventCategory in eventCategories"
+                    :key="eventCategory.id!"
+                    :value="eventCategory.id!"
+                  >
+                    {{ eventCategory.name }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </FormControl>
+          </Select>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
     <Button type="submit">
       Submit
     </Button>

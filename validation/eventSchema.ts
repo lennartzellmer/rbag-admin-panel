@@ -41,7 +41,7 @@ const performanceSchema = z.object({
 export const eventSchema = z.object({
   id: z.string().refine((val) => {
     return val.match(/^[0-9a-fA-F]{24}$/)
-  }).nullable(),
+  }).optional(),
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
   status: z.enum([
