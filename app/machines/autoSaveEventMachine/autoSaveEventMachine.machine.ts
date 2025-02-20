@@ -28,6 +28,19 @@ export const autoSaveEventMachine = setup({
       toast({
         ...params.toast
       })
+    },
+    showErrorToast: ({ self }) => {
+      toast({
+        title: 'Fehler beim Speichern',
+        action: h(ToastAction, {
+          altText: 'Try again',
+          onClick: () => {
+            self.send({ type: 'user.save' })
+          }
+        }, {
+          default: () => 'Nochmal versuchen'
+        })
+      })
     }
   },
   actors: {
@@ -58,20 +71,7 @@ export const autoSaveEventMachine = setup({
         onError: {
           target: 'idle',
           actions: [{
-            type: 'showToast',
-            params: () => ({ toast:
-              {
-                title: 'Error saving event',
-                action: h(ToastAction, {
-                  altText: 'Try again',
-                  onClick: () => {
-                    send({ type: 'user.save' })
-                  }
-                }, {
-                  default: () => 'Try again'
-                })
-              }
-            })
+            type: 'showErrorToast'
           }]
         },
         onDone: {
