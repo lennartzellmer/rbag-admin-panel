@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import type { SerializeObject } from 'nitropack'
-import type { Event } from '@prisma/client'
+import type { EventSchema } from '~~/validation/eventSchema'
 
 defineProps<{
-  events: SerializeObject<Event>[]
+  events: EventSchema[]
 }>()
 </script>
 

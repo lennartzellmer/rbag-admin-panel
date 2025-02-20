@@ -69,3 +69,5 @@ export const eventSchema = z.object({
   performance: performanceSchema.nullable(),
   registration: registrationSchema.nullable()
 })
+
+export type EventSchema = z.infer<typeof eventSchema>

@@ -18,7 +18,7 @@ const forwarded = useForwardPropsEmits(props, emits)
     v-bind="forwarded"
   >
     <DateRangePickerField
-      class="flex select-none bg-white items-center rounded-lg text-center text-green10 border border-transparent data-[invalid]:border-red-500"
+      class="flex select-none bg-white items-center rounded-lg text-center border border-transparent data-[invalid]:border-red-500"
     >
       <DateRangePickerTrigger class="flex items-center gap-4 justify-between min-w-52 h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
         <span
@@ -100,7 +100,41 @@ const forwarded = useForwardPropsEmits(props, emits)
                   <DateRangePickerCellTrigger
                     :day="weekDate"
                     :month="month.value"
-                    class="relative flex items-center justify-center rounded-full whitespace-nowrap text-sm font-normal text-black w-8 h-8 outline-none focus:shadow-[0_0_0_2px] focus:shadow-black data-[outside-view]:text-black/30 data-[selected]:bg-green-600 data-[selected]:text-white hover:bg-green5 data-[highlighted]:bg-green5 data-[unavailable]:pointer-events-none data-[unavailable]:text-black/30 data-[unavailable]:line-through before:absolute before:top-[5px] before:hidden before:rounded-full before:w-1 before:h-1 before:bg-white data-[today]:before:block data-[today]:before:bg-green9 "
+                    class="`
+                      relative
+                      flex
+                      items-center
+                      justify-center
+                      rounded-md
+                      whitespace-nowrap
+                      text-sm
+                      font-normal
+                      text-black
+                      w-8
+                      h-8
+                      outline-none
+                      focus:shadow-[0_0_0_1px]
+                      focus:shadow-black
+                      data-[outside-view]:text-black/30
+                      data-[selection-end]:bg-gray-700
+                      data-[selection-start]:bg-gray-700
+                      data-[selected]:bg-gray-500
+                      data-[selected]:text-white
+                      hover:bg-gray-200
+                      data-[highlighted]:bg-gray-300
+                      data-[unavailable]:pointer-events-none
+                      data-[unavailable]:text-black/30
+                      data-[unavailable]:line-through
+                      before:absolute
+                      before:top-[4px]
+                      before:hidden
+                      before:rounded-full
+                      before:w-1
+                      before:h-1
+                      before:bg-white
+                      data-[today]:before:block
+                      data-[today]:before:bg-blue-500
+                    `"
                   />
                 </DateRangePickerCell>
               </DateRangePickerGridRow>

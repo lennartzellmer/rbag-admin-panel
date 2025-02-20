@@ -12,6 +12,8 @@ export default defineEventHandler(async (event) => {
 
     const body = await useValidatedBody(event, eventSchema.partial())
 
+    delete body.id
+
     const updatedEvent = await prisma.event.update({
       where: {
         id: id
@@ -29,6 +31,7 @@ export default defineEventHandler(async (event) => {
     return updatedEvent
   }
   catch (error) {
+    console.error(error)
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,

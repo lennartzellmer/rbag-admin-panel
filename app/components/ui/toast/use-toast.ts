@@ -1,6 +1,6 @@
 import type { Component, VNode } from 'vue'
-import type { ToastProps } from '.'
 import { computed, ref } from 'vue'
+import type { ToastProps } from '.'
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
@@ -10,7 +10,7 @@ export type StringOrVNode =
   | VNode
   | (() => VNode)
 
-type ToasterToast = ToastProps & {
+export type ToasterToast = ToastProps & {
   id: string
   title?: string
   description?: StringOrVNode
@@ -21,7 +21,7 @@ const actionTypes = {
   ADD_TOAST: 'ADD_TOAST',
   UPDATE_TOAST: 'UPDATE_TOAST',
   DISMISS_TOAST: 'DISMISS_TOAST',
-  REMOVE_TOAST: 'REMOVE_TOAST',
+  REMOVE_TOAST: 'REMOVE_TOAST'
 } as const
 
 let count = 0
@@ -65,7 +65,7 @@ function addToRemoveQueue(toastId: string) {
     toastTimeouts.delete(toastId)
     dispatch({
       type: actionTypes.REMOVE_TOAST,
-      toastId,
+      toastId
     })
   }, TOAST_REMOVE_DELAY)
 
@@ -73,7 +73,7 @@ function addToRemoveQueue(toastId: string) {
 }
 
 const state = ref<State>({
-  toasts: [],
+  toasts: []
 })
 
 function dispatch(action: Action) {
@@ -84,7 +84,7 @@ function dispatch(action: Action) {
 
     case actionTypes.UPDATE_TOAST:
       state.value.toasts = state.value.toasts.map(t =>
-        t.id === action.toast.id ? { ...t, ...action.toast } : t,
+        t.id === action.toast.id ? { ...t, ...action.toast } : t
       )
       break
 
@@ -104,9 +104,9 @@ function dispatch(action: Action) {
         t.id === toastId || toastId === undefined
           ? {
               ...t,
-              open: false,
+              open: false
             }
-          : t,
+          : t
       )
       break
     }
@@ -125,11 +125,11 @@ function useToast() {
   return {
     toasts: computed(() => state.value.toasts),
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: actionTypes.DISMISS_TOAST, toastId }),
+    dismiss: (toastId?: string) => dispatch({ type: actionTypes.DISMISS_TOAST, toastId })
   }
 }
 
-type Toast = Omit<ToasterToast, 'id'>
+export type Toast = Omit<ToasterToast, 'id'>
 
 function toast(props: Toast) {
   const id = genId()
@@ -137,7 +137,7 @@ function toast(props: Toast) {
   const update = (props: ToasterToast) =>
     dispatch({
       type: actionTypes.UPDATE_TOAST,
-      toast: { ...props, id },
+      toast: { ...props, id }
     })
 
   const dismiss = () => dispatch({ type: actionTypes.DISMISS_TOAST, toastId: id })
@@ -151,14 +151,14 @@ function toast(props: Toast) {
       onOpenChange: (open: boolean) => {
         if (!open)
           dismiss()
-      },
-    },
+      }
+    }
   })
 
   return {
     id,
     dismiss,
-    update,
+    update
   }
 }
 

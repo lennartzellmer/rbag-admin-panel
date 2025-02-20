@@ -4,6 +4,7 @@ import { useForm } from 'vee-validate'
 import { parseDate } from '@internationalized/date'
 import type z from 'zod'
 import { EventStatus } from '@prisma/client'
+import { useMachine } from '@xstate/vue'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { DateRangePicker } from '~/components/ui/date-range-picker'
@@ -11,6 +12,7 @@ import { eventSchema } from '~~/validation/eventSchema'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import type { categorySchema } from '~~/validation/categorySchema'
+import { autoSaveEventMachine } from '~/machines/autoSaveEventMachine/autoSaveEventMachine.machine'
 
 const props = defineProps<{
   initialEventData: z.infer<typeof eventSchema>
@@ -24,7 +26,14 @@ const { handleSubmit, values, setFieldValue } = useForm({
   initialValues: props.initialEventData
 })
 
+watch(values, () => {
+  onSubmit()
+}, { deep: true })
+
+const { send } = useMachine(autoSaveEventMachine)
+
 const onSubmit = handleSubmit((values) => {
+  send({ type: 'user.edit', payload: { event: values } })
   console.log(values)
 })
 
@@ -72,7 +81,6 @@ const statusOptions = Object.values(EventStatus).map((status) => {
 <template>
   <form
     class="flex flex-col gap-4"
-    @submit="onSubmit"
   >
     <FormField
       v-slot="{ componentField }"
@@ -197,8 +205,5 @@ const statusOptions = Object.values(EventStatus).map((status) => {
         <FormMessage />
       </FormItem>
     </FormField>
-    <Button type="submit">
-      Submit
-    </Button>
   </form>
 </template>

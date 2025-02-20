@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { Event } from '@prisma/client'
-import type { SerializeObject } from 'nitropack'
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
+import type { EventSchema } from '~~/validation/eventSchema'
 
 const props = defineProps<{
-  event: SerializeObject<Event>
+  event: EventSchema
 }>()
 
 const badgeDetails = computed<{

@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import type { SerializeObject } from 'nitropack'
-import type { Event } from '@prisma/client'
 import { parseAbsoluteToLocal, DateFormatter } from '@internationalized/date'
 import { BookOpenCheck, CalendarFold, MapPinned } from 'lucide-vue-next'
+import type { EventSchema } from '~~/validation/eventSchema'
 
 defineProps<{
-  event: SerializeObject<Event>
+  event: EventSchema
 }>()
 
 const router = useRouter()
@@ -35,14 +34,14 @@ const router = useRouter()
       <div class=" flex flex-col gap-2 items-start">
         <Badge variant="gray">
           <CalendarFold class="size-4 mr-2" />
-          {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.startDate).toDate()) }}
+          {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.startDate) }}
           →
-          {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.endDate).toDate()) }}
+          {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.endDate) }}
         </Badge>
         <Badge variant="gray">
           <BookOpenCheck class="size-4 mr-2" />
           <span v-if="event.registration">
-            {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.registration.startDate).toDate()) }} → {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.registration.endDate).toDate()) }}
+            {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.startDate) }} → {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.registration.endDate).toDate()) }}
           </span>
           <span v-else>
             Registrierung Ausstehend
