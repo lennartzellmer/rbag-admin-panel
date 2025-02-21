@@ -5,9 +5,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-}
+// generator zod {
+//   provider = "zod-prisma-types"
+// }
 
 datasource db {
   provider = "mongodb"
@@ -41,12 +41,11 @@ type Performance {
 }
 
 type Registration {
-  fromPDFDownloadLink String
+  fromPDFDownloadLink String?
   startDate           DateTime
   endDate             DateTime
   confirmationText    String
-  checkinOpen         Boolean
-  externalLink        String
+  externalLink        String?
   lateRegistration    Boolean
   singleRoomSurcharge Float
   participationFees   ParticipationFees

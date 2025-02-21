@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const participationFeesSchema = z.object({
+export const participationFeesSchema = z.object({
   childrenAndYouth: z.number(),
   youngAdults: z.number(),
   youngAdultsMultiplier: z.number(),
@@ -8,7 +8,7 @@ const participationFeesSchema = z.object({
   adultsMultiplier: z.number()
 })
 
-const locationSchema = z.object({
+export const locationSchema = z.object({
   name: z.string().min(1),
   line1: z.string().min(1),
   line2: z.string().nullable(),
@@ -17,26 +17,25 @@ const locationSchema = z.object({
   geoLocation: z.array(z.number())
 })
 
-const registrationSchema = z.object({
-  fromPDFDownloadLink: z.string().min(1),
+export const registrationSchema = z.object({
+  fromPDFDownloadLink: z.string().min(1).optional(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  confirmationText: z.string().min(1),
-  checkinOpen: z.boolean(),
-  externalLink: z.string().min(1),
+  confirmationText: z.string().url().optional(),
+  externalLink: z.string().min(1).optional(),
   lateRegistration: z.boolean(),
   singleRoomSurcharge: z.number(),
   participationFees: participationFeesSchema
-}).nullable()
+})
 
-const performanceSchema = z.object({
+export const performanceSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   description: z.string().min(1),
   location: locationSchema,
   posterDownloadUrl: z.string().min(1),
   showOnEventPage: z.boolean()
-}).nullable()
+})
 
 export const eventSchema = z.object({
   id: z.string().refine((val) => {
@@ -71,3 +70,4 @@ export const eventSchema = z.object({
 })
 
 export type EventSchema = z.infer<typeof eventSchema>
+export type RegistrationSchema = z.infer<typeof registrationSchema>

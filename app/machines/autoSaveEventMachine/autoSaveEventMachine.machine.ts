@@ -81,7 +81,8 @@ export const autoSaveEventMachine = setup({
               type: 'showToast',
               params: {
                 toast: {
-                  title: 'Veranstaltung gespeichert'
+                  title: 'Veranstaltung gespeichert',
+                  description: 'Die Veranstaltung wurde automatisch gespeichert'
                 }
               }
             },

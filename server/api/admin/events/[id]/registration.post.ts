@@ -1,8 +1,8 @@
 import { z } from 'zod'
-import { defineEventHandler, createError } from 'h3'
-import { useValidatedParams, useValidatedBody } from 'h3-zod'
+import { defineEventHandler, readBody, createError } from 'h3'
+import { useValidatedParams } from 'h3-zod'
+import { registrationSchema } from '~~/validation/eventSchema'
 import prisma from '~~/lib/prisma'
-import { eventSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -11,38 +11,34 @@ export default defineEventHandler(async (event) => {
     })
 
     const body = await readBody(event)
-    const validatedData = await useValidatedBody(body, eventSchema.omit({ id: true }).partial())
+    const validatedData = registrationSchema.strict().parse(body)
 
     const updatedEvent = await prisma.event.update({
       where: {
         id: id
       },
-      data: validatedData,
-      include: {
-        category: true
+      data: {
+        registration: validatedData
       }
     })
 
-    if (!updatedEvent) {
-      throw createError({
-        statusCode: 404,
-        message: 'Event not found'
-      })
+    return {
+      data: {
+        registration: updatedEvent
+      }
     }
-
-    return updatedEvent
   }
   catch (error) {
-    console.error(error)
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,
         message: 'Invalid event data'
       })
     }
+
     throw createError({
       statusCode: 500,
-      message: 'Error updating event'
+      message: 'Error creating event'
     })
   }
 })
