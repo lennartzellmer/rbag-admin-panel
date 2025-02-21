@@ -8,11 +8,21 @@ const { data: categories } = await useAsyncData('categories', () => getCategorie
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">
-    <RbagEventForm
-      v-if="event && categories"
-      :initial-event-data="event"
-      :event-categories="categories.data"
-    />
+  <div class="grid grid-cols-2 gap-8 mx-auto py-10 px-4 sm:px-6 md:px-10">
+    <div class="flex flex-col gap-4">
+      <h2 class=" text-xl font-bold">
+        Allgemein
+      </h2>
+      <RbagEventForm
+        v-if="event && categories"
+        :initial-event-data="event"
+        :event-categories="categories.data"
+      />
+    </div>
+    <div>
+      <h2 class=" text-xl font-bold">
+        Registrierung
+      </h2>
+    </div>
   </div>
 </template>

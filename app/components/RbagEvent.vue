@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { parseAbsoluteToLocal, DateFormatter } from '@internationalized/date'
+import { DateFormatter } from '@internationalized/date'
 import { BookOpenCheck, CalendarFold, MapPinned } from 'lucide-vue-next'
 import type { EventSchema } from '~~/validation/eventSchema'
 
@@ -41,7 +41,7 @@ const router = useRouter()
         <Badge variant="gray">
           <BookOpenCheck class="size-4 mr-2" />
           <span v-if="event.registration">
-            {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.startDate) }} → {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(parseAbsoluteToLocal(event.registration.endDate).toDate()) }}
+            {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.startDate) }} → {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.endDate) }}
           </span>
           <span v-else>
             Registrierung Ausstehend
