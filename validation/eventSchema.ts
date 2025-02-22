@@ -18,14 +18,14 @@ export const locationSchema = z.object({
 })
 
 export const registrationSchema = z.object({
-  fromPDFDownloadLink: z.string().min(1).optional(),
+  fromPDFDownloadLink: z.string().url().min(1).nullable(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  confirmationText: z.string().url().optional(),
-  externalLink: z.string().min(1).optional(),
+  confirmationText: z.string().min(1).nullable(),
+  externalLink: z.string().url().min(1).nullable(),
   lateRegistration: z.boolean(),
   singleRoomSurcharge: z.number(),
-  participationFees: participationFeesSchema
+  participationFees: participationFeesSchema.nullable()
 })
 
 export const performanceSchema = z.object({

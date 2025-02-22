@@ -44,11 +44,11 @@ type Registration {
   fromPDFDownloadLink String?
   startDate           DateTime
   endDate             DateTime
-  confirmationText    String
+  confirmationText    String?
   externalLink        String?
   lateRegistration    Boolean
   singleRoomSurcharge Float
-  participationFees   ParticipationFees
+  participationFees   ParticipationFees?
 }
 
 type ParticipationFees {

@@ -38,7 +38,10 @@ const { data: categories } = await useAsyncData('categories', () => getCategorie
         Registrierung hinzufügen
       </Button>
     </button>
-    <div class="flex flex-col gap-4 bg-gray-50 border border-gray-200 p-8 rounded-lg">
+    <div
+      v-else
+      class="flex flex-col gap-4 bg-gray-50 border border-gray-200 p-8 rounded-lg"
+    >
       <RbagEventRegistrationForm
         v-if="event"
         :initial-registration-data="event.registration"

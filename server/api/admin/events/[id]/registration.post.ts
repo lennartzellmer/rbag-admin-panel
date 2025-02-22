@@ -22,13 +22,10 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    return {
-      data: {
-        registration: updatedEvent
-      }
-    }
+    return updatedEvent.registration
   }
   catch (error) {
+    console.error(error)
     if (error instanceof z.ZodError) {
       throw createError({
         statusCode: 400,

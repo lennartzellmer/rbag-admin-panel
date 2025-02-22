@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
       prisma.event.count()
     ])
 
+    console.log('events', events)
+
     return {
       data: events,
       meta: {

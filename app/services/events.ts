@@ -1,5 +1,5 @@
 import type { PaginatedRequestParams } from '~/types/base.types'
-import { eventSchema, type EventSchema } from '~~/validation/eventSchema'
+import { eventSchema, registrationSchema, type EventSchema, type RegistrationSchema } from '~~/validation/eventSchema'
 
 export async function getEvents({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
   const response = await useRequestFetch()('/api/admin/events', {
@@ -42,5 +42,14 @@ export async function patchEvent(id: string, event: Partial<EventSchema>, signal
     signal
   })
   const validatedData = eventSchema.strict().parse(response)
+  return validatedData
+}
+
+export async function createEventRegistration(id: string, registration: RegistrationSchema) {
+  const response = await useRequestFetch()(`/api/admin/events/${id}/registration`, {
+    method: 'POST',
+    body: registration
+  })
+  const validatedData = registrationSchema.strict().parse(response)
   return validatedData
 }
