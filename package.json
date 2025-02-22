@@ -34,6 +34,7 @@
     "nuxt-seo-utils": "6.0.8",
     "nuxt-server-utils": "0.0.7",
     "radix-vue": "1.9.16",
+    "reka-ui": "2.0.0",
     "shadcn-nuxt": "1.0.1",
     "tailwind-merge": "3.0.2",
     "tailwindcss-animate": "1.0.7",

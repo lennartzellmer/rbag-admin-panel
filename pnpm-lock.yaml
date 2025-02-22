@@ -77,6 +77,9 @@ importers:
       radix-vue:
         specifier: 1.9.16
         version: 1.9.16(vue@3.5.13(typescript@5.7.3))
+      reka-ui:
+        specifier: 2.0.0
+        version: 2.0.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
       shadcn-nuxt:
         specifier: 1.0.1
         version: 1.0.1(magicast@0.3.5)
@@ -4111,6 +4114,11 @@ packages:
   regjsparser@0.12.0:
     resolution: {integrity: sha512-cnE+y8bz4NhMjISKbgeVJtqNbtf5QpjZP+Bslo+UqkIt9QPnX9q095eiRRASJG1/tz6dlNr6Z5NsBiWYokp6EQ==}
     hasBin: true
+
+  reka-ui@2.0.0:
+    resolution: {integrity: sha512-/1amDDvTnDIkSFbTZnUkiFWkxlc/UEe0pZsgvz3nDI15R9+yspQv/gIbM62Mo9LALK6A76NsgMNlXie04kv7PA==}
+    peerDependencies:
+      vue: '>= 3.2.0'
 
   replace-in-file@6.3.5:
     resolution: {integrity: sha512-arB9d3ENdKva2fxRnSjwBEXfK1npgyci7ZZuwysgAp7ORjHSyxz6oqIjTEv8R0Ydl4Ll7uOAZXL4vbkhGIizCg==}
@@ -9933,6 +9941,23 @@ snapshots:
   regjsparser@0.12.0:
     dependencies:
       jsesc: 3.0.2
+
+  reka-ui@2.0.0(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3)):
+    dependencies:
+      '@floating-ui/dom': 1.6.13
+      '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.7.3))
+      '@internationalized/date': 3.7.0
+      '@internationalized/number': 3.6.0
+      '@tanstack/vue-virtual': 3.13.0(vue@3.5.13(typescript@5.7.3))
+      '@vueuse/core': 12.7.0(typescript@5.7.3)
+      '@vueuse/shared': 12.7.0(typescript@5.7.3)
+      aria-hidden: 1.2.4
+      defu: 6.1.4
+      ohash: 1.1.4
+      vue: 3.5.13(typescript@5.7.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - typescript
 
   replace-in-file@6.3.5:
     dependencies:

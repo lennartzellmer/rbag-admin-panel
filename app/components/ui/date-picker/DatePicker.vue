@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { DatePickerArrow, DatePickerCalendar, DatePickerCell, DatePickerCellTrigger, DatePickerContent, DatePickerGrid, DatePickerGridBody, DatePickerGridHead, DatePickerGridRow, DatePickerHeadCell, DatePickerHeader, DatePickerHeading, DatePickerNext, DatePickerPrev, DatePickerRoot, DatePickerTrigger, useForwardPropsEmits } from 'radix-vue'
-import type { DatePickerRootProps, DatePickerRootEmits } from 'radix-vue'
+import { DatePickerArrow, DatePickerCalendar, DatePickerCell, DatePickerCellTrigger, DatePickerContent, DatePickerGrid, DatePickerGridBody, DatePickerGridHead, DatePickerGridRow, DatePickerHeadCell, DatePickerHeader, DatePickerHeading, DatePickerNext, DatePickerPrev, DatePickerRoot, DatePickerTrigger, useForwardPropsEmits } from 'reka-ui'
+import type { DatePickerRootProps, DatePickerRootEmits } from 'reka-ui'
 import { DateFormatter, getLocalTimeZone } from '@internationalized/date'
 
 const props = defineProps<DatePickerRootProps>()
