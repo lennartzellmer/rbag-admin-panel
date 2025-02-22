@@ -20,9 +20,9 @@ const router = useRouter()
     >
       <span class="text-lg font-bold flex gap-2 items-center">
         <span>{{ event.name }}</span>
-        <Badge variant="gray">
+        <UiBadge variant="gray">
           {{ event.abbreviation }}
-        </Badge>
+        </UiBadge>
       </span>
       <span class="text-sm text-muted-foreground font-normal">
         {{ event.targetGroupDescription }}
@@ -32,13 +32,13 @@ const router = useRouter()
 
     <td class="border-y border-l border-gray-100 group-hover:bg-gray-50 group-hover:border-gray-200 bg-white px-5 py-6">
       <div class=" flex flex-col gap-2 items-start">
-        <Badge variant="gray">
+        <UiBadge variant="gray">
           <CalendarFold class="size-4 mr-2" />
           {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.startDate) }}
           →
           {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.endDate) }}
-        </Badge>
-        <Badge variant="gray">
+        </UiBadge>
+        <UiBadge variant="gray">
           <BookOpenCheck class="size-4 mr-2" />
           <span v-if="event.registration">
             {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.startDate) }} → {{ new DateFormatter('de-DE', { dateStyle: 'short' }).format(event.registration.endDate) }}
@@ -46,8 +46,8 @@ const router = useRouter()
           <span v-else>
             Registrierung Ausstehend
           </span>
-        </Badge>
-        <Badge variant="gray">
+        </UiBadge>
+        <UiBadge variant="gray">
           <MapPinned class="size-4 mr-2" />
           <span v-if="event.location">
             {{ event.location.name }}
@@ -55,7 +55,7 @@ const router = useRouter()
           <span v-else>
             Ort ausstehend
           </span>
-        </Badge>
+        </UiBadge>
       </div>
     </td>
 

@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    'radix-vue/nuxt',
+    'reka-ui/nuxt',
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxtjs/tailwindcss',

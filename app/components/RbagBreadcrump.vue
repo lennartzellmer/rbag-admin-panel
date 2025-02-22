@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Breadcrumb, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator, BreadcrumbItem } from '@/components/ui/breadcrumb'
 
 const items = useBreadcrumbItems({
   hideRoot: true,

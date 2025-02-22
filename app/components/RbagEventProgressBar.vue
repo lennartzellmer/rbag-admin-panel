@@ -1,12 +1,6 @@
 <script setup lang="ts">
 import { EventStatus } from '@prisma/client'
 import { CircleCheck, CircleDashed, CircleDot } from 'lucide-vue-next'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from '@/components/ui/tooltip'
 
 const props = defineProps<{
   eventStatus: EventStatus
@@ -61,9 +55,9 @@ const stepsWithDoneState = computed(() => {
         :key="index"
         class="flex flex-row items-center gap-1"
       >
-        <TooltipProvider :delay-duration="100">
-          <Tooltip>
-            <TooltipTrigger>
+        <UiTooltipProvider :delay-duration="100">
+          <UiTooltip>
+            <UiTooltipTrigger>
               <div class="flex flex-col items-center gap-1">
                 <CircleCheck
                   v-if="step.doneState === 'done'"
@@ -86,13 +80,13 @@ const stepsWithDoneState = computed(() => {
                   class="text-gray-300"
                 />
               </div>
-            </TooltipTrigger>
-            <TooltipContent>
+            </UiTooltipTrigger>
+            <UiTooltipContent>
               {{ step.title }}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <Separator
+            </UiTooltipContent>
+          </UiTooltip>
+        </UiTooltipProvider>
+        <UiSeparator
           v-if="index < stepsWithDoneState.length - 1"
           class="w-4"
           orientation="horizontal"

@@ -14,7 +14,7 @@ const { data: categories } = await useAsyncData('categories', () => getCategorie
       Allgemein
     </h2>
     <div class="flex flex-col gap-4 bg-gray-50 border border-gray-200 p-8 rounded-lg">
-      <RbagEventForm
+      <RbagEventFormEdit
         v-if="event && categories"
         :initial-event-data="event"
         :event-categories="categories.data"
@@ -31,18 +31,18 @@ const { data: categories } = await useAsyncData('categories', () => getCategorie
       <p class="text-gray-500 text-sm">
         Es wurde noch keine Registrierung für diese Veranstaltung erstellt.
       </p>
-      <Button
+      <UiButton
         as="div"
         variant="secondary"
       >
         Registrierung hinzufügen
-      </Button>
+      </UiButton>
     </button>
     <div
       v-else
       class="flex flex-col gap-4 bg-gray-50 border border-gray-200 p-8 rounded-lg"
     >
-      <RbagEventRegistrationForm
+      <RbagEventRegistrationFormEdit
         v-if="event"
         :initial-registration-data="event.registration"
       />

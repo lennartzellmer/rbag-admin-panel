@@ -2,7 +2,10 @@
 <script setup lang="ts">
 import { useSelector } from '@xstate/vue'
 import type { ActorRefFrom } from 'xstate'
+import { PaginationList, PaginationListItem, PaginationRoot } from 'reka-ui'
 import type { paginationMachine } from '~/machines/pagination/pagination.machine'
+import { Button } from '~/components/ui/button'
+import { PaginationFirst, PaginationLast, PaginationNext, PaginationPrev, PaginationEllipsis } from '~/components/ui/pagination'
 
 const props = defineProps<{
   paginationActorRef: ActorRefFrom<typeof paginationMachine>
@@ -14,13 +17,13 @@ const send = props.paginationActorRef.send
 </script>
 
 <template>
-  <Pagination
+  <PaginationRoot
     v-slot="{ page }"
     :sibling-count="1"
     show-edges
     :default-page="state.context.currentPage"
     :total="state.context.totalCount"
-    :items-per-page="state.context.limit"
+    :items-per-page="state.context.limit ?? 10"
     @update:page="send({ type: 'GO_TO_TARGET_PAGE', targetPage: $event })"
   >
     <PaginationList
@@ -54,5 +57,5 @@ const send = props.paginationActorRef.send
       <PaginationNext />
       <PaginationLast />
     </PaginationList>
-  </Pagination>
+  </PaginationRoot>
 </template>

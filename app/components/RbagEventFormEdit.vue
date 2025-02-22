@@ -5,12 +5,7 @@ import { parseDate } from '@internationalized/date'
 import type z from 'zod'
 import { EventStatus } from '@prisma/client'
 import { useMachine } from '@xstate/vue'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { DateRangePicker } from '~/components/ui/date-range-picker'
 import { eventSchema } from '~~/validation/eventSchema'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import type { categorySchema } from '~~/validation/categorySchema'
 import { autoSaveEventMachine } from '~/machines/autoSaveEventMachine/autoSaveEventMachine.machine'
 
@@ -82,73 +77,73 @@ const statusOptions = Object.values(EventStatus).map((status) => {
   <form
     class="flex flex-col gap-4"
   >
-    <FormField
+    <UiFormField
       v-slot="{ componentField }"
       name="name"
       :validate-on-model-update="false"
     >
-      <FormItem>
-        <FormLabel>Veranstaltungsname</FormLabel>
-        <FormControl dynamic-vaidation>
-          <Input
+      <UiFormItem>
+        <UiFormLabel>Veranstaltungsname</UiFormLabel>
+        <UiFormControl dynamic-vaidation>
+          <UiInput
             type="text"
             placeholder="Name..."
             v-bind="componentField"
             data-1p-ignore
           />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </UiFormField>
+    <UiFormField
       v-slot="{ componentField }"
       name="abbreviation"
       :validate-on-model-update="false"
     >
-      <FormItem>
-        <FormLabel>Abkürzung</FormLabel>
-        <FormControl dynamic-vaidation>
-          <Input
+      <UiFormItem>
+        <UiFormLabel>Abkürzung</UiFormLabel>
+        <UiFormControl dynamic-vaidation>
+          <UiInput
             type="text"
             placeholder="SMS12"
             v-bind="componentField"
           />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </UiFormField>
+    <UiFormField
       v-slot="{ componentField }"
       name="status"
     >
-      <FormItem>
-        <FormLabel>Status</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField">
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Status wählen" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
+      <UiFormItem>
+        <UiFormLabel>Status</UiFormLabel>
+        <UiFormControl>
+          <UiSelect v-bind="componentField">
+            <UiFormControl>
+              <UiSelectTrigger>
+                <UiSelectValue placeholder="Status wählen" />
+              </UiSelectTrigger>
+              <UiSelectContent>
+                <UiSelectGroup>
+                  <UiSelectItem
                     v-for="statusOption in statusOptions"
                     :key="statusOption.value"
                     :value="statusOption.value"
                   >
                     {{ statusOption.label }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </FormControl>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
+                  </UiSelectItem>
+                </UiSelectGroup>
+              </UiSelectContent>
+            </UiFormControl>
+          </UiSelect>
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </UiFormField>
     <div>
-      <Label>Zeitraum</Label>
-      <DateRangePicker
+      <UiLabel>Zeitraum</UiLabel>
+      <UiDateRangePicker
         :model-value="{
           start: parseDate(values.startDate?.toISOString().substring(0, 10) || '01-01-1990'),
           end: parseDate(values.endDate?.toISOString().substring(0, 10) || '01-01-1990')
@@ -161,49 +156,49 @@ const statusOptions = Object.values(EventStatus).map((status) => {
         }"
       />
     </div>
-    <FormField
+    <UiFormField
       v-slot="{ componentField }"
       name="targetGroupDescription"
       :validate-on-model-update="false"
     >
-      <FormItem>
-        <FormLabel>Zielgruppe</FormLabel>
-        <FormControl dynamic-vaidation>
-          <Textarea
+      <UiFormItem>
+        <UiFormLabel>Zielgruppe</UiFormLabel>
+        <UiFormControl dynamic-vaidation>
+          <UiTextarea
             v-bind="componentField"
           />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
-    <FormField
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </UiFormField>
+    <UiFormField
       v-slot="{ componentField }"
       name="categoryId"
     >
-      <FormItem>
-        <FormLabel>Kategorie</FormLabel>
-        <FormControl>
-          <Select v-bind="componentField">
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Kategorie wählen" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
+      <UiFormItem>
+        <UiFormLabel>Kategorie</UiFormLabel>
+        <UiFormControl>
+          <UiSelect v-bind="componentField">
+            <UiFormControl>
+              <UiSelectTrigger>
+                <UiSelectValue placeholder="Kategorie wählen" />
+              </UiSelectTrigger>
+              <UiSelectContent>
+                <UiSelectGroup>
+                  <UiSelectItem
                     v-for="eventCategory in eventCategories"
                     :key="eventCategory.id!"
                     :value="eventCategory.id!"
                   >
                     {{ eventCategory.name }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </FormControl>
-          </Select>
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    </FormField>
+                  </UiSelectItem>
+                </UiSelectGroup>
+              </UiSelectContent>
+            </UiFormControl>
+          </UiSelect>
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </UiFormField>
   </form>
 </template>

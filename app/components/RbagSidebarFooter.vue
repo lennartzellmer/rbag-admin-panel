@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { LogOut, ChevronsUpDown } from 'lucide-vue-next'
+import { SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
@@ -41,7 +42,7 @@ function getInitials(name: string) {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
             side="bottom"
             align="end"
             :side-offset="4"
