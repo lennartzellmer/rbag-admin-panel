@@ -59,16 +59,6 @@ type ParticipationFees {
   adultsMultiplier      Float
 }
 
-enum EventStatus {
-  DRAFT
-  SAVE_THE_DATE
-  REGISTRATION_SCHEDULED
-  REGISTRATION_OPEN
-  REGISTRATION_CLOSED
-  COMPLETED
-  CANCELED
-}
-
 model WorkshopOffer {
   id                             String      @id @default(auto()) @map("_id") @db.ObjectId
   eventId                        String      @db.ObjectId
@@ -91,7 +81,8 @@ model Facilitator {
 model Event {
   id                        String          @id @default(auto()) @map("_id") @db.ObjectId
   name                      String
-  status                    EventStatus
+  isDraft                   Boolean
+  isCanceled                Boolean
   abbreviation              String
   startDate                 DateTime
   endDate                   DateTime

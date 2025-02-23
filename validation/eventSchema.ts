@@ -43,15 +43,8 @@ export const eventSchema = z.object({
   }).optional(),
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
-  status: z.enum([
-    'DRAFT',
-    'SAVE_THE_DATE',
-    'REGISTRATION_SCHEDULED',
-    'REGISTRATION_OPEN',
-    'REGISTRATION_CLOSED',
-    'COMPLETED',
-    'CANCELED'
-  ]),
+  isDraft: z.boolean(),
+  isCanceled: z.boolean(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   targetGroupDescription: z.string().min(1),

@@ -2,16 +2,19 @@
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
 import type { EventSchema } from '~~/validation/eventSchema'
+import { getEventStatusFromEvent } from '~/lib/utils'
 
 const props = defineProps<{
   event: EventSchema
 }>()
 
+const eventStatus = computed(() => getEventStatusFromEvent(props.event))
+
 const badgeDetails = computed<{
   status: string
   badgeVariant?: BadgeVariants['variant']
 }>(() => {
-  switch (props.event.status) {
+  switch (eventStatus.value) {
     case 'DRAFT':
       return {
         status: 'Draft',
@@ -32,7 +35,7 @@ const badgeDetails = computed<{
         status: 'Registrierung läuft',
         badgeVariant: 'blue'
       }
-    case 'REGISTRATION_CLOSED':
+    case 'UPCOMING':
       return {
         status: 'Registrierung geschlossen',
         badgeVariant: 'red'

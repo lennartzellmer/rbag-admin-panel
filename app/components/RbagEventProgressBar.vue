@@ -1,41 +1,51 @@
 <script setup lang="ts">
-import { EventStatus } from '@prisma/client'
 import { CircleCheck, CircleDashed, CircleDot } from 'lucide-vue-next'
+import { getEventStatusFromEvent, type EventStatus } from '~/lib/utils'
+import type { EventSchema } from '~~/validation/eventSchema'
 
 const props = defineProps<{
-  eventStatus: EventStatus
+  event: EventSchema
 }>()
 
-const eventLifeCycle = [
+const eventStatus = computed(() => getEventStatusFromEvent(props.event))
+
+const eventLifeCycle: Array<{
+  status: EventStatus
+  title: string
+}> = [
   {
-    status: EventStatus.DRAFT,
+    status: 'DRAFT',
     title: 'Entwurf'
   },
   {
-    status: EventStatus.SAVE_THE_DATE,
+    status: 'SAVE_THE_DATE',
     title: 'Save the Date'
   },
   {
-    status: EventStatus.REGISTRATION_SCHEDULED,
+    status: 'REGISTRATION_SCHEDULED',
     title: 'Registrierung geplant'
   },
   {
-    status: EventStatus.REGISTRATION_OPEN,
+    status: 'REGISTRATION_OPEN',
     title: 'Registrierung offen'
   },
   {
-    status: EventStatus.REGISTRATION_CLOSED,
+    status: 'UPCOMING',
     title: 'Registrierung geschlossen'
   },
   {
-    status: EventStatus.COMPLETED,
+    status: 'ONGOING',
+    title: 'Läuft'
+  },
+  {
+    status: 'COMPLETED',
     title: 'Abgeschlossen'
   }
 ]
 
 const stepsWithDoneState = computed(() => {
   return eventLifeCycle.map((step, index) => {
-    const currentStep = eventLifeCycle.findIndex(step => step.status === props.eventStatus)
+    const currentStep = eventLifeCycle.findIndex(step => step.status === eventStatus.value)
     return {
       ...step,
       doneState: index < currentStep ? 'done' : index === currentStep ? 'inProgress' : 'pending'
@@ -47,7 +57,7 @@ const stepsWithDoneState = computed(() => {
 <template>
   <div class="flex flex-col gap-3 items-end">
     <div
-      v-if="eventStatus !== EventStatus.CANCELED"
+      v-if="eventStatus !== 'CANCELED'"
       class="flex flex-row gap-1"
     >
       <div

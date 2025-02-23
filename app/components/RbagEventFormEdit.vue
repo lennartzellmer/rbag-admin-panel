@@ -3,7 +3,6 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { parseDate } from '@internationalized/date'
 import type z from 'zod'
-import { EventStatus } from '@prisma/client'
 import { useMachine } from '@xstate/vue'
 import { eventSchema } from '~~/validation/eventSchema'
 import type { categorySchema } from '~~/validation/categorySchema'
@@ -31,46 +30,7 @@ const onSubmit = handleSubmit((values) => {
   send({ type: 'user.edit', payload: { event: values } })
   console.log(values)
 })
-
-const statusOptions = Object.values(EventStatus).map((status) => {
-  switch (status) {
-    case EventStatus.CANCELED:
-      return {
-        value: EventStatus.CANCELED,
-        label: 'Abgesagt'
-      }
-    case EventStatus.COMPLETED:
-      return {
-        value: EventStatus.COMPLETED,
-        label: 'Abgeschlossen'
-      }
-    case EventStatus.REGISTRATION_CLOSED:
-      return {
-        value: EventStatus.REGISTRATION_CLOSED,
-        label: 'Registrierung geschlossen'
-      }
-    case EventStatus.REGISTRATION_OPEN:
-      return {
-        value: EventStatus.REGISTRATION_OPEN,
-        label: 'Registrierung läuft'
-      }
-    case EventStatus.REGISTRATION_SCHEDULED:
-      return {
-        value: EventStatus.REGISTRATION_SCHEDULED,
-        label: 'Registrierung geplant'
-      }
-    case EventStatus.SAVE_THE_DATE:
-      return {
         value: EventStatus.SAVE_THE_DATE,
-        label: 'Save the Date'
-      }
-    case EventStatus.DRAFT:
-      return {
-        value: EventStatus.DRAFT,
-        label: 'Entwurf'
-      }
-  }
-})
 </script>
 
 <template>
@@ -108,35 +68,6 @@ const statusOptions = Object.values(EventStatus).map((status) => {
             placeholder="SMS12"
             v-bind="componentField"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </UiFormField>
-    <UiFormField
-      v-slot="{ componentField }"
-      name="status"
-    >
-      <UiFormItem>
-        <UiFormLabel>Status</UiFormLabel>
-        <UiFormControl>
-          <UiSelect v-bind="componentField">
-            <UiFormControl>
-              <UiSelectTrigger>
-                <UiSelectValue placeholder="Status wählen" />
-              </UiSelectTrigger>
-              <UiSelectContent>
-                <UiSelectGroup>
-                  <UiSelectItem
-                    v-for="statusOption in statusOptions"
-                    :key="statusOption.value"
-                    :value="statusOption.value"
-                  >
-                    {{ statusOption.label }}
-                  </UiSelectItem>
-                </UiSelectGroup>
-              </UiSelectContent>
-            </UiFormControl>
-          </UiSelect>
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>

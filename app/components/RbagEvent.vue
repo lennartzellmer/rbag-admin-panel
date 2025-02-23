@@ -62,7 +62,7 @@ const router = useRouter()
     <td
       class="border-y border-r border-gray-100 group-hover:bg-gray-50 group-hover:border-gray-200 bg-white rounded-r-lg px-5 py-6"
     >
-      <RbagEventProgressBar :event-status="event.status" />
+      <RbagEventProgressBar :event="event" />
     </td>
   </tr>
 </template>
