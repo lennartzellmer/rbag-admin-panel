@@ -30,7 +30,6 @@ const onSubmit = handleSubmit((values) => {
   send({ type: 'user.edit', payload: { event: values } })
   console.log(values)
 })
-        value: EventStatus.SAVE_THE_DATE,
 </script>
 
 <template>
