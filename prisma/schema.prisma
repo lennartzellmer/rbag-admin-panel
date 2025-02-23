@@ -81,7 +81,7 @@ model Facilitator {
 model Event {
   id                        String          @id @default(auto()) @map("_id") @db.ObjectId
   name                      String
-  isDraft                   Boolean
+  isPublished                   Boolean
   isCanceled                Boolean
   abbreviation              String
   startDate                 DateTime

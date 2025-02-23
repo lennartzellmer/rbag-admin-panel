@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getEventStatusFromEvent(event: EventSchema) {
-  if (event.isDraft) return 'DRAFT'
+  if (!event.isPublished) return 'DRAFT'
   if (event.isCanceled) return 'CANCELED'
   if (!event.registration) return 'SAVE_THE_DATE'
   if (event.registration) {

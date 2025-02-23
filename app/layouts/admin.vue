@@ -28,7 +28,7 @@ const data = {
           <UiSidebarHeader>
             <UiSidebarMenu>
               <UiSidebarMenuItem>
-                <UiNuxtLink
+                <NuxtLink
                   to="/admin"
                   class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground p-2 flex gap-3 items-center"
                 >
@@ -37,7 +37,7 @@ const data = {
                     <span class="truncate font-semibold">RBAG</span>
                     <span class="truncate text-xs">Veranstaltungsplaner</span>
                   </div>
-                </UiNuxtLink>
+                </NuxtLink>
               </UiSidebarMenuItem>
             </UiSidebarMenu>
           </UiSidebarHeader>

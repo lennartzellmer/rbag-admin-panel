@@ -43,7 +43,7 @@ export const eventSchema = z.object({
   }).optional(),
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
-  isDraft: z.boolean(),
+  isPublished: z.boolean(),
   isCanceled: z.boolean(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),

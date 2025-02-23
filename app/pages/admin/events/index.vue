@@ -15,12 +15,7 @@ const paginationMachineRef = useSelector(actorRef, state => state.context.pagina
 <template>
   <NuxtLayout name="admin">
     <template #header-action>
-      <UiButton
-        to="/admin/events/create"
-        class="w-full sm:w-auto"
-      >
-        Create Event
-      </UiButton>
+      <RbagEventCreateModal />
     </template>
 
     <main class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">
