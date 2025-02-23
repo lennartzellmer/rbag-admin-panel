@@ -10,7 +10,9 @@ useHead({
 
 <template>
   <Toaster />
-  <NuxtPage />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <style>

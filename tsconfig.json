@@ -1,5 +1,7 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "strictNullChecks": true,
+  "compilerOptions": {
+    "strictNullChecks": true,
+  },
   "extends": "./.nuxt/tsconfig.json"
 }
