@@ -81,7 +81,7 @@ model Facilitator {
 model Event {
   id                        String          @id @default(auto()) @map("_id") @db.ObjectId
   name                      String
-  isPublished                   Boolean
+  isPublished               Boolean
   isCanceled                Boolean
   abbreviation              String
   startDate                 DateTime
@@ -96,4 +96,33 @@ model Event {
   alternativeWorkshopOffers WorkshopOffer[] @relation("AlternativeWorkshopOffers")
 
   @@map("Events")
+}
+
+// New model for event history
+model EventHistory {
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  eventId                   String    @db.ObjectId
+  version                   Int
+
+  name                      String
+  isPublished               Boolean
+  isCanceled                Boolean
+  abbreviation              String
+  startDate                 DateTime
+  endDate                   DateTime
+  targetGroupDescription    String
+  categoryId                String    @db.ObjectId
+  location                  Location?
+  performance               Performance?
+  registration              Registration?
+  workshopOffers            String[]    @db.ObjectId
+  alternativeWorkshopOffers String[]    @db.ObjectId
+  
+  // Metadata
+  createdAt                 DateTime  @default(now())
+  createdBy                 String?
+  changeReason              String?
+
+  @@map("EventHistory")
+  @@unique([eventId, version])
 }

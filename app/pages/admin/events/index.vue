@@ -7,15 +7,14 @@ definePageMeta({
   layout: false
 })
 
-const machine = createFetchPaginatedMachine({ fetchDataFunction: getEvents })
-const { actorRef, snapshot } = useActor(machine)
+const { actorRef, snapshot } = useActor(createFetchPaginatedMachine({ fetchDataFunction: getEvents }))
 const paginationMachineRef = useSelector(actorRef, state => state.context.paginationMachineRef)
 </script>
 
 <template>
   <NuxtLayout name="admin">
     <template #header-action>
-      <RbagEventCreateModal />
+      <RbagModalCreateEvent />
     </template>
 
     <main class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">

@@ -26,8 +26,8 @@ export async function getEvent(id: string) {
   return validatedData
 }
 
-export async function createEvent(event: EventSchema) {
-  const response = await useRequestFetch()('/api/admin/events', {
+export async function createEventDraft(event: EventSchema) {
+  const response = await useRequestFetch()('/api/admin/create-event-draft', {
     method: 'POST',
     body: event
   })
@@ -35,17 +35,7 @@ export async function createEvent(event: EventSchema) {
   return validatedData
 }
 
-export async function patchEvent(id: string, event: Partial<EventSchema>, signal: AbortSignal) {
-  const response = await useRequestFetch()(`/api/admin/events/${id}`, {
-    method: 'PATCH',
-    body: event,
-    signal
-  })
-  const validatedData = eventSchema.strict().parse(response)
-  return validatedData
-}
-
-export async function createEventRegistration(id: string, registration: RegistrationSchema) {
+export async function addEventRegistration(id: string, registration: RegistrationSchema) {
   const response = await useRequestFetch()(`/api/admin/events/${id}/registration`, {
     method: 'POST',
     body: registration

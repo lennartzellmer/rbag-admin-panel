@@ -86,6 +86,11 @@ export function createFetchPaginatedMachine<T>(
             limit: params.limit
           }
         }
+      }),
+      assignErrorMessageToContext: assign({
+        errorMessage: (_, params: string) => {
+          return params
+        }
       })
     },
     guards: {
@@ -161,7 +166,13 @@ export function createFetchPaginatedMachine<T>(
             }
           ],
           onError: {
-            target: 'error'
+            target: 'error',
+            actions: [
+              {
+                type: 'assignErrorMessageToContext',
+                params: ({ event }) => event.error as string
+              }
+            ]
           }
         }
       },

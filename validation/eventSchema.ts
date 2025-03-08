@@ -51,7 +51,7 @@ export const eventSchema = z.object({
   categoryId: z.string().refine((val) => {
     return val.match(/^[0-9a-fA-F]{24}$/)
   }),
-  location: locationSchema,
+  location: locationSchema.nullable(),
   workshopOffer: z.array(z.string().refine((val) => {
     return val.match(/^[0-9a-fA-F]{24}$/)
   })).optional(),
@@ -64,3 +64,5 @@ export const eventSchema = z.object({
 
 export type EventSchema = z.infer<typeof eventSchema>
 export type RegistrationSchema = z.infer<typeof registrationSchema>
+export type LocationSchema = z.infer<typeof locationSchema>
+export type PerformanceSchema = z.infer<typeof performanceSchema>
