@@ -1,7 +1,7 @@
 import type { Event } from '@event-driven-io/emmett'
 import type { StreamName, StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import type { EventDetailsSchema, EventSchema, RegistrationSchema } from '~~/validation/eventSchema'
+import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
 export const RbagEventStreamType: StreamType = 'rbag_event'
 export const generateRbagEventStreamName = (): StreamName<StreamType> => `${RbagEventStreamType}:${uuidv4()}`
@@ -27,9 +27,16 @@ export type RbagEventRegistrationAdded = Event<
   RbagEventEventMetadata
 >
 
+export type RbagEventPerformanceSet = Event<
+  'RbagEventPerformanceSet',
+  PerformanceSchema,
+  RbagEventEventMetadata
+>
+
 export type RbagEventEvent =
   | RbagEventCreated
   | RbagEventRegistrationAdded
+  | RbagEventPerformanceSet
 
 export const initialState = (): EventSchema => {
   return {
@@ -68,9 +75,15 @@ export const evolve = (
         ...state,
         registration: data
       }
+    case 'RbagEventPerformanceSet':
+      return {
+        ...state,
+        performance: data
+      }
     default: {
       // Exhaustive matching of the event type
-      // This will throw a compile-time error if a new event type is added
+      // This will throw a compile-time error
+      // if a new event type is added and not handled here
       const _: never = event
       return state
     }

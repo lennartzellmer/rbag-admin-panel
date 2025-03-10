@@ -1,6 +1,6 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
-import type { RbagEventCreated, RbagEventRegistrationAdded } from './rbagEvent'
-import type { EventDetailsSchema, EventSchema, RegistrationSchema } from '~~/validation/eventSchema'
+import type { RbagEventCreated, RbagEventPerformanceSet, RbagEventRegistrationAdded } from './rbagEvent'
+import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
 /////////////////////////////////////////
 /// /////// Commands
@@ -18,7 +18,13 @@ export type AddRgabEventAsDraft = Command<
 
 export type AddRegistrationDetails = Command<
   'AddRegistrationDetails',
-  RegistrationSchema & { eventId: string },
+  RegistrationSchema,
+  EventCommandMetadata
+>
+
+export type SetPerformanceDetails = Command<
+  'SetPerformanceDetails',
+  PerformanceSchema,
   EventCommandMetadata
 >
 
@@ -57,11 +63,25 @@ export const addRegistrationDetails = (
   if (registration)
     throw new IllegalStateError('Registration already exists')
 
-  if (data.startDate < data.endDate)
-    throw new IllegalStateError('Start date must be before end date')
-
   return {
     type: 'RbagEventRegistrationAdded',
+    data: data,
+    metadata: {
+      changedBy: metadata.requestedBy
+    }
+  }
+}
+
+export const setPerformanceDetails = (
+  command: SetPerformanceDetails
+): RbagEventPerformanceSet => {
+  const {
+    data,
+    metadata
+  } = command
+
+  return {
+    type: 'RbagEventPerformanceSet',
     data: data,
     metadata: {
       changedBy: metadata.requestedBy

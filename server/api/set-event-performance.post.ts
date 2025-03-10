@@ -1,8 +1,9 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
 import { CommandHandler } from '@event-driven-io/emmett'
-import { addRegistrationDetails, type AddRegistrationDetails } from '~~/server/eventDriven/businessLogic'
+import { setPerformanceDetails, type SetPerformanceDetails } from '~~/server/eventDriven/businessLogic'
 import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
+import { locationSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -23,7 +24,10 @@ export default defineEventHandler(async (event) => {
   } = z.object({
     eventId: z.string().uuid(),
     startDate: z.coerce.date(),
-    endDate: z.coerce.date()
+    endDate: z.coerce.date(),
+    description: z.string().min(1),
+    location: locationSchema,
+    posterDownloadUrl: z.string().min(1)
   }).strict().safeParse(body)
 
   if (!isValidParams) {
@@ -60,19 +64,21 @@ export default defineEventHandler(async (event) => {
   /// /////// Handle command
   /////////////////////////////////////////
 
-  const command: AddRegistrationDetails = {
-    type: 'AddRegistrationDetails',
+  const command: SetPerformanceDetails = {
+    type: 'SetPerformanceDetails',
     data: {
+      description: validatedData.description,
       startDate: validatedData.startDate,
       endDate: validatedData.endDate,
-      lateRegistration: false
+      location: validatedData.location,
+      posterDownloadUrl: validatedData.posterDownloadUrl
     },
     metadata: { requestedBy: 'Larry 1', now: new Date() }
   }
 
   try {
     const handle = CommandHandler({ evolve, initialState })
-    const { newState } = await handle(eventStore, streamName, state => addRegistrationDetails(command, state))
+    const { newState } = await handle(eventStore, streamName, () => setPerformanceDetails(command))
     return newState
   }
   catch (error) {

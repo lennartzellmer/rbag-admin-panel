@@ -1,12 +1,14 @@
 import { getMongoDBEventStore } from '@event-driven-io/emmett-mongodb'
 
-const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI!
+const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
 
+if (!connectionString) {
+  throw new Error('Missing required environment variable NUXT_MONGODB_EVENT_STORE_URI')
+}
+
+// Create a singleton instance of the MongoDB event store
 export const mongoEventStoreSingleton = getMongoDBEventStore({
-  connectionString,
-  storage: {
-    type: 'COLLECTION_PER_STREAM_TYPE'
-  }
+  connectionString
 })
 
 // Extend the H3EventContext interface to include the eventStore property

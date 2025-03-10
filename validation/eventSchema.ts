@@ -1,13 +1,5 @@
 import { z } from 'zod'
 
-export const participationFeesSchema = z.object({
-  childrenAndYouth: z.number(),
-  youngAdults: z.number(),
-  youngAdultsMultiplier: z.number(),
-  adults: z.number(),
-  adultsMultiplier: z.number()
-})
-
 export const locationSchema = z.object({
   name: z.string().min(1),
   line1: z.string().min(1),
@@ -17,26 +9,18 @@ export const locationSchema = z.object({
   geoLocation: z.array(z.number())
 })
 
+export const performanceSchema = z.object({
+  description: z.string().min(1),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  location: locationSchema,
+  posterDownloadUrl: z.string().url()
+})
+
 export const registrationSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  lateRegistration: z.boolean(),
-
-  // Optional fields
-  singleRoomSurcharge: z.number().optional(),
-  confirmationText: z.string().min(1).optional(),
-  externalLink: z.string().url().min(1).optional(),
-  participationFees: participationFeesSchema.optional(),
-  fromPDFDownloadLink: z.string().url().min(1).optional()
-})
-
-export const performanceSchema = z.object({
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  description: z.string().min(1),
-  location: locationSchema,
-  posterDownloadUrl: z.string().min(1),
-  showOnEventPage: z.boolean()
+  lateRegistration: z.boolean()
 })
 
 export const eventDetailsSchema = z.object({
@@ -53,8 +37,8 @@ export const eventSchema = z.object({
   details: eventDetailsSchema,
   isPublished: z.boolean(),
   isCanceled: z.boolean(),
-  workshopOffer: z.array(z.string().refine(val => val.match(/^[0-9a-fA-F]{24}$/))).optional(),
-  alternativeProgram: z.array(z.string().refine(val => val.match(/^[0-9a-fA-F]{24}$/))).optional(),
+  workshopOffer: z.array(z.string().uuid()).optional(),
+  alternativeProgram: z.array(z.string().uuid()).optional(),
   performance: performanceSchema.optional(),
   registration: registrationSchema.optional()
 })
