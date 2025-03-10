@@ -27,16 +27,12 @@ export type AddRegistrationDetails = Command<
 /////////////////////////////////////////
 
 export const addRbagEventAsDraft = (
-  command: AddRgabEventAsDraft,
-  state: EventSchema
+  command: AddRgabEventAsDraft
 ): RbagEventCreated => {
   const {
     data,
     metadata
   } = command
-
-  if (state.details.name)
-    throw new IllegalStateError('Event already exists')
 
   return {
     type: 'RbagEventCreated',
