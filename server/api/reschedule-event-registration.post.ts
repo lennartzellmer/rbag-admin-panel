@@ -1,9 +1,8 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
-import { setPerformanceDetails, type SetPerformanceDetails } from '~~/server/eventDriven/businessLogic'
+import { rescheduleRegistration, type RescheduleRegistration } from '~~/server/eventDriven/businessLogic'
 import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
-import { locationSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -25,10 +24,7 @@ export default defineEventHandler(async (event) => {
   } = z.object({
     eventId: z.string().uuid(),
     startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
-    description: z.string().min(1),
-    location: locationSchema,
-    posterDownloadUrl: z.string().min(1)
+    endDate: z.coerce.date()
   }).strict().safeParse(body)
 
   if (!isValidParams) {
@@ -65,21 +61,19 @@ export default defineEventHandler(async (event) => {
   /// /////// Handle command
   /////////////////////////////////////////
 
-  const command: SetPerformanceDetails = {
-    type: 'SetPerformanceDetails',
+  const command: RescheduleRegistration = {
+    type: 'RescheduleRegistration',
     data: {
-      description: validatedData.description,
       startDate: validatedData.startDate,
       endDate: validatedData.endDate,
-      location: validatedData.location,
-      posterDownloadUrl: validatedData.posterDownloadUrl
+      lateRegistration: false
     },
     metadata: { requestedBy: user.email, now: new Date() }
   }
 
   try {
     const handle = CommandHandler({ evolve, initialState })
-    const { newState } = await handle(eventStore, streamName, () => setPerformanceDetails(command))
+    const { newState } = await handle(eventStore, streamName, state => rescheduleRegistration(command, state))
     return newState
   }
   catch (error) {

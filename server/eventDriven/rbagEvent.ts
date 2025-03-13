@@ -1,5 +1,5 @@
 import type { Event } from '@event-driven-io/emmett'
-import type { StreamName, StreamType } from '@event-driven-io/emmett-mongodb'
+import { mongoDBInlineProjection, type MongoDBEventStore, type StreamName, type StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
 import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
@@ -27,6 +27,12 @@ export type RbagEventRegistrationAdded = Event<
   RbagEventEventMetadata
 >
 
+export type RbagEventRegistrationRescheduled = Event<
+  'RbagEventRegistrationRescheduled',
+  RegistrationSchema,
+  RbagEventEventMetadata
+>
+
 export type RbagEventPerformanceSet = Event<
   'RbagEventPerformanceSet',
   PerformanceSchema,
@@ -37,6 +43,7 @@ export type RbagEventEvent =
   | RbagEventCreated
   | RbagEventRegistrationAdded
   | RbagEventPerformanceSet
+  | RbagEventRegistrationRescheduled
 
 export const initialState = (): EventSchema => {
   return {
@@ -80,6 +87,11 @@ export const evolve = (
         ...state,
         performance: data
       }
+    case 'RbagEventRegistrationRescheduled':
+      return {
+        ...state,
+        registration: data
+      }
     default: {
       // Exhaustive matching of the event type
       // This will throw a compile-time error
@@ -89,3 +101,38 @@ export const evolve = (
     }
   }
 }
+
+/////////////////////////////////////////
+/// /////// Projections
+/////////////////////////////////////////
+
+export const rbagEventProjectionName = 'rbagEvent'
+
+export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: number, limit: number
+) => eventStore.projections.inline.find<EventSchema[]>({
+  streamType: RbagEventStreamType,
+  projectionName: rbagEventProjectionName
+},
+{},
+{
+  limit,
+  skip
+})
+
+export const getRbagEventById = (eventStore: MongoDBEventStore, id: string) =>
+  eventStore.projections.inline.findOne<EventSchema[]>({
+    streamName: getStreamNameById(id),
+    projectionName: rbagEventProjectionName
+  })
+
+export const rbagEventProjection = mongoDBInlineProjection({
+  name: rbagEventProjectionName,
+  evolve,
+  canHandle: [
+    'RbagEventCreated',
+    'RbagEventPerformanceSet',
+    'RbagEventRegistrationAdded',
+    'RbagEventRegistrationRescheduled'
+  ],
+  initialState
+})

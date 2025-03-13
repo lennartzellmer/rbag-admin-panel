@@ -1,4 +1,6 @@
+import { projections } from '@event-driven-io/emmett'
 import { getMongoDBEventStore } from '@event-driven-io/emmett-mongodb'
+import { rbagEventProjection } from '../eventDriven/rbagEvent'
 
 const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
 
@@ -8,7 +10,8 @@ if (!connectionString) {
 
 // Create a singleton instance of the MongoDB event store
 export const mongoEventStoreSingleton = getMongoDBEventStore({
-  connectionString
+  connectionString,
+  projections: projections.inline([rbagEventProjection])
 })
 
 // Extend the H3EventContext interface to include the eventStore property
@@ -18,7 +21,9 @@ declare module 'h3' {
   }
 }
 
-// Extend the NitroApp context interface to include the eventStore singleton
+// Add the event store to the request event context
+// This way, the event store is available in all request handlers
+// like this: const eventStore = event.context.eventStore
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('request', (event) => {
     event.context.eventStore = mongoEventStoreSingleton
