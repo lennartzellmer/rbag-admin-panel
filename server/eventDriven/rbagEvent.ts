@@ -39,11 +39,39 @@ export type RbagEventPerformanceSet = Event<
   RbagEventEventMetadata
 >
 
+export type RbagEventRegistrationDetailsUpdated = Event<
+  'RbagEventRegistrationDetailsUpdated',
+  Pick<RegistrationSchema, 'confirmationText' | 'formPDFDownloadLink'>,
+  RbagEventEventMetadata
+>
+
+export type RbagEventCanceled = Event<
+  'RbagEventCanceled',
+  Record<never, never>,
+  RbagEventEventMetadata
+>
+
+export type RbagEventPublished = Event<
+  'RbagEventPublished',
+  Record<never, never>,
+  RbagEventEventMetadata
+>
+
+export type RbagEventUnpublished = Event<
+  'RbagEventUnpublished',
+  Record<never, never>,
+  RbagEventEventMetadata
+>
+
 export type RbagEventEvent =
   | RbagEventCreated
   | RbagEventRegistrationAdded
   | RbagEventPerformanceSet
   | RbagEventRegistrationRescheduled
+  | RbagEventRegistrationDetailsUpdated
+  | RbagEventCanceled
+  | RbagEventPublished
+  | RbagEventUnpublished
 
 export const initialState = (): EventSchema => {
   return {
@@ -92,10 +120,32 @@ export const evolve = (
         ...state,
         registration: data
       }
+    case 'RbagEventRegistrationDetailsUpdated':
+      return {
+        ...state,
+        registration: {
+          ...state.registration!,
+          ...data
+        }
+      }
+    case 'RbagEventCanceled':
+      return {
+        ...state,
+        isCanceled: true
+      }
+    case 'RbagEventPublished':
+      return {
+        ...state,
+        isPublished: true
+      }
+    case 'RbagEventUnpublished':
+      return {
+        ...state,
+        isPublished: false
+      }
     default: {
       // Exhaustive matching of the event type
-      // This will throw a compile-time error
-      // if a new event type is added and not handled here
+      // This will throw a TS error if a new event type is added and not handled here
       const _: never = event
       return state
     }

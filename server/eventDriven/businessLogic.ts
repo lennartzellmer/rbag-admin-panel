@@ -1,6 +1,6 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
 import { fromDate, now } from '@internationalized/date'
-import type { RbagEventCreated, RbagEventPerformanceSet, RbagEventRegistrationAdded, RbagEventRegistrationRescheduled } from './rbagEvent'
+import type { RbagEventCanceled, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled } from './rbagEvent'
 import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
 /////////////////////////////////////////
@@ -29,9 +29,33 @@ export type RescheduleRegistration = Command<
   EventCommandMetadata
 >
 
+export type UpdateRegistrationDetails = Command<
+  'UpdateRegistrationDetails',
+  Pick<RegistrationSchema, 'confirmationText' | 'formPDFDownloadLink'>,
+  EventCommandMetadata
+>
+
 export type SetPerformanceDetails = Command<
   'SetPerformanceDetails',
   PerformanceSchema,
+  EventCommandMetadata
+>
+
+export type CancelRbagEvent = Command<
+  'CancelRbagEvent',
+  Record<string, never>,
+  EventCommandMetadata
+>
+
+export type PublishRbagEvent = Command<
+  'PublishRbagEvent',
+  Record<string, never>,
+  EventCommandMetadata
+>
+
+export type UnpublishRbagEvent = Command<
+  'UnpublishRbagEvent',
+  Record<string, never>,
   EventCommandMetadata
 >
 
@@ -90,6 +114,71 @@ export const setPerformanceDetails = (
   return {
     type: 'RbagEventPerformanceSet',
     data: data,
+    metadata: {
+      changedBy: metadata.requestedBy
+    }
+  }
+}
+
+export const updateRegistrationDetails = (
+  command: UpdateRegistrationDetails,
+  state: EventSchema
+): RbagEventRegistrationDetailsUpdated => {
+  const {
+    data,
+    metadata
+  } = command
+
+  const { registration } = state
+
+  if (!registration)
+    throw new IllegalStateError('Registration does not exist yet')
+
+  return {
+    type: 'RbagEventRegistrationDetailsUpdated',
+    data: data,
+    metadata: {
+      changedBy: metadata.requestedBy
+    }
+  }
+}
+
+export const cancelRbagEvent = (
+  command: CancelRbagEvent
+): RbagEventCanceled => {
+  const { metadata } = command
+
+  return {
+    type: 'RbagEventCanceled',
+    data: {},
+    metadata: {
+      changedBy: metadata.requestedBy
+    }
+  }
+}
+
+export const publishRbagEvent = (
+  command: PublishRbagEvent
+): RbagEventPublished => {
+  const { metadata } = command
+
+  return {
+    type: 'RbagEventPublished',
+    data: {},
+    metadata: {
+      changedBy: metadata.requestedBy
+    }
+  }
+}
+
+export const unpublishRbagEvent = (
+  command: UnpublishRbagEvent
+): RbagEventPublished => {
+  const { metadata } = command
+
+  return {
+    type: 'RbagEventPublished',
+    data: {},
     metadata: {
       changedBy: metadata.requestedBy
     }

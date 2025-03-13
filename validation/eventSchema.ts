@@ -20,7 +20,9 @@ export const performanceSchema = z.object({
 export const registrationSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  lateRegistration: z.boolean()
+  lateRegistration: z.boolean(),
+  formPDFDownloadLink: z.string().url().min(1).optional(),
+  confirmationText: z.string().min(1).optional()
 })
 
 export const eventDetailsSchema = z.object({

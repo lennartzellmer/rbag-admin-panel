@@ -1,16 +1,15 @@
 import { z } from 'zod'
 import { defineEventHandler, readBody, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
-import { addRegistrationDetails, type AddRegistrationDetails } from '~~/server/eventDriven/businessLogic'
+import { cancelRbagEvent, type CancelRbagEvent } from '~~/server/eventDriven/businessLogic'
 import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
-import { registrationSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
   /// /////// Get user object fot event metadata
   /////////////////////////////////////////
 
-  // const user = await requireUserSession(event)
+  // const { user } = await requireUserSession(event)
   const user = { email: 'test@test.de', name: 'Larry' }
 
   /////////////////////////////////////////
@@ -18,25 +17,19 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const body = await readBody(event)
-  const eventIdSchema = z.object({ eventId: z.string().uuid() })
   const {
     success: isValidParams,
     data: validatedData,
     error: validationError
-  } = registrationSchema.merge(eventIdSchema).strict().safeParse(body)
+  } = z.object({
+    eventId: z.string().uuid()
+  }).strict().safeParse(body)
 
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
       message: 'Invalid event data',
       statusText: validationError?.message
-    })
-  }
-
-  if (validatedData.startDate > validatedData.endDate) {
-    throw createError({
-      statusCode: 400,
-      message: 'Start date must be before end date'
     })
   }
 
@@ -59,21 +52,15 @@ export default defineEventHandler(async (event) => {
   /// /////// Handle command
   /////////////////////////////////////////
 
-  const command: AddRegistrationDetails = {
-    type: 'AddRegistrationDetails',
-    data: {
-      startDate: validatedData.startDate,
-      endDate: validatedData.endDate,
-      lateRegistration: false,
-      confirmationText: validatedData.confirmationText,
-      formPDFDownloadLink: validatedData.formPDFDownloadLink
-    },
+  const command: CancelRbagEvent = {
+    type: 'CancelRbagEvent',
+    data: {},
     metadata: { requestedBy: user.email, now: new Date() }
   }
 
   try {
     const handle = CommandHandler({ evolve, initialState })
-    const { newState } = await handle(eventStore, streamName, state => addRegistrationDetails(command, state))
+    const { newState } = await handle(eventStore, streamName, () => cancelRbagEvent(command))
     return newState
   }
   catch (error) {
