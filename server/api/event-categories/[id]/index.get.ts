@@ -1,7 +1,6 @@
-import { z } from 'zod'
-import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedParams } from 'h3-zod'
-import { getRbagEventById } from '~~/server/eventDriven/rbagEvents'
+import { defineEventHandler } from 'h3'
+import { useSafeValidatedParams, z } from 'h3-zod'
+import { getRbagEventCategoryById } from '~~/server/eventDriven/rbagEventCategories'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -25,14 +24,14 @@ export default defineEventHandler(async (event) => {
   }
 
   /////////////////////////////////////////
-  /// /////// Check if event exists
+  /// /////// Get category by id
   /////////////////////////////////////////
 
   const eventStore = event.context.eventStore
 
-  const rbagEvent = await getRbagEventById(eventStore, validatedParams.id)
+  const rbagEventCategory = await getRbagEventCategoryById(eventStore, validatedParams.id)
 
-  if (!rbagEvent) {
+  if (!rbagEventCategory) {
     throw createError({
       statusCode: 404,
       message: 'Event not found'
@@ -40,9 +39,9 @@ export default defineEventHandler(async (event) => {
   }
 
   return {
-    id: rbagEvent._metadata.streamId,
-    name: rbagEvent._metadata.streamPosition.toString(),
-    ...excludeKey(rbagEvent, '_metadata')
+    id: rbagEventCategory._metadata.streamId,
+    name: rbagEventCategory._metadata.streamPosition.toString(),
+    ...excludeKey(rbagEventCategory, '_metadata')
   }
 })
 

@@ -1,18 +1,18 @@
 import { defineEventHandler } from 'h3'
-import { useSafeValidatedQuery } from 'h3-zod'
-import { getRbagEventsPaginated, rbagEventProjectionName, rbagEventStreamType } from '~~/server/eventDriven/rbagEvents'
+import { useSafeValidatedParams } from 'h3-zod'
+import { getRbagEventCategoriesPaginated, rbagEventCategoryProjectionName, rbagEventCategoryStreamType } from '~~/server/eventDriven/rbagEventCategories'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
-  /// /////// Parse and validate request params
+  /// /////// Parse and validate request body
   /////////////////////////////////////////
 
   const {
     success: isValidParams,
     data: validatedParams,
     error: validationError
-  } = await useSafeValidatedQuery(event, paginationQuerySchema)
+  } = await useSafeValidatedParams(event, paginationQuerySchema)
 
   if (!isValidParams) {
     throw createError({
@@ -32,14 +32,14 @@ export default defineEventHandler(async (event) => {
     const eventStore = event.context.eventStore
 
     const [events, total] = await Promise.all([
-      getRbagEventsPaginated(eventStore, offset, limit),
+      getRbagEventCategoriesPaginated(eventStore, offset, limit),
       eventStore.projections.inline.count({
-        streamType: rbagEventStreamType,
-        projectionName: rbagEventProjectionName
+        streamType: rbagEventCategoryStreamType,
+        projectionName: rbagEventCategoryProjectionName
       })
     ])
 
-    const eventsWithoutMetadata = events.map((event) => {
+    const eventCategoriesWithoutMetadata = events.map((event) => {
       return {
         id: event._metadata.streamId,
         name: event._metadata.streamPosition.toString(),
@@ -48,11 +48,11 @@ export default defineEventHandler(async (event) => {
     })
 
     return {
-      data: eventsWithoutMetadata,
+      data: eventCategoriesWithoutMetadata,
       meta: {
         total,
-        limit,
-        offset
+        offset,
+        limit
       }
     }
   }

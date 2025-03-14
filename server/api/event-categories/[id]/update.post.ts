@@ -1,9 +1,10 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
-import { useSafeValidatedParams } from 'h3-zod'
-import { unpublishRbagEvent, type UnpublishRbagEvent } from '~~/server/eventDriven/rbagEvents/businessLogic'
-import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
+import { useSafeValidatedBody } from 'h3-zod'
+import { fromStreamName } from '@event-driven-io/emmett-mongodb'
+import { updateRbagEventCategory, type UpdateRbagEventCategory } from '~~/server/eventDriven/rbagEventCategories/businessLogic'
+import { evolve, generateRbagEventCategoryStreamName, initialState } from '~~/server/eventDriven/rbagEventCategories'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -17,13 +18,19 @@ export default defineEventHandler(async (event) => {
   /// /////// Parse and validate request body
   /////////////////////////////////////////
 
+  const bodySchema = z.object({
+    name: z.string().min(1),
+    description: z.string().min(1)
+  }).strict().partial()
+
   const {
     success: isValidParams,
-    data: validatedParams,
+    data: validatedData,
     error: validationError
-  } = await useSafeValidatedParams(event, {
-    id: z.string().uuid()
-  })
+  } = await useSafeValidatedBody(
+    event,
+    bodySchema
+  )
 
   if (!isValidParams) {
     throw createError({
@@ -34,34 +41,26 @@ export default defineEventHandler(async (event) => {
   }
 
   /////////////////////////////////////////
-  /// /////// Check if event exists
-  /////////////////////////////////////////
-
-  const eventStore = event.context.eventStore
-  const streamName = getRbagEventStreamNameById(validatedParams.id)
-  const eventStream = await eventStore.readStream(streamName)
-
-  if (!eventStream.streamExists) {
-    throw createError({
-      statusCode: 404,
-      message: 'Event not found'
-    })
-  }
-
-  /////////////////////////////////////////
   /// /////// Handle command
   /////////////////////////////////////////
 
-  const command: UnpublishRbagEvent = {
-    type: 'UnpublishRbagEvent',
-    data: {},
-    metadata: { requestedBy: user.email, now: new Date() }
-  }
-
   try {
+    const command: UpdateRbagEventCategory = {
+      type: 'UpdateRbagEventCategory',
+      data: validatedData,
+      metadata: { requestedBy: user.email, now: new Date() }
+    }
+
     const handle = CommandHandler({ evolve, initialState })
-    const { newState } = await handle(eventStore, streamName, () => unpublishRbagEvent(command))
-    return newState
+    const eventStore = event.context.eventStore
+    const streamname = generateRbagEventCategoryStreamName()
+
+    const { newState } = await handle(eventStore, streamname, state => updateRbagEventCategory(command, state))
+
+    return {
+      id: fromStreamName(streamname).streamId,
+      ...newState
+    }
   }
   catch (error) {
     console.error(error)

@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedParams } from 'h3-zod'
-import { cancelRbagEvent, type CancelRbagEvent } from '~~/server/eventDriven/businessLogic'
-import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
+import { cancelRbagEvent, type CancelRbagEvent } from '~~/server/eventDriven/rbagEvents/businessLogic'
+import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const eventStore = event.context.eventStore
-  const streamName = getStreamNameById(validatedParams.id)
+  const streamName = getRbagEventStreamNameById(validatedParams.id)
   const eventStream = await eventStore.readStream(streamName)
 
   if (!eventStream.streamExists) {

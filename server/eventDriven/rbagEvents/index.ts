@@ -1,11 +1,15 @@
 import type { Event } from '@event-driven-io/emmett'
-import { mongoDBInlineProjection, type MongoDBEventStore, type StreamName, type StreamType } from '@event-driven-io/emmett-mongodb'
+import { mongoDBInlineProjection, toStreamName, type MongoDBEventStore, type StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
 import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
-export const RbagEventStreamType: StreamType = 'rbag_event'
-export const generateRbagEventStreamName = (): StreamName<StreamType> => `${RbagEventStreamType}:${uuidv4()}`
-export const getStreamNameById = (id: string): StreamName<StreamType> => `${RbagEventStreamType}:${id}`
+/////////////////////////////////////////
+/// /////// Name generation
+/////////////////////////////////////////
+
+export const rbagEventStreamType: StreamType = 'rbag_event'
+export const generateRbagEventStreamName = () => toStreamName(rbagEventStreamType, uuidv4())
+export const getRbagEventStreamNameById = (id: string) => toStreamName(rbagEventStreamType, id)
 
 /////////////////////////////////////////
 /// /////// Events
@@ -160,7 +164,7 @@ export const rbagEventProjectionName = 'rbagEvent'
 
 export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: number, limit: number
 ) => eventStore.projections.inline.find<EventSchema[]>({
-  streamType: RbagEventStreamType,
+  streamType: rbagEventStreamType,
   projectionName: rbagEventProjectionName
 },
 {},
@@ -171,7 +175,7 @@ export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: numb
 
 export const getRbagEventById = (eventStore: MongoDBEventStore, id: string) =>
   eventStore.projections.inline.findOne<EventSchema[]>({
-    streamName: getStreamNameById(id),
+    streamName: getRbagEventStreamNameById(id),
     projectionName: rbagEventProjectionName
   })
 

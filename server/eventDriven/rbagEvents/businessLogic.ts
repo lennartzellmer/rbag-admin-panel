@@ -1,7 +1,9 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
 import { fromDate, now } from '@internationalized/date'
-import type { RbagEventCanceled, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled, RbagEventUnpublished } from './rbagEvent'
+import { getRbagEventCategoryById } from '../rbagEventCategories'
+import type { RbagEventCanceled, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled, RbagEventUnpublished } from '.'
 import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
+import { mongoEventStoreSingleton } from '~~/server/plugins/mongoEventStore'
 
 /////////////////////////////////////////
 /// /////// Commands
@@ -63,13 +65,18 @@ export type UnpublishRbagEvent = Command<
 /// /////// Business Logic
 /////////////////////////////////////////
 
-export const addRbagEventAsDraft = (
+export const addRbagEventAsDraft = async (
   command: AddRgabEventAsDraft
-): RbagEventCreated => {
+): Promise<RbagEventCreated> => {
   const {
     data,
     metadata
   } = command
+
+  const eventCategory = await getRbagEventCategoryById(mongoEventStoreSingleton, data.categoryId)
+  if (!eventCategory) {
+    throw new IllegalStateError('Event category does not exist')
+  }
 
   return {
     type: 'RbagEventCreated',
