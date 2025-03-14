@@ -1,4 +1,5 @@
 import { defineEventHandler } from 'h3'
+import { useSafeValidatedQuery } from 'h3-zod'
 import { getRbagEventsPaginated, rbagEventProjectionName, RbagEventStreamType } from '~~/server/eventDriven/rbagEvent'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
@@ -7,12 +8,11 @@ export default defineEventHandler(async (event) => {
   /// /////// Parse and validate request params
   /////////////////////////////////////////
 
-  const query = await getQuery(event)
   const {
     success: isValidParams,
     data: validatedParams,
     error: validationError
-  } = paginationQuerySchema.safeParse(query)
+  } = await useSafeValidatedQuery(event, paginationQuerySchema)
 
   if (!isValidParams) {
     throw createError({

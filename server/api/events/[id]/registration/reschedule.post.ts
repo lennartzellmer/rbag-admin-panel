@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
+import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { rescheduleRegistration, type RescheduleRegistration } from '~~/server/eventDriven/businessLogic'
 import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
 
@@ -13,29 +14,44 @@ export default defineEventHandler(async (event) => {
   const user = { email: 'test@test.de', name: 'Larry' }
 
   /////////////////////////////////////////
-  /// /////// Parse and validate request body
+  /// /////// Parse and validate request body and params
   /////////////////////////////////////////
 
-  const body = await readBody(event)
   const {
     success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = z.object({
-    eventId: z.string().uuid(),
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date()
-  }).strict().safeParse(body)
+    data: validatedParams,
+    error: validationErrorParams
+  } = await useSafeValidatedParams(event, {
+    id: z.string().uuid()
+  })
 
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
-      message: 'Invalid event data',
-      statusText: validationError?.message
+      message: 'Id must be a valid UUID',
+      statusText: validationErrorParams?.message
     })
   }
 
-  if (validatedData.startDate > validatedData.endDate) {
+  const {
+    success: isValidBody,
+    data: validatedBody,
+    error: validationErrorBody
+  } = await useSafeValidatedBody(event, {
+    eventId: z.string().uuid(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date()
+  })
+
+  if (!isValidBody) {
+    throw createError({
+      statusCode: 400,
+      message: 'Invalid event data',
+      statusText: validationErrorBody?.message
+    })
+  }
+
+  if (validatedBody.startDate > validatedBody.endDate) {
     throw createError({
       statusCode: 400,
       message: 'Start date must be before end date'
@@ -47,7 +63,7 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const eventStore = event.context.eventStore
-  const streamName = getStreamNameById(validatedData.eventId)
+  const streamName = getStreamNameById(validatedParams.id)
   const eventStream = await eventStore.readStream(streamName)
 
   if (!eventStream.streamExists) {
@@ -64,8 +80,8 @@ export default defineEventHandler(async (event) => {
   const command: RescheduleRegistration = {
     type: 'RescheduleRegistration',
     data: {
-      startDate: validatedData.startDate,
-      endDate: validatedData.endDate,
+      startDate: validatedBody.startDate,
+      endDate: validatedBody.endDate,
       lateRegistration: false
     },
     metadata: { requestedBy: user.email, now: new Date() }

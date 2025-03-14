@@ -1,6 +1,6 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
 import { fromDate, now } from '@internationalized/date'
-import type { RbagEventCanceled, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled } from './rbagEvent'
+import type { RbagEventCanceled, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled, RbagEventUnpublished } from './rbagEvent'
 import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
 
 /////////////////////////////////////////
@@ -173,11 +173,11 @@ export const publishRbagEvent = (
 
 export const unpublishRbagEvent = (
   command: UnpublishRbagEvent
-): RbagEventPublished => {
+): RbagEventUnpublished => {
   const { metadata } = command
 
   return {
-    type: 'RbagEventPublished',
+    type: 'RbagEventUnpublished',
     data: {},
     metadata: {
       changedBy: metadata.requestedBy

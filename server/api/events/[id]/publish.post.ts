@@ -1,8 +1,9 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
-import { addRbagEventAsDraft, type AddRgabEventAsDraft } from '~~/server/eventDriven/businessLogic'
-import { evolve, generateRbagEventStreamName, initialState } from '~~/server/eventDriven/rbagEvent'
+import { useSafeValidatedParams } from 'h3-zod'
+import { publishRbagEvent, type PublishRbagEvent } from '~~/server/eventDriven/businessLogic'
+import { evolve, getStreamNameById, initialState } from '~~/server/eventDriven/rbagEvent'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -16,23 +17,13 @@ export default defineEventHandler(async (event) => {
   /// /////// Parse and validate request body
   /////////////////////////////////////////
 
-  const bodySchema = z.object({
-    name: z.string().min(1),
-    abbreviation: z.string().min(1),
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
-    targetGroupDescription: z.string().min(1),
-    categoryId: z.string().uuid()
-  }).strict()
-
   const {
     success: isValidParams,
-    data: validatedData,
+    data: validatedParams,
     error: validationError
-  } = await readValidatedBody(
-    event,
-    body => bodySchema.safeParse(body)
-  )
+  } = await useSafeValidatedParams(event, {
+    id: z.string().uuid()
+  })
 
   if (!isValidParams) {
     throw createError({
@@ -42,25 +33,34 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (validatedData.startDate > validatedData.endDate) {
+  /////////////////////////////////////////
+  /// /////// Check if event exists
+  /////////////////////////////////////////
+
+  const eventStore = event.context.eventStore
+  const streamName = getStreamNameById(validatedParams.id)
+  const eventStream = await eventStore.readStream(streamName)
+
+  if (!eventStream.streamExists) {
     throw createError({
-      statusCode: 400,
-      message: 'Start date must be before end date'
+      statusCode: 404,
+      message: 'Event not found'
     })
   }
 
+  /////////////////////////////////////////
+  /// /////// Handle command
+  /////////////////////////////////////////
+
+  const command: PublishRbagEvent = {
+    type: 'PublishRbagEvent',
+    data: {},
+    metadata: { requestedBy: user.email, now: new Date() }
+  }
+
   try {
-    const command: AddRgabEventAsDraft = {
-      type: 'AddRbagEventAsDraft',
-      data: validatedData,
-      metadata: { requestedBy: user.email, now: new Date() }
-    }
-
     const handle = CommandHandler({ evolve, initialState })
-    const eventStore = event.context.eventStore
-
-    const { newState } = await handle(eventStore, generateRbagEventStreamName(), () => addRbagEventAsDraft(command))
-
+    const { newState } = await handle(eventStore, streamName, () => publishRbagEvent(command))
     return newState
   }
   catch (error) {
