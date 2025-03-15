@@ -43,6 +43,12 @@ export type RbagEventPerformanceSet = Event<
   RbagEventEventMetadata
 >
 
+export type RbagEventCategorySet = Event<
+  'RbagEventCategorySet',
+  { categoryId: string },
+  RbagEventEventMetadata
+>
+
 export type RbagEventRegistrationDetailsUpdated = Event<
   'RbagEventRegistrationDetailsUpdated',
   Pick<RegistrationSchema, 'confirmationText' | 'formPDFDownloadLink'>,
@@ -76,6 +82,7 @@ export type RbagEventEvent =
   | RbagEventCanceled
   | RbagEventPublished
   | RbagEventUnpublished
+  | RbagEventCategorySet
 
 export const initialState = (): EventSchema => {
   return {
@@ -146,6 +153,11 @@ export const evolve = (
       return {
         ...state,
         isPublished: false
+      }
+    case 'RbagEventCategorySet':
+      return {
+        ...state,
+        ...data
       }
     default: {
       // Exhaustive matching of the event type

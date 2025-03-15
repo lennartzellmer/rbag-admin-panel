@@ -2,10 +2,8 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
-import { fromStreamName } from '@event-driven-io/emmett-mongodb'
-import { updateRbagEventCategory, type UpdateRbagEventCategory } from '~~/server/eventDriven/rbagEventCategories/businessLogic'
-import { evolve, getRbagEventCategoryStreamNameById, initialState } from '~~/server/eventDriven/rbagEventCategories'
-import { updateRbagEventCategorySchema } from '~~/validation/categorySchema'
+import { setCategory, type SetCategory } from '~~/server/eventDriven/rbagEvents/businessLogic'
+import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -16,13 +14,13 @@ export default defineEventHandler(async (event) => {
   const user = { email: 'test@test.de', name: 'Larry' }
 
   /////////////////////////////////////////
-  /// /////// Parse and validate request params and body
+  /// /////// Parse and validate request body and params
   /////////////////////////////////////////
 
   const {
     success: isValidParams,
     data: validatedParams,
-    error: validationError
+    error: validationErrorParams
   } = await useSafeValidatedParams(event, {
     id: z.string().uuid()
   })
@@ -31,7 +29,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       message: 'Invalid event data',
-      statusText: validationError?.message
+      statusText: validationErrorParams?.message
     })
   }
 
@@ -39,10 +37,9 @@ export default defineEventHandler(async (event) => {
     success: isValidBody,
     data: validatedBody,
     error: validationErrorBody
-  } = await useSafeValidatedBody(
-    event,
-    updateRbagEventCategorySchema
-  )
+  } = await useSafeValidatedBody(event, {
+    categoryId: z.string().uuid()
+  })
 
   if (!isValidBody) {
     throw createError({
@@ -53,26 +50,36 @@ export default defineEventHandler(async (event) => {
   }
 
   /////////////////////////////////////////
+  /// /////// Check if event exists
+  /////////////////////////////////////////
+
+  const eventStore = event.context.eventStore
+  const streamName = getRbagEventStreamNameById(validatedParams.id)
+  const eventStream = await eventStore.readStream(streamName)
+
+  if (!eventStream.streamExists) {
+    throw createError({
+      statusCode: 404,
+      message: 'Event not found'
+    })
+  }
+
+  /////////////////////////////////////////
   /// /////// Handle command
   /////////////////////////////////////////
 
+  const command: SetCategory = {
+    type: 'SetCategory',
+    data: {
+      categoryId: validatedBody.categoryId
+    },
+    metadata: { requestedBy: user.email, now: new Date() }
+  }
+
   try {
-    const command: UpdateRbagEventCategory = {
-      type: 'UpdateRbagEventCategory',
-      data: validatedBody,
-      metadata: { requestedBy: user.email, now: new Date() }
-    }
-
     const handle = CommandHandler({ evolve, initialState })
-    const eventStore = event.context.eventStore
-    const streamname = getRbagEventCategoryStreamNameById(validatedParams.id)
-
-    const { newState } = await handle(eventStore, streamname, () => updateRbagEventCategory(command))
-
-    return {
-      id: fromStreamName(streamname).streamId,
-      ...newState
-    }
+    const { newState } = await handle(eventStore, streamName, () => setCategory(command))
+    return newState
   }
   catch (error) {
     console.error(error)
