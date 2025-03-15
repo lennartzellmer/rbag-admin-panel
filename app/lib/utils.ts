@@ -1,13 +1,13 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { parseDate, today, getLocalTimeZone } from '@internationalized/date'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getEventStatusFromEvent(event: EventSchema) {
+export function getEventStatusFromEvent(event: RbagEvent) {
   if (event.isPublished === false) return 'DRAFT'
   if (event.isCanceled) return 'CANCELED'
   if (!event.registration) return 'SAVE_THE_DATE'

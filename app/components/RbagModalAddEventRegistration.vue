@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { CalendarPlus } from 'lucide-vue-next'
 import { addEventRegistration } from '~/services/events'
-import type { RegistrationSchema } from '~~/validation/eventSchema'
+import type { RegistrationDetails } from '~~/validation/eventSchema'
 
 const props = defineProps<{
   eventId: string
 }>()
 
 const emit = defineEmits<{
-  added: [registration: RegistrationSchema]
+  added: [registration: RegistrationDetails]
 }>()
 
 const modalOpen = ref(false)
 
-const onSubmit = async (values: RegistrationSchema) => {
+const onSubmit = async (values: RegistrationDetails) => {
   try {
     const eventRegistration = await addEventRegistration(props.eventId, values)
     emit('added', eventRegistration)

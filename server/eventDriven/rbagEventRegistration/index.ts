@@ -1,7 +1,7 @@
 import type { Event } from '@event-driven-io/emmett'
 import { toStreamName, type StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import type { CategorySchema, CreateRbagEventCategorySchema, UpdateRbagEventCategorySchema } from '~~/validation/categorySchema'
+import type { CategorySchema } from '~~/validation/categorySchema'
 
 /////////////////////////////////////////
 /// /////// Name generation

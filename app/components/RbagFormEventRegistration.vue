@@ -2,19 +2,19 @@
 import { parseDate } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import type { RegistrationSchema } from '~~/validation/eventSchema'
-import { registrationSchema } from '~~/validation/eventSchema'
+import type { RegistrationDetails } from '~~/validation/eventSchema'
+import { RegistrationDetailsSchema } from '~~/validation/eventSchema'
 
 const props = defineProps<{
-  initialData?: RegistrationSchema | null
+  initialData?: RegistrationDetails | null
   submitLabel?: string
 }>()
 
 const emit = defineEmits<{
-  submit: [event: RegistrationSchema]
+  submit: [event: RegistrationDetails]
 }>()
 
-const formSchema = toTypedSchema(registrationSchema)
+const formSchema = toTypedSchema(RegistrationDetailsSchema)
 
 const { handleSubmit, values, setFieldValue } = useForm({
   validationSchema: formSchema,

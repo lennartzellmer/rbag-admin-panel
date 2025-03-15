@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { getCategories } from '~/services/categories'
 import { createEventDraft } from '~/services/events'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 
 const { data: eventCategories } = await useAsyncData('categories', () => getCategories())
 
-const onSubmit = async (values: EventSchema) => {
+const onSubmit = async (values: RbagEvent) => {
   try {
     const event = await createEventDraft(values)
     navigateTo(`/admin/events/${event.id}`)

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { BadgeVariants } from '~/components/ui/badge'
 import { Badge } from '~/components/ui/badge'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 import { getEventStatusFromEvent } from '~/lib/utils'
 
 const props = defineProps<{
-  event: EventSchema
+  event: RbagEvent
 }>()
 
 const eventStatus = computed(() => getEventStatusFromEvent(props.event))

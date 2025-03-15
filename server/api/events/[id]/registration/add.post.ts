@@ -4,7 +4,7 @@ import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { addRegistrationDetails, type AddRegistrationDetails } from '~~/server/eventDriven/rbagEvents/businessLogic'
 import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
-import { registrationSchema } from '~~/validation/eventSchema'
+import { RegistrationDetailsSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     success: isValidBody,
     data: validatedBody,
     error: validationErrorBody
-  } = await useSafeValidatedBody(event, registrationSchema)
+  } = await useSafeValidatedBody(event, RegistrationDetailsSchema)
 
   if (!isValidBody) {
     throw createError({

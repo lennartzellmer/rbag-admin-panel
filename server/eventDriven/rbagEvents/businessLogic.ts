@@ -2,7 +2,7 @@ import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@e
 import { fromDate, now } from '@internationalized/date'
 import { getRbagEventCategoryById } from '../rbagEventCategories'
 import type { RbagEventCanceled, RbagEventCategorySet, RbagEventCreated, RbagEventPerformanceSet, RbagEventPublished, RbagEventRegistrationAdded, RbagEventRegistrationDetailsUpdated, RbagEventRegistrationRescheduled, RbagEventUnpublished } from '.'
-import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
+import type { EventDetails, RbagEvent, Performance, RegistrationDetails } from '~~/validation/eventSchema'
 import { mongoEventStoreSingleton } from '~~/server/plugins/mongoEventStore'
 
 /////////////////////////////////////////
@@ -15,31 +15,31 @@ export type EventCommandMetadata = DefaultCommandMetadata & {
 
 export type AddRgabEventAsDraft = Command<
   'AddRbagEventAsDraft',
-  EventDetailsSchema,
+  EventDetails,
   EventCommandMetadata
 >
 
 export type AddRegistrationDetails = Command<
   'AddRegistrationDetails',
-  RegistrationSchema,
+  RegistrationDetails,
   EventCommandMetadata
 >
 
 export type RescheduleRegistration = Command<
   'RescheduleRegistration',
-  RegistrationSchema,
+  RegistrationDetails,
   EventCommandMetadata
 >
 
 export type UpdateRegistrationDetails = Command<
   'UpdateRegistrationDetails',
-  Pick<RegistrationSchema, 'confirmationText' | 'formPDFDownloadLink'>,
+  Pick<RegistrationDetails, 'confirmationText' | 'formPDFDownloadLink'>,
   EventCommandMetadata
 >
 
 export type SetPerformanceDetails = Command<
   'SetPerformanceDetails',
-  PerformanceSchema,
+  Performance,
   EventCommandMetadata
 >
 
@@ -95,7 +95,7 @@ export const addRbagEventAsDraft = async (
 
 export const addRegistrationDetails = (
   command: AddRegistrationDetails,
-  state: EventSchema
+  state: RbagEvent
 ): RbagEventRegistrationAdded => {
   const {
     data,
@@ -157,7 +157,7 @@ export const setCategory = async (
 
 export const updateRegistrationDetails = (
   command: UpdateRegistrationDetails,
-  state: EventSchema
+  state: RbagEvent
 ): RbagEventRegistrationDetailsUpdated => {
   const {
     data,
@@ -222,7 +222,7 @@ export const unpublishRbagEvent = (
 
 export const rescheduleRegistration = (
   command: RescheduleRegistration,
-  state: EventSchema
+  state: RbagEvent
 ): RbagEventRegistrationRescheduled => {
   const {
     data,

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { CircleCheck, CircleDashed, CircleDot } from 'lucide-vue-next'
 import { getEventStatusFromEvent, type EventStatus } from '~/lib/utils'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 
 const props = defineProps<{
-  event: EventSchema
+  event: RbagEvent
 }>()
 
 const eventStatus = computed(() => getEventStatusFromEvent(props.event))

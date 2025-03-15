@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { PartialDeep } from 'type-fest'
 import type { useForm } from 'vee-validate'
-import type { LocationSchema } from '~~/validation/eventSchema'
+import type { Location } from '~~/validation/eventSchema'
 
 defineProps<{
-  values: ReturnType<typeof useForm<PartialDeep<LocationSchema>>>['values']
-  setFieldValue: ReturnType<typeof useForm<PartialDeep<LocationSchema>>>['setFieldValue']
+  values: ReturnType<typeof useForm<PartialDeep<Location>>>['values']
+  setFieldValue: ReturnType<typeof useForm<PartialDeep<Location>>>['setFieldValue']
 }>()
 </script>
 

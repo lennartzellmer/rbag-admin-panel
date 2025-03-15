@@ -1,7 +1,7 @@
 import type { Event } from '@event-driven-io/emmett'
 import { mongoDBInlineProjection, toStreamName, type MongoDBEventStore, type StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import type { EventDetailsSchema, EventSchema, PerformanceSchema, RegistrationSchema } from '~~/validation/eventSchema'
+import type { EventDetails, RbagEvent, Performance, RegistrationDetails } from '~~/validation/eventSchema'
 
 /////////////////////////////////////////
 /// /////// Name generation
@@ -21,25 +21,25 @@ export type RbagEventEventMetadata = {
 
 export type RbagEventCreated = Event<
   'RbagEventCreated',
-  EventDetailsSchema,
+  EventDetails,
   RbagEventEventMetadata
 >
 
 export type RbagEventRegistrationAdded = Event<
   'RbagEventRegistrationAdded',
-  RegistrationSchema,
+  RegistrationDetails,
   RbagEventEventMetadata
 >
 
 export type RbagEventRegistrationRescheduled = Event<
   'RbagEventRegistrationRescheduled',
-  RegistrationSchema,
+  RegistrationDetails,
   RbagEventEventMetadata
 >
 
 export type RbagEventPerformanceSet = Event<
   'RbagEventPerformanceSet',
-  PerformanceSchema,
+  Performance,
   RbagEventEventMetadata
 >
 
@@ -51,7 +51,7 @@ export type RbagEventCategorySet = Event<
 
 export type RbagEventRegistrationDetailsUpdated = Event<
   'RbagEventRegistrationDetailsUpdated',
-  Pick<RegistrationSchema, 'confirmationText' | 'formPDFDownloadLink'>,
+  Pick<RegistrationDetails, 'confirmationText' | 'formPDFDownloadLink'>,
   RbagEventEventMetadata
 >
 
@@ -84,7 +84,7 @@ export type RbagEventEvent =
   | RbagEventUnpublished
   | RbagEventCategorySet
 
-export const initialState = (): EventSchema => {
+export const initialState = (): RbagEvent => {
   return {
     details: {
       name: '',
@@ -104,9 +104,9 @@ export const initialState = (): EventSchema => {
 /////////////////////////////////////////
 
 export const evolve = (
-  state: EventSchema,
+  state: RbagEvent,
   event: RbagEventEvent
-): EventSchema => {
+): RbagEvent => {
   const { type, data } = event
 
   switch (type) {
@@ -175,7 +175,7 @@ export const evolve = (
 export const rbagEventProjectionName = 'rbagEvent'
 
 export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: number, limit: number
-) => eventStore.projections.inline.find<EventSchema[]>({
+) => eventStore.projections.inline.find<RbagEvent[]>({
   streamType: rbagEventStreamType,
   projectionName: rbagEventProjectionName
 },
@@ -186,7 +186,7 @@ export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: numb
 })
 
 export const getRbagEventById = (eventStore: MongoDBEventStore, id: string) =>
-  eventStore.projections.inline.findOne<EventSchema[]>({
+  eventStore.projections.inline.findOne<RbagEvent[]>({
     streamName: getRbagEventStreamNameById(id),
     projectionName: rbagEventProjectionName
   })

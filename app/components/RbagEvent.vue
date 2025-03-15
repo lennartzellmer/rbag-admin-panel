@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { DateFormatter } from '@internationalized/date'
 import { BookOpenCheck, CalendarFold, MapPinned } from 'lucide-vue-next'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 
 defineProps<{
-  event: EventSchema
+  event: RbagEvent
 }>()
 
 const router = useRouter()

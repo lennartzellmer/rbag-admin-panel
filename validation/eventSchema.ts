@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const locationSchema = z.object({
+export const LocationSchema = z.object({
   name: z.string().min(1),
   line1: z.string().min(1),
   line2: z.string().nullable(),
@@ -9,15 +9,15 @@ export const locationSchema = z.object({
   geoLocation: z.array(z.number())
 })
 
-export const performanceSchema = z.object({
+export const PerformanceSchema = z.object({
   description: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  location: locationSchema,
+  location: LocationSchema,
   posterDownloadUrl: z.string().url()
 })
 
-export const registrationSchema = z.object({
+export const RegistrationDetailsSchema = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   lateRegistration: z.boolean(),
@@ -25,30 +25,30 @@ export const registrationSchema = z.object({
   confirmationText: z.string().min(1).optional()
 })
 
-export const eventDetailsSchema = z.object({
+export const EventDetailsSchema = z.object({
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   categoryId: z.string().uuid(),
   abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   targetGroupDescription: z.string().min(1),
-  location: locationSchema.optional()
+  location: LocationSchema.optional()
 })
 
-export const eventSchema = z.object({
-  details: eventDetailsSchema,
+export const RbagEventSchema = z.object({
+  details: EventDetailsSchema,
   isPublished: z.boolean(),
   isCanceled: z.boolean(),
   workshopOffer: z.array(z.string().uuid()).optional(),
   alternativeProgram: z.array(z.string().uuid()).optional(),
-  performance: performanceSchema.optional(),
-  registration: registrationSchema.optional()
+  performance: PerformanceSchema.optional(),
+  registration: RegistrationDetailsSchema.optional()
 })
 
-export type EventSchema = z.infer<typeof eventSchema>
+export type RbagEvent = z.infer<typeof RbagEventSchema>
 
-export type EventDetailsSchema = z.infer<typeof eventDetailsSchema>
-export type LocationSchema = z.infer<typeof locationSchema>
-export type PerformanceSchema = z.infer<typeof performanceSchema>
+export type EventDetails = z.infer<typeof EventDetailsSchema>
+export type Location = z.infer<typeof LocationSchema>
+export type Performance = z.infer<typeof PerformanceSchema>
 
-export type RegistrationSchema = z.infer<typeof registrationSchema>
+export type RegistrationDetails = z.infer<typeof RegistrationDetailsSchema>

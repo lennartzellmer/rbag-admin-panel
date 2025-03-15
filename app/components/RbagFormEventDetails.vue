@@ -3,21 +3,21 @@ import { useForm } from 'vee-validate'
 import { parseDate } from '@internationalized/date'
 import type { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 import type { categorySchema } from '~~/validation/categorySchema'
-import { eventSchema } from '~~/validation/eventSchema'
+import { RbagEventSchema } from '~~/validation/eventSchema'
 
 const props = defineProps<{
   eventCategories: z.infer<typeof categorySchema>[]
-  initialData?: EventSchema
+  initialData?: RbagEvent
   submitLabel?: string
 }>()
 
 const emit = defineEmits<{
-  submit: [event: EventSchema]
+  submit: [event: RbagEvent]
 }>()
 
-const formSchema = toTypedSchema(eventSchema)
+const formSchema = toTypedSchema(RbagEventSchema)
 
 const { handleSubmit, values, setFieldValue } = useForm({
   validationSchema: formSchema,

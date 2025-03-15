@@ -4,7 +4,7 @@ import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { setPerformanceDetails, type SetPerformanceDetails } from '~~/server/eventDriven/rbagEvents/businessLogic'
 import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
-import { locationSchema } from '~~/validation/eventSchema'
+import { LocationSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     description: z.string().min(1),
-    location: locationSchema,
+    location: LocationSchema,
     posterDownloadUrl: z.string().min(1)
   })
 

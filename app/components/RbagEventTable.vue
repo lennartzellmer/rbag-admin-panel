@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { EventSchema } from '~~/validation/eventSchema'
+import type { RbagEvent } from '~~/validation/eventSchema'
 
 defineProps<{
-  events: EventSchema[]
+  events: RbagEvent[]
 }>()
 </script>
 
