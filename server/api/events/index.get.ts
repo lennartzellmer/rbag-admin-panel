@@ -42,7 +42,6 @@ export default defineEventHandler(async (event) => {
     const eventsWithoutMetadata = events.map((event) => {
       return {
         id: event._metadata.streamId,
-        name: event._metadata.streamPosition.toString(),
         ...excludeKey(event, '_metadata')
       }
     })
