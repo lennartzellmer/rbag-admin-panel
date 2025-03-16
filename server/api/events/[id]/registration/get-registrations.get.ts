@@ -6,7 +6,7 @@ import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
-  /// /////// Parse and validate request body
+  /// /////// Parse and validate params and query
   /////////////////////////////////////////
 
   const {
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
   const { offset, limit } = validatedQuery
 
   /////////////////////////////////////////
-  /// /////// Check if event exists
+  /// /////// Get registrations for event id
   /////////////////////////////////////////
 
   const eventStore = event.context.eventStore
