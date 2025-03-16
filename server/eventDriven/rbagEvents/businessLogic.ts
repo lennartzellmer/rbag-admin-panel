@@ -27,7 +27,7 @@ export type AddRegistrationDetails = Command<
 
 export type RescheduleRegistration = Command<
   'RescheduleRegistration',
-  RegistrationDetails,
+  Pick<RegistrationDetails, 'startDate' | 'endDate' | 'lateRegistration'>,
   EventCommandMetadata
 >
 

@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
     data: {
       startDate: validatedBody.startDate,
       endDate: validatedBody.endDate,
-      lateRegistration: false
+      lateRegistration: validatedBody.lateRegistration
     },
     metadata: { requestedBy: user.email, now: new Date() }
   }
