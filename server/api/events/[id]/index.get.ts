@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedParams } from 'h3-zod'
 import { getRbagEventById } from '~~/server/eventDriven/rbagEvents'
+import { excludeKey } from '~~/server/utils/excludeKey'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -45,9 +46,3 @@ export default defineEventHandler(async (event) => {
     ...excludeKey(rbagEvent, '_metadata')
   }
 })
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const excludeKey = <T extends object, U extends keyof any>(obj: T, key: U) => {
-  const { [key]: _, ...newObj } = obj
-  return newObj
-}
