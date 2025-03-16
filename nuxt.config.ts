@@ -11,12 +11,8 @@ export default defineNuxtConfig({
   ],
   ssr: false,
   devtools: { enabled: true },
-  runtimeConfig: {
-    mongodbUri: process.env.NUXT_MONGODB_URI
-  },
   future: { compatibilityVersion: 4 },
   compatibilityDate: '2024-11-01',
-
   eslint: {
     config: {
       stylistic: {
