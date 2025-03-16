@@ -108,7 +108,7 @@ export const addRegistrationDetails = (
   const { registration } = state
 
   if (registration)
-    throw new IllegalStateError('Registration already exists')
+    throw new IllegalStateError('Registration details already added. Please update instead.')
 
   return {
     type: 'RbagEventRegistrationAdded',

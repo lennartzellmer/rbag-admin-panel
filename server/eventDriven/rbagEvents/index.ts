@@ -129,7 +129,10 @@ export const evolve = (
     case 'RbagEventRegistrationRescheduled':
       return {
         ...state,
-        registration: data
+        registration: {
+          ...state.registration!,
+          ...data
+        }
       }
     case 'RbagEventRegistrationDetailsUpdated':
       return {
@@ -196,8 +199,13 @@ export const rbagEventProjection = mongoDBInlineProjection({
   evolve,
   canHandle: [
     'RbagEventCreated',
-    'RbagEventPerformanceSet',
     'RbagEventRegistrationAdded',
-    'RbagEventRegistrationRescheduled'
+    'RbagEventPerformanceSet',
+    'RbagEventRegistrationRescheduled',
+    'RbagEventRegistrationDetailsUpdated',
+    'RbagEventCanceled',
+    'RbagEventPublished',
+    'RbagEventUnpublished',
+    'RbagEventCategorySet'
   ]
 })

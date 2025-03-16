@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
   } = await useSafeValidatedBody(event, RegistrationDetailsSchema.pick({
     formPDFDownloadLink: true,
     confirmationText: true
-  }))
+  }).strict())
 
   if (!isValidBody) {
     throw createError({

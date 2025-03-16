@@ -4,6 +4,7 @@ import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { rescheduleRegistration, type RescheduleRegistration } from '~~/server/eventDriven/rbagEvents/businessLogic'
 import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
+import { RegistrationDetailsSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -37,11 +38,11 @@ export default defineEventHandler(async (event) => {
     success: isValidBody,
     data: validatedBody,
     error: validationErrorBody
-  } = await useSafeValidatedBody(event, {
-    eventId: z.string().uuid(),
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date()
-  })
+  } = await useSafeValidatedBody(event, RegistrationDetailsSchema.pick({
+    startDate: true,
+    endDate: true,
+    lateRegistration: true
+  }).strict())
 
   if (!isValidBody) {
     throw createError({
