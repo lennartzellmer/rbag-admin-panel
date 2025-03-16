@@ -1,6 +1,8 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
-import type { RbagEventCategoryCreated, RbagEventCategoryUpdated } from '.'
-import type { CreateRbagEventCategorySchema, UpdateRbagEventCategorySchema } from '~~/validation/categorySchema'
+import { getRbagEventById } from '../rbagEvents'
+import type { RbagEventRegistrationCreated } from '.'
+import type { Registration } from '~~/validation/registrationSchema'
+import { mongoEventStoreSingleton } from '~~/server/plugins/mongoEventStore'
 
 /////////////////////////////////////////
 /// /////// Commands
@@ -10,15 +12,9 @@ export type EventCommandMetadata = DefaultCommandMetadata & {
   requestedBy: string
 }
 
-export type CreateRbagEventCategory = Command<
-  'CreateRbagEventCategory',
-  CreateRbagEventCategorySchema,
-  EventCommandMetadata
->
-
-export type UpdateRbagEventCategory = Command<
-  'UpdateRbagEventCategory',
-  UpdateRbagEventCategorySchema,
+export type CreateRbagEventRegistration = Command<
+  'CreateRbagEventRegistration',
+  Registration,
   EventCommandMetadata
 >
 
@@ -26,37 +22,21 @@ export type UpdateRbagEventCategory = Command<
 /// /////// Business Logic
 /////////////////////////////////////////
 
-export const createRbagEventCategory = (
-  command: CreateRbagEventCategory
-): RbagEventCategoryCreated => {
+export const createRbagEventRegistration = async (
+  command: CreateRbagEventRegistration
+): Promise<RbagEventRegistrationCreated> => {
   const {
     data,
     metadata
   } = command
 
-  return {
-    type: 'RbagEventCategoryCreated',
-    data: data,
-    metadata: {
-      changedBy: metadata.requestedBy
-    }
-  }
-}
-
-export const updateRbagEventCategory = (
-  command: UpdateRbagEventCategory
-): RbagEventCategoryUpdated => {
-  const {
-    data,
-    metadata
-  } = command
-
-  if (!data.name && !data.description) {
-    throw new IllegalStateError('Category name and description are missing. At least one of them must be provided')
+  const event = await getRbagEventById(mongoEventStoreSingleton, data.eventId)
+  if (!event) {
+    throw new IllegalStateError('Event does not exist')
   }
 
   return {
-    type: 'RbagEventCategoryUpdated',
+    type: 'RbagEventRegistrationCreated',
     data: data,
     metadata: {
       changedBy: metadata.requestedBy

@@ -1,15 +1,15 @@
 import type { Event } from '@event-driven-io/emmett'
-import { toStreamName, type StreamType } from '@event-driven-io/emmett-mongodb'
+import { mongoDBInlineProjection, toStreamName, type MongoDBEventStore, type StreamType } from '@event-driven-io/emmett-mongodb'
 import { v4 as uuidv4 } from 'uuid'
-import type { CategorySchema } from '~~/validation/categorySchema'
+import type { Registration, RegistrationUpdate } from '~~/validation/registrationSchema'
 
 /////////////////////////////////////////
 /// /////// Name generation
 /////////////////////////////////////////
 
-export const rbagEventCategoryStreamType: StreamType = 'rbag_event_registration'
-export const generateRbagEventCategoryStreamName = () => toStreamName(rbagEventCategoryStreamType, uuidv4())
-export const getRbagEventCategoryStreamNameById = (id: string) => toStreamName(rbagEventCategoryStreamType, id)
+export const rbagEventRegistrationStreamType: StreamType = 'rbag_event_registration'
+export const generateRbagEventRegistrationStreamName = () => toStreamName(rbagEventRegistrationStreamType, uuidv4())
+export const getRbagEventRegistrationStreamNameById = (id: string) => toStreamName(rbagEventRegistrationStreamType, id)
 
 /////////////////////////////////////////
 /// /////// Events
@@ -21,38 +21,46 @@ export type RbagEventEventMetadata = {
 
 export type RbagEventRegistrationCreated = Event<
   'RbagEventRegistrationCreated',
-  {
-    name: string
-    birthDate: string
-    email: string
-    phone: string
-  },
+  Registration,
+  RbagEventEventMetadata
+>
+
+export type RbagEventRegistrationUpdated = Event<
+  'RbagEventRegistrationUpdated',
+  RegistrationUpdate,
   RbagEventEventMetadata
 >
 
 export type RbagEventRegistrationEvent =
   | RbagEventRegistrationCreated
-
-export const initialState = (): CategorySchema => {
-  return {
-    name: '',
-    description: ''
-  }
-}
+  | RbagEventRegistrationUpdated
 
 /////////////////////////////////////////
 /// /////// Evolve
 /////////////////////////////////////////
 
 export const evolve = (
-  state: CategorySchema,
+  state: Registration | null,
   event: RbagEventRegistrationEvent
-): CategorySchema => {
+): Registration | null => {
   const { type, data } = event
+
+  if (!state) {
+    if (type === 'RbagEventRegistrationCreated') {
+      return { ...data }
+    }
+    return state
+  }
 
   switch (type) {
     case 'RbagEventRegistrationCreated': {
-      return data
+      return { ...data }
+    }
+    case 'RbagEventRegistrationUpdated': {
+      return {
+        ...state,
+        ...data
+      }
     }
     default: {
       // Exhaustive matching of the event type
@@ -68,3 +76,25 @@ export const evolve = (
 /////////////////////////////////////////
 
 export const rbagEventRegistrationProjectionName = 'rbagEventRegistration'
+
+export const getRbagEventRegistrationsByEventIdPaginated = (eventStore: MongoDBEventStore, eventId: string, skip: number, limit: number
+) => eventStore.projections.inline.find<Registration[]>({
+  streamType: rbagEventRegistrationStreamType,
+  projectionName: rbagEventRegistrationProjectionName
+},
+{ eventId },
+{ limit, skip })
+
+export const getRbagEventRegistrationById = (eventStore: MongoDBEventStore, id: string) =>
+  eventStore.projections.inline.findOne<Registration>({
+    streamName: getRbagEventRegistrationStreamNameById(id),
+    projectionName: rbagEventRegistrationProjectionName
+  })
+
+export const rbagEventRegistrationProjection = mongoDBInlineProjection({
+  name: rbagEventRegistrationProjectionName,
+  evolve,
+  canHandle: [
+    'RbagEventRegistrationCreated'
+  ]
+})
