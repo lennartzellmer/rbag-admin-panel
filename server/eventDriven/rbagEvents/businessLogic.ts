@@ -191,8 +191,8 @@ export const cancelRbagEvent = (
   if (!state)
     throw new IllegalStateError('Event has not been created yet')
 
-  if (state.isPublished === false)
-    throw new IllegalStateError('Event is already unpublished')
+  if (state.isCanceled === true)
+    throw new IllegalStateError('Event is already canceled')
 
   return {
     type: 'RbagEventCanceled',
@@ -212,8 +212,8 @@ export const publishRbagEvent = (
   if (!state)
     throw new IllegalStateError('Event has not been created yet')
 
-  if (state.isPublished === false)
-    throw new IllegalStateError('Event is already unpublished')
+  if (state.isPublished === true)
+    throw new IllegalStateError('Event is already published')
 
   return {
     type: 'RbagEventPublished',
