@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedParams, useSafeValidatedQuery } from 'h3-zod'
-import { getRbagEventRegistrationCountByEventId, getRbagEventRegistrationsByEventIdPaginated, rbagEventRegistrationProjectionName, rbagEventRegistrationStreamType } from '~~/server/eventDriven/rbagEventRegistration'
+import { getRbagEventRegistrationCountByEventId, getRbagEventRegistrationsByEventIdPaginated } from '~~/server/eventDriven/rbagEventRegistration'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
