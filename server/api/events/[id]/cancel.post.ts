@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const handle = CommandHandler({ evolve, initialState })
-    const { newState } = await handle(eventStore, streamName, () => cancelRbagEvent(command))
+    const { newState } = await handle(eventStore, streamName, state => cancelRbagEvent(command, state))
     return newState
   }
   catch (error) {

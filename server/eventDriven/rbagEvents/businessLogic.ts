@@ -170,9 +170,7 @@ export const updateRegistrationDetails = (
   if (!state)
     throw new IllegalStateError('Event has not been created yet')
 
-  const { registration } = state
-
-  if (!registration)
+  if (!state.registration)
     throw new IllegalStateError('Registration does not exist yet')
 
   return {
@@ -185,9 +183,16 @@ export const updateRegistrationDetails = (
 }
 
 export const cancelRbagEvent = (
-  command: CancelRbagEvent
+  command: CancelRbagEvent,
+  state: RbagEvent | null
 ): RbagEventCanceled => {
   const { metadata } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
+
+  if (state.isPublished === false)
+    throw new IllegalStateError('Event is already unpublished')
 
   return {
     type: 'RbagEventCanceled',
@@ -199,9 +204,16 @@ export const cancelRbagEvent = (
 }
 
 export const publishRbagEvent = (
-  command: PublishRbagEvent
+  command: PublishRbagEvent,
+  state: RbagEvent | null
 ): RbagEventPublished => {
   const { metadata } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
+
+  if (state.isPublished === false)
+    throw new IllegalStateError('Event is already unpublished')
 
   return {
     type: 'RbagEventPublished',
@@ -213,9 +225,16 @@ export const publishRbagEvent = (
 }
 
 export const unpublishRbagEvent = (
-  command: UnpublishRbagEvent
+  command: UnpublishRbagEvent,
+  state: RbagEvent | null
 ): RbagEventUnpublished => {
   const { metadata } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
+
+  if (state.isPublished === false)
+    throw new IllegalStateError('Event is already unpublished')
 
   return {
     type: 'RbagEventUnpublished',
