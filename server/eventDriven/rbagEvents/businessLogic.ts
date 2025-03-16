@@ -95,12 +95,15 @@ export const addRbagEventAsDraft = async (
 
 export const addRegistrationDetails = (
   command: AddRegistrationDetails,
-  state: RbagEvent
+  state: RbagEvent | null
 ): RbagEventRegistrationAdded => {
   const {
     data,
     metadata
   } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
 
   const { registration } = state
 
@@ -157,12 +160,15 @@ export const setCategory = async (
 
 export const updateRegistrationDetails = (
   command: UpdateRegistrationDetails,
-  state: RbagEvent
+  state: RbagEvent | null
 ): RbagEventRegistrationDetailsUpdated => {
   const {
     data,
     metadata
   } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
 
   const { registration } = state
 
@@ -222,12 +228,15 @@ export const unpublishRbagEvent = (
 
 export const rescheduleRegistration = (
   command: RescheduleRegistration,
-  state: RbagEvent
+  state: RbagEvent | null
 ): RbagEventRegistrationRescheduled => {
   const {
     data,
     metadata
   } = command
+
+  if (!state)
+    throw new IllegalStateError('Event has not been created yet')
 
   const { registration } = state
 

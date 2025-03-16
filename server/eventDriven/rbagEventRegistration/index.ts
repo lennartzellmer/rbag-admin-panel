@@ -35,6 +35,8 @@ export type RbagEventRegistrationEvent =
   | RbagEventRegistrationCreated
   | RbagEventRegistrationUpdated
 
+export const initialState = () => null
+
 /////////////////////////////////////////
 /// /////// Evolve
 /////////////////////////////////////////
@@ -77,13 +79,20 @@ export const evolve = (
 
 export const rbagEventRegistrationProjectionName = 'rbagEventRegistration'
 
-export const getRbagEventRegistrationsByEventIdPaginated = (eventStore: MongoDBEventStore, eventId: string, skip: number, limit: number
-) => eventStore.projections.inline.find<Registration[]>({
+export const getRbagEventRegistrationsByEventIdPaginated
+= (eventStore: MongoDBEventStore, eventId: string, skip: number, limit: number) => eventStore.projections.inline.find<Registration[]>({
   streamType: rbagEventRegistrationStreamType,
   projectionName: rbagEventRegistrationProjectionName
 },
 { eventId },
 { limit, skip })
+
+export const getRbagEventRegistrationCountByEventId = (eventStore: MongoDBEventStore, eventId: string) => eventStore.projections.inline.count({
+  streamType: rbagEventRegistrationStreamType,
+  projectionName: rbagEventRegistrationProjectionName
+},
+{ eventId: eventId }
+)
 
 export const getRbagEventRegistrationById = (eventStore: MongoDBEventStore, id: string) =>
   eventStore.projections.inline.findOne<Registration>({

@@ -84,30 +84,30 @@ export type RbagEventEvent =
   | RbagEventUnpublished
   | RbagEventCategorySet
 
-export const initialState = (): RbagEvent => {
-  return {
-    details: {
-      name: '',
-      abbreviation: '',
-      startDate: new Date(),
-      endDate: new Date(),
-      targetGroupDescription: '',
-      categoryId: ''
-    },
-    isCanceled: false,
-    isPublished: false
-  }
-}
+export const initialState = () => null
 
 /////////////////////////////////////////
 /// /////// Evolve
 /////////////////////////////////////////
 
 export const evolve = (
-  state: RbagEvent,
+  state: RbagEvent | null,
   event: RbagEventEvent
-): RbagEvent => {
+): RbagEvent | null => {
   const { type, data } = event
+
+  // Handle the case where the state is null
+  // This is the case when the event is the first event in the stream
+  if (!state) {
+    if (type === 'RbagEventCreated') {
+      return {
+        details: data,
+        isPublished: false,
+        isCanceled: false
+      }
+    }
+    return state
+  }
 
   switch (type) {
     case 'RbagEventCreated':
@@ -199,6 +199,5 @@ export const rbagEventProjection = mongoDBInlineProjection({
     'RbagEventPerformanceSet',
     'RbagEventRegistrationAdded',
     'RbagEventRegistrationRescheduled'
-  ],
-  initialState
+  ]
 })

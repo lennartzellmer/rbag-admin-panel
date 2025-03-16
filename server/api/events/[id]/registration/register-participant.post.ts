@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const handle = CommandHandler({ evolve, initialState: () => null })
-    const { newState } = await handle(eventStore, streamName, () => createRbagEventRegistration(command))
+    const { newState } = await handle(eventStore, streamName, state => createRbagEventRegistration(command, state))
     return newState
   }
   catch (error) {

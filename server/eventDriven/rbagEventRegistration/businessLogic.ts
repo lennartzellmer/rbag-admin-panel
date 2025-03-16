@@ -23,7 +23,8 @@ export type CreateRbagEventRegistration = Command<
 /////////////////////////////////////////
 
 export const createRbagEventRegistration = async (
-  command: CreateRbagEventRegistration
+  command: CreateRbagEventRegistration,
+  state: Registration | null
 ): Promise<RbagEventRegistrationCreated> => {
   const {
     data,
@@ -33,6 +34,9 @@ export const createRbagEventRegistration = async (
   const event = await getRbagEventById(mongoEventStoreSingleton, data.eventId)
   if (!event) {
     throw new IllegalStateError('Event does not exist')
+  }
+  if (state !== null) {
+    throw new IllegalStateError('Registration already exists')
   }
 
   return {
