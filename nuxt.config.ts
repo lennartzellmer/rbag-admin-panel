@@ -25,9 +25,6 @@ export default defineNuxtConfig({
       }
     }
   },
-  prisma: {
-    runMigration: false
-  },
   shadcn: {
     componentDir: './app/components/ui'
   },
