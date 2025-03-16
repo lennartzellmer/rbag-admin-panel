@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { useSafeValidatedParams } from 'h3-zod'
+import { useSafeValidatedQuery } from 'h3-zod'
 import { getRbagEventCategoriesPaginated, rbagEventCategoryProjectionName, rbagEventCategoryStreamType } from '~~/server/eventDriven/rbagEventCategories'
 import { excludeKey } from '~~/server/utils/excludeKey'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
@@ -10,20 +10,20 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const {
-    success: isValidParams,
-    data: validatedParams,
-    error: validationError
-  } = await useSafeValidatedParams(event, paginationQuerySchema)
+    success: isValidQuery,
+    data: validatedQuery,
+    error: validationErrorQuery
+  } = await useSafeValidatedQuery(event, paginationQuerySchema)
 
-  if (!isValidParams) {
+  if (!isValidQuery) {
     throw createError({
       statusCode: 400,
       message: 'Invalid event data',
-      statusText: validationError?.message
+      statusText: validationErrorQuery?.message
     })
   }
 
-  const { offset, limit } = validatedParams
+  const { offset, limit } = validatedQuery
 
   /////////////////////////////////////////
   /// /////// Get events

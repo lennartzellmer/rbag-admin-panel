@@ -1,10 +1,10 @@
-import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody } from 'h3-zod'
 import { fromStreamName } from '@event-driven-io/emmett-mongodb'
 import { createRbagEventCategory, type CreateRbagEventCategory } from '~~/server/eventDriven/rbagEventCategories/businessLogic'
 import { evolve, generateRbagEventCategoryStreamName, initialState } from '~~/server/eventDriven/rbagEventCategories'
+import { createRbagEventCategorySchema } from '~~/validation/categorySchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -18,18 +18,13 @@ export default defineEventHandler(async (event) => {
   /// /////// Parse and validate request body
   /////////////////////////////////////////
 
-  const bodySchema = z.object({
-    name: z.string().min(1),
-    description: z.string().min(1)
-  }).strict()
-
   const {
     success: isValidParams,
     data: validatedData,
     error: validationError
   } = await useSafeValidatedBody(
     event,
-    bodySchema
+    createRbagEventCategorySchema
   )
 
   if (!isValidParams) {

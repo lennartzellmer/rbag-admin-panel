@@ -42,7 +42,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     id: rbagEvent._metadata.streamId,
-    name: rbagEvent._metadata.streamPosition.toString(),
     ...excludeKey(rbagEvent, '_metadata')
   }
 })
