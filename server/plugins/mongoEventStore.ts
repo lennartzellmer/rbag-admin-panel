@@ -1,20 +1,18 @@
-import { projections } from '@event-driven-io/emmett'
-import { getMongoDBEventStore } from '@event-driven-io/emmett-mongodb'
-import { rbagEventProjection } from '../eventDriven/rbagEvents'
-import { rbagEventCategoryProjection } from '../eventDriven/rbagEventCategories'
-import { rbagEventRegistrationProjection } from '../eventDriven/rbagEventRegistration'
+import { createMongoDBSingleton } from '../eventStore/mongoDbStorage'
 
 const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
+const databaseName = process.env.NUXT_MONGODB_EVENT_STORE_DATABASE_NAME
 
 if (!connectionString) {
   throw new Error('Missing required environment variable NUXT_MONGODB_EVENT_STORE_URI')
 }
 
+if (!databaseName) {
+  throw new Error('Missing required environment variable NUXT_MONGODB_EVENT_STORE_DATABASE_NAME')
+}
+
 // Create a singleton instance of the MongoDB event store
-export const mongoEventStoreSingleton = getMongoDBEventStore({
-  connectionString,
-  projections: projections.inline([rbagEventProjection, rbagEventCategoryProjection, rbagEventRegistrationProjection])
-})
+export const mongoEventStoreSingleton = createMongoDBSingleton({ uri: connectionString, dbName: databaseName })
 
 // Extend the H3EventContext interface to include the eventStore property
 declare module 'h3' {

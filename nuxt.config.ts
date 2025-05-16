@@ -1,13 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    'reka-ui/nuxt',
     'nuxt-auth-utils',
-    '@nuxt/eslint',
-    '@nuxtjs/tailwindcss',
-    'shadcn-nuxt',
-    'nuxt-seo-utils',
-    '@nuxt/fonts'
+    '@nuxt/eslint'
   ],
   ssr: false,
   devtools: { enabled: true },
@@ -20,13 +15,5 @@ export default defineNuxtConfig({
         commaDangle: 'never'
       }
     }
-  },
-  shadcn: {
-    componentDir: './app/components/ui'
-  },
-  tailwindcss: {
-    exposeConfig: true,
-    viewer: true,
-    cssPath: ['./app/assets/css/tailwind.css', { injectPosition: 'first' }]
   }
 })

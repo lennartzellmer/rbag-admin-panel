@@ -1,0 +1,19 @@
+meta {
+  name: Reschedule
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/registration/change-details
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "startDate": "2025-05-01T00:00:00.000Z",
+    "endDate": "2025-10-31T23:59:59.999Z",
+    "lateRegistration": true
+  }
+}
