@@ -5,9 +5,13 @@ meta {
 }
 
 post {
-  url: {{base_url}}/api/events/{{event_id}}/cancel
+  url: {{base_url}}/api/events/:event-id/cancel
   body: json
   auth: none
+}
+
+params:path {
+  event-id: 
 }
 
 body:json {

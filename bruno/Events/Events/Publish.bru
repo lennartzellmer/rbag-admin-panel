@@ -1,13 +1,17 @@
 meta {
   name: Publish
   type: http
-  seq: 3
+  seq: 6
 }
 
 post {
-  url: {{base_url}}/api/events/{{event_id}}/publish
+  url: {{base_url}}/api/events/:event-id/publish
   body: json
   auth: none
+}
+
+params:path {
+  event-id: 
 }
 
 body:json {

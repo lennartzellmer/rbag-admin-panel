@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{base_url}}/api/event-categories/{{categoryId}}
+  url: {{base_url}}/api/event-categories/:category-id
   body: json
   auth: none
+}
+
+params:path {
+  category-id: 
 }

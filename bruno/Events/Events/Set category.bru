@@ -1,13 +1,17 @@
 meta {
   name: Set category
   type: http
-  seq: 3
+  seq: 7
 }
 
 post {
-  url: {{base_url}}/api/events/{{event_id}}/set-category
+  url: {{base_url}}/api/events/:event-id/set-category
   body: json
   auth: none
+}
+
+params:path {
+  event-id: 
 }
 
 body:json {

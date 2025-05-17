@@ -5,9 +5,13 @@ meta {
 }
 
 post {
-  url: {{base_url}}/api/event-categories/{{categoryId}}/update
+  url: {{base_url}}/api/event-categories/:category-id/update
   body: json
   auth: none
+}
+
+params:path {
+  category-id: 
 }
 
 body:json {

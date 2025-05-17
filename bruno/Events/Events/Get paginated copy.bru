@@ -1,0 +1,16 @@
+meta {
+  name: Get paginated copy
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/events?offset=0&limit=100
+  body: json
+  auth: none
+}
+
+params:query {
+  offset: 0
+  limit: 100
+}
