@@ -1,0 +1,18 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/event-categories/{{categoryId}}/update
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "Musicals und co",
+      "description": "Spaß mit al und so."
+  }
+}

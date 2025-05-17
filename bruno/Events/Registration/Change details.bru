@@ -1,0 +1,18 @@
+meta {
+  name: Change details
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/registration/change-details
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "formPDFDownloadLink": "https://rbag.de/formulare/anmeldeformular.pdf",
+    "confirmationText": "Vielen Dank für Ihre Anmeldung. Sie erhalten in Kürze eine Bestätigungs-E-Mail."
+  }
+}

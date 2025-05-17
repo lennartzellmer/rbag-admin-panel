@@ -1,0 +1,21 @@
+meta {
+  name: Add details
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/registration/add-details
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "startDate": "2025-05-01T00:00:00.000Z",
+    "endDate": "2025-09-30T23:59:59.999Z",
+    "lateRegistration": true,
+    "formPDFDownloadLink": "https://rbag.de/formulare/anmeldeformular.pdf",
+    "confirmationText": "Vielen Dank für Ihre Anmeldung. Sie erhalten in Kürze eine Bestätigungs-E-Mail."
+  }
+}

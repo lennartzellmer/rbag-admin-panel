@@ -1,0 +1,22 @@
+meta {
+  name: Create draft
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/events/create-draft
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Music and Al 2025",
+    "abbreviation": "MA25",
+    "startDate": "2025-04-15T00:00:00.000Z",
+    "endDate": "2025-08-31T23:59:59.999Z",
+    "targetGroupDescription": "Jung und Alt",
+    "categoryId": "{{categoryId}}"
+  }
+}

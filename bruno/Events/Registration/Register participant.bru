@@ -1,0 +1,29 @@
+meta {
+  name: Register participant
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/registration/register-participant
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "eventId": "{{event_id}}",
+    "name": "Klaus Müller",
+    "gender": "Male",
+    "email": "klaus.mueller@beispiel.de",
+    "phone": "+49 151 12345678",
+    "birthDate": "1985-06-12",
+    "address": {
+      "name": "Klaus Müller",
+      "line1": "Musterstraße 23",
+      "line2": null,
+      "postalCode": "10117",
+      "countryCode": "DE"
+    }
+  }
+}

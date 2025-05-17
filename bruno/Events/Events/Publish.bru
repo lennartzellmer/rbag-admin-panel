@@ -1,0 +1,17 @@
+meta {
+  name: Publish
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/publish
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "categoryId": "{{categoryId}}"
+  }
+}

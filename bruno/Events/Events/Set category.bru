@@ -1,0 +1,17 @@
+meta {
+  name: Set category
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/events/{{event_id}}/set-category
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "categoryId": "{{categoryId}}"
+  }
+}
