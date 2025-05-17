@@ -5,13 +5,13 @@ meta {
 }
 
 post {
-  url: {{base_url}}/api/events/:event-id}}/registration/change-details
+  url: {{base_url}}/api/events/:event-id/registration/change-details
   body: json
   auth: none
 }
 
 params:path {
-  event-id%7D%7D: 
+  event-id: {{eventId}}
 }
 
 body:json {

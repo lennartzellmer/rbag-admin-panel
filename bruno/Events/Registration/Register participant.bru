@@ -5,14 +5,18 @@ meta {
 }
 
 post {
-  url: {{base_url}}/api/events/{{event_id}}/registration/register-participant
+  url: {{base_url}}/api/events/:event-id/registration/register-participant
   body: json
   auth: none
 }
 
+params:path {
+  event-id: {{eventId}}
+}
+
 body:json {
   {
-    "eventId": "{{event_id}}",
+    "eventId": "{{eventId}}",
     "name": "Klaus Müller",
     "gender": "Male",
     "email": "klaus.mueller@beispiel.de",
