@@ -186,9 +186,9 @@ export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: numb
   skip
 })
 
-export const getRbagEventById = (eventStore: MongoDBEventStore, id: string) =>
+export const getRbagEventByKuerzel = (eventStore: MongoDBEventStore, kuerzel: string) =>
   eventStore.projections.inline.findOne<RbagEvent[]>({
-    streamName: getRbagEventStreamNameByKuerzel(id),
+    streamName: getRbagEventStreamNameByKuerzel(kuerzel),
     projectionName: rbagEventProjectionName
   })
 

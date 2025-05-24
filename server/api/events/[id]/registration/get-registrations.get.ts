@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     data: validatedParams,
     error: validationError
   } = await useSafeValidatedParams(event, {
-    id: z.string().uuid()
+    id: z.string()
   })
 
   if (!isValidParams) {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const LocationSchema = z.object({
+export const LocationSchema = z.strictObject({
   name: z.string().min(1),
   line1: z.string().min(1),
   line2: z.string().nullable(),
@@ -9,7 +9,7 @@ export const LocationSchema = z.object({
   geoLocation: z.array(z.number())
 })
 
-export const PerformanceSchema = z.object({
+export const PerformanceSchema = z.strictObject({
   description: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
@@ -17,7 +17,7 @@ export const PerformanceSchema = z.object({
   posterDownloadUrl: z.string().url()
 })
 
-export const RegistrationDetailsSchema = z.object({
+export const RegistrationDetailsSchema = z.strictObject({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   lateRegistration: z.boolean(),
@@ -25,16 +25,16 @@ export const RegistrationDetailsSchema = z.object({
   confirmationText: z.string().min(1).optional()
 })
 
-export const EventDetailsSchema = z.object({
+export const EventDetailsSchema = z.strictObject({
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   categoryId: z.string().uuid(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  targetGroupDescription: z.string().min(1),
+  zielgruppe: z.string().min(1),
   location: LocationSchema.optional()
 })
 
-export const RbagEventSchema = z.object({
+export const RbagEventSchema = z.strictObject({
   details: EventDetailsSchema,
   isPublished: z.boolean(),
   isCanceled: z.boolean(),

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedParams } from 'h3-zod'
-import { getRbagEventById } from '~~/server/eventDriven/rbagEvents'
+import { getRbagEventByKuerzel } from '~~/server/eventDriven/rbagEvents'
 import { excludeKey } from '~~/server/utils/excludeKey'
 
 export default defineEventHandler(async (event) => {
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     data: validatedParams,
     error: validationError
   } = await useSafeValidatedParams(event, {
-    id: z.string().uuid()
+    id: z.string()
   })
 
   if (!isValidParams) {
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const eventStore = event.context.eventStore
 
-  const rbagEvent = await getRbagEventById(eventStore, validatedParams.id)
+  const rbagEvent = await getRbagEventByKuerzel(eventStore, validatedParams.id)
 
   if (!rbagEvent) {
     throw createError({

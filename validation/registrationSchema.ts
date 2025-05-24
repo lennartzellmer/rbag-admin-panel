@@ -61,7 +61,7 @@ export const AddressSchema = z.object({
 
 export const RegistrationSchema = z.object({
   // Required fields
-  eventId: z.string().uuid(),
+  eventId: z.string(),
   name: z.string().min(1),
   gender: z.enum(['Male', 'Female', 'Diverse']),
   email: z.string().email(),

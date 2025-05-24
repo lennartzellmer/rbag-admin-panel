@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     name: z.string().min(1),
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
-    targetGroupDescription: z.string().min(1),
+    zielgruppe: z.string().min(1),
     categoryId: z.string().uuid()
   }).strict()
 
@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
   try {
     const command: AddRgabEventAsDraft = {
       type: 'AddRbagEventAsDraft',
-      data: validatedData,
+      data: (({ kuerzel, ...rest }) => rest)(validatedData),
       metadata: { requestedBy: user.email, now: new Date() }
     }
 
@@ -66,8 +66,7 @@ export default defineEventHandler(async (event) => {
     const eventStore = event.context.eventStore
     const streamname = getRbagEventStreamNameByKuerzel(validatedData.kuerzel)
 
-    const { newState } = await handle(eventStore, streamname, () => addRbagEventAsDraft(command))
-
+    const { newState } = await handle(eventStore, streamname, state => addRbagEventAsDraft(command, state))
     return {
       kuerzel: fromStreamName(streamname).streamId,
       ...newState

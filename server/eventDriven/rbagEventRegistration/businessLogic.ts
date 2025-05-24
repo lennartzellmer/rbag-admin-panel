@@ -1,5 +1,5 @@
 import { IllegalStateError, type Command, type DefaultCommandMetadata } from '@event-driven-io/emmett'
-import { getRbagEventById } from '../rbagEvents'
+import { getRbagEventByKuerzel } from '../rbagEvents'
 import type { RbagEventRegistrationCreated } from '.'
 import type { Registration } from '~~/validation/registrationSchema'
 import { mongoEventStoreSingleton } from '~~/server/plugins/mongoEventStore'
@@ -31,7 +31,7 @@ export const createRbagEventRegistration = async (
     metadata
   } = command
 
-  const event = await getRbagEventById(mongoEventStoreSingleton, data.eventId)
+  const event = await getRbagEventByKuerzel(mongoEventStoreSingleton, data.eventId)
   if (!event) {
     throw new IllegalStateError('Event does not exist')
   }

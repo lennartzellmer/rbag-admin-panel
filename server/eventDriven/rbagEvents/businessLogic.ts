@@ -72,12 +72,16 @@ export type UnpublishRbagEvent = Command<
 /////////////////////////////////////////
 
 export const addRbagEventAsDraft = async (
-  command: AddRgabEventAsDraft
+  command: AddRgabEventAsDraft,
+  state: RbagEvent | null
 ): Promise<RbagEventCreated> => {
   const {
     data,
     metadata
   } = command
+
+  if (state)
+    throw new IllegalStateError('Event with this kuerzel has already been created.')
 
   const eventCategory = await getRbagEventCategoryById(mongoEventStoreSingleton, data.categoryId)
   if (!eventCategory) {

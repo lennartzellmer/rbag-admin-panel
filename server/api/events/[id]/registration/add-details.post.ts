@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
-      message: 'Id must be a valid UUID',
+      message: 'Id must be a valid string',
       statusText: validationErrorParams?.message
     })
   }

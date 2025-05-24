@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     data: validatedBody,
     error: validationErrorBody
   } = await useSafeValidatedBody(event, {
-    categoryId: z.string().uuid()
+    categoryId: z.string()
   })
 
   if (!isValidBody) {
