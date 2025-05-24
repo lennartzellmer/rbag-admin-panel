@@ -87,8 +87,8 @@ export const RegistrationSchema = z.object({
   internalComments: z.array(InternalCommentSchema).default([])
 })
 
-export const RegiatrationUpdateSchema = RegistrationSchema.partial()
+export const RegistrationUpdateSchema = RegistrationSchema.partial()
 
 export type DietaryRequirements = z.infer<typeof DietaryRequirementsSchema>
 export type Registration = z.infer<typeof RegistrationSchema>
-export type RegistrationUpdate = z.infer<typeof RegiatrationUpdateSchema>
+export type RegistrationUpdate = z.infer<typeof RegistrationUpdateSchema>
