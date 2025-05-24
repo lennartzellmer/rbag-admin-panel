@@ -4,7 +4,7 @@ import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody } from 'h3-zod'
 import { fromStreamName } from '@event-driven-io/emmett-mongodb'
 import { addRbagEventAsDraft, type AddRgabEventAsDraft } from '~~/server/eventDriven/rbagEvents/businessLogic'
-import { evolve, generateRbagEventStreamName, initialState } from '~~/server/eventDriven/rbagEvents'
+import { evolve, getRbagEventStreamNameByKuerzel, initialState } from '~~/server/eventDriven/rbagEvents'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -19,8 +19,8 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const bodySchema = z.object({
+    kuerzel: z.string().regex(/^[A-Z]{2}\d{2}$/),
     name: z.string().min(1),
-    abbreviation: z.string().min(1),
     startDate: z.coerce.date(),
     endDate: z.coerce.date(),
     targetGroupDescription: z.string().min(1),
@@ -64,12 +64,12 @@ export default defineEventHandler(async (event) => {
 
     const handle = CommandHandler({ evolve, initialState })
     const eventStore = event.context.eventStore
-    const streamname = generateRbagEventStreamName()
+    const streamname = getRbagEventStreamNameByKuerzel(validatedData.kuerzel)
 
     const { newState } = await handle(eventStore, streamname, () => addRbagEventAsDraft(command))
 
     return {
-      id: fromStreamName(streamname).streamId,
+      kuerzel: fromStreamName(streamname).streamId,
       ...newState
     }
   }

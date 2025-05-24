@@ -28,7 +28,6 @@ export const RegistrationDetailsSchema = z.object({
 export const EventDetailsSchema = z.object({
   name: z.string().min(3, { message: 'Benötigt mindestens 3 Zeichen.' }),
   categoryId: z.string().uuid(),
-  abbreviation: z.string().min(1, { message: 'Benötigt mindestens 3 Zeichen.' }),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   targetGroupDescription: z.string().min(1),

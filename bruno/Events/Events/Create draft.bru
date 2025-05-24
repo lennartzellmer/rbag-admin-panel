@@ -12,13 +12,17 @@ post {
 
 body:json {
   {
-    "name": "Music and Al 2025",
-    "abbreviation": "MA25",
+    "kuerzel": "AM25",
+    "name": "Al in Motion 2025",
     "startDate": "2025-04-15T00:00:00.000Z",
     "endDate": "2025-08-31T23:59:59.999Z",
     "targetGroupDescription": "Jung und Alt",
     "categoryId": "{{categoryId}}"
   }
+}
+
+vars:pre-request {
+  categoryId: e8c2a032-00af-4305-b7bc-886d4fc7a7d7
 }
 
 vars:post-response {

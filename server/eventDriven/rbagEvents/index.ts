@@ -1,6 +1,5 @@
 import type { Event } from '@event-driven-io/emmett'
 import { mongoDBInlineProjection, toStreamName, type MongoDBEventStore, type StreamType } from '@event-driven-io/emmett-mongodb'
-import { v4 as uuidv4 } from 'uuid'
 import type { EventDetails, RbagEvent, Performance, RegistrationDetails } from '~~/validation/eventSchema'
 
 /////////////////////////////////////////
@@ -8,8 +7,7 @@ import type { EventDetails, RbagEvent, Performance, RegistrationDetails } from '
 /////////////////////////////////////////
 
 export const rbagEventStreamType: StreamType = 'rbag_event'
-export const generateRbagEventStreamName = () => toStreamName(rbagEventStreamType, uuidv4())
-export const getRbagEventStreamNameById = (id: string) => toStreamName(rbagEventStreamType, id)
+export const getRbagEventStreamNameByKuerzel = (kuerzel: string) => toStreamName(rbagEventStreamType, kuerzel)
 
 /////////////////////////////////////////
 /// /////// Events
@@ -190,7 +188,7 @@ export const getRbagEventsPaginated = (eventStore: MongoDBEventStore, skip: numb
 
 export const getRbagEventById = (eventStore: MongoDBEventStore, id: string) =>
   eventStore.projections.inline.findOne<RbagEvent[]>({
-    streamName: getRbagEventStreamNameById(id),
+    streamName: getRbagEventStreamNameByKuerzel(id),
     projectionName: rbagEventProjectionName
   })
 

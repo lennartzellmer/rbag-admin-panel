@@ -3,7 +3,7 @@ import { defineEventHandler, createError } from 'h3'
 import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { setPerformanceDetails, type SetPerformanceDetails } from '~~/server/eventDriven/rbagEvents/businessLogic'
-import { evolve, getRbagEventStreamNameById, initialState } from '~~/server/eventDriven/rbagEvents'
+import { evolve, getRbagEventStreamNameByKuerzel, initialState } from '~~/server/eventDriven/rbagEvents'
 import { LocationSchema } from '~~/validation/eventSchema'
 
 export default defineEventHandler(async (event) => {
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     data: validatedParams,
     error: validationErrorParams
   } = await useSafeValidatedParams(event, {
-    id: z.string().uuid()
+    id: z.string()
   })
 
   if (!isValidParams) {
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   const eventStore = event.context.eventStore
-  const streamName = getRbagEventStreamNameById(validatedParams.id)
+  const streamName = getRbagEventStreamNameByKuerzel(validatedParams.id)
   const eventStream = await eventStore.readStream(streamName)
 
   if (!eventStream.streamExists) {
