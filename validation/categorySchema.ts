@@ -1,20 +1,22 @@
 import { z } from 'zod'
 
-export const categorySchema = z.object({
+export const kategorieSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1)
 })
 
-export const createRbagEventCategorySchema = categorySchema.pick({
+export const createRbagVeranstaltungKategorieSchema = kategorieSchema.pick({
   name: true,
   description: true
 })
 
-export const updateRbagEventCategorySchema = categorySchema.pick({
+export const updateRbagVeranstaltungKategorieSchema = kategorieSchema.pick({
   name: true,
   description: true
-}).partial()
+}).partial().extend({
+  streamSubject: z.string()
+})
 
-export type CreateRbagEventCategorySchema = z.infer<typeof createRbagEventCategorySchema>
-export type UpdateRbagEventCategorySchema = z.infer<typeof updateRbagEventCategorySchema>
-export type CategorySchema = z.infer<typeof categorySchema>
+export type CreateRbagVeranstaltungKategorieSchema = z.infer<typeof createRbagVeranstaltungKategorieSchema>
+export type UpdateRbagVeranstaltungKategorieSchema = z.infer<typeof updateRbagVeranstaltungKategorieSchema>
+export type KategorieSchema = z.infer<typeof kategorieSchema>

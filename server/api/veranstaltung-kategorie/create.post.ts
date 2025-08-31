@@ -1,10 +1,10 @@
+import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody } from 'h3-zod'
-import { fromStreamName } from '@event-driven-io/emmett-mongodb'
-import { createRbagEventCategory, type CreateRbagEventCategory } from '~~/server/eventDriven/rbagEventCategories/businessLogic'
-import { evolve, generateRbagEventCategoryStreamName, initialState } from '~~/server/eventDriven/rbagEventCategories'
-import { createRbagEventCategorySchema } from '~~/validation/categorySchema'
+import { createCommand, handleCommand } from 'vorfall'
+import { createRbagVeranstaltungKategorieSchema } from '~~/validation/categorySchema'
+import { createRbagVeranstaltungKategorie, type CreateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
+import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     error: validationError
   } = await useSafeValidatedBody(
     event,
-    createRbagEventCategorySchema
+    createRbagVeranstaltungKategorieSchema
   )
 
   if (!isValidParams) {
@@ -35,32 +35,33 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  /////////////////////////////////////////
+  /// /////// Handle command
+  /////////////////////////////////////////
+
   try {
-    const command: CreateRbagEventCategory = {
-      type: 'CreateRbagEventCategory',
+    const eventStore = event.context.eventStore
+    const command: CreateRbagVeranstaltungKategorie = createCommand({
+      type: 'CreateRbagVeranstaltungKategorie',
       data: validatedData,
       metadata: { requestedBy: user.email, now: new Date() }
-    }
+    })
 
-    const handle = CommandHandler({ evolve, initialState })
-    const eventStore = event.context.eventStore
-    const streamname = generateRbagEventCategoryStreamName()
-
-    const { newState } = await handle(eventStore, streamname, () => createRbagEventCategory(command))
+    const result = await handleCommand({
+      eventStore,
+      evolve,
+      initialState,
+      streamSubject: getRbagVeranstaltungsStreamSubjectById(randomUUID()),
+      commandHandlerFunction: createRbagVeranstaltungKategorie,
+      command: command
+    })
 
     return {
-      id: fromStreamName(streamname).streamId,
-      ...newState
+      ...result
     }
   }
   catch (error) {
     console.error(error)
-    if (error instanceof IllegalStateError) {
-      throw createError({
-        statusCode: 500,
-        message: error.message
-      })
-    }
     throw createError({
       statusCode: 500,
       message: 'Error creating event'

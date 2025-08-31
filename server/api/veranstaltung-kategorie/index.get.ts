@@ -1,7 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { useSafeValidatedQuery } from 'h3-zod'
-import { getRbagEventCategoriesPaginated, rbagEventCategoryProjectionName, rbagEventCategoryStreamType } from '~~/server/eventDriven/rbagEventCategories'
-import { excludeKey } from '~~/server/utils/excludeKey'
+import { getRbagVeranstaltungKategorieCount, getRbagVeranstaltungsKategorienPaginated } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
@@ -32,24 +31,13 @@ export default defineEventHandler(async (event) => {
   try {
     const eventStore = event.context.eventStore
 
-    const [events, total] = await Promise.all([
-      getRbagEventCategoriesPaginated(eventStore, offset, limit),
-      eventStore.projections.inline.count({
-        streamType: rbagEventCategoryStreamType,
-        projectionName: rbagEventCategoryProjectionName
-      })
+    const [VeranstaltungsKategorien, total] = await Promise.all([
+      getRbagVeranstaltungsKategorienPaginated(eventStore, offset, limit),
+      getRbagVeranstaltungKategorieCount(eventStore)
     ])
 
-    const eventCategoriesWithoutMetadata = events.map((event) => {
-      return {
-        id: event._metadata.streamId,
-        name: event._metadata.streamPosition.toString(),
-        ...excludeKey(event, '_metadata')
-      }
-    })
-
     return {
-      data: eventCategoriesWithoutMetadata,
+      data: VeranstaltungsKategorien,
       meta: {
         total,
         offset,

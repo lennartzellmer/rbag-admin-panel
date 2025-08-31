@@ -1,11 +1,10 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
-import { CommandHandler, IllegalStateError } from '@event-driven-io/emmett'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
-import { fromStreamName } from '@event-driven-io/emmett-mongodb'
-import { updateRbagEventCategory, type UpdateRbagEventCategory } from '~~/server/eventDriven/rbagEventCategories/businessLogic'
-import { evolve, getRbagEventCategoryStreamNameById, initialState } from '~~/server/eventDriven/rbagEventCategories'
-import { updateRbagEventCategorySchema } from '~~/validation/categorySchema'
+import { createCommand, handleCommand } from 'vorfall'
+import { updateRbagVeranstaltungKategorie, type UpdateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
+import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
+import { kategorieSchema } from '~~/validation/categorySchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
@@ -41,7 +40,7 @@ export default defineEventHandler(async (event) => {
     error: validationErrorBody
   } = await useSafeValidatedBody(
     event,
-    updateRbagEventCategorySchema
+    kategorieSchema.partial()
   )
 
   if (!isValidBody) {
@@ -57,34 +56,34 @@ export default defineEventHandler(async (event) => {
   /////////////////////////////////////////
 
   try {
-    const command: UpdateRbagEventCategory = {
-      type: 'UpdateRbagEventCategory',
-      data: validatedBody,
-      metadata: { requestedBy: user.email, now: new Date() }
-    }
-
-    const handle = CommandHandler({ evolve, initialState })
     const eventStore = event.context.eventStore
-    const streamname = getRbagEventCategoryStreamNameById(validatedParams.id)
+    const command: UpdateRbagVeranstaltungKategorie = createCommand({
+      type: 'UpdateRbagVeranstaltungKategorie',
+      data: {
+        ...validatedBody,
+        streamSubject: getRbagVeranstaltungsStreamSubjectById(validatedParams.id)
+      },
+      metadata: { requestedBy: user.email, now: new Date() }
+    })
 
-    const { newState } = await handle(eventStore, streamname, () => updateRbagEventCategory(command))
+    const result = await handleCommand({
+      eventStore,
+      evolve,
+      initialState,
+      streamSubject: getRbagVeranstaltungsStreamSubjectById(validatedParams.id),
+      commandHandlerFunction: updateRbagVeranstaltungKategorie,
+      command: command
+    })
 
     return {
-      id: fromStreamName(streamname).streamId,
-      ...newState
+      ...result
     }
   }
   catch (error) {
     console.error(error)
-    if (error instanceof IllegalStateError) {
-      throw createError({
-        statusCode: 500,
-        message: error.message
-      })
-    }
     throw createError({
       statusCode: 500,
-      message: 'Error creating event'
+      message: 'Error updating event'
     })
   }
 })
