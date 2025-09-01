@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createRbagVeranstaltungKategorieSchema } from '~~/validation/categorySchema'
+import { createRbagVeranstaltungKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 import { createRbagVeranstaltungKategorie, type CreateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
 import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
 

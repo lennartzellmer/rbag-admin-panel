@@ -4,7 +4,7 @@ import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { updateRbagVeranstaltungKategorie, type UpdateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
 import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
-import { kategorieSchema } from '~~/validation/categorySchema'
+import { kategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 
 export default defineEventHandler(async (event) => {
   /////////////////////////////////////////

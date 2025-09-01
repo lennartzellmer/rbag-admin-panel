@@ -44,7 +44,18 @@ export const RbagEventSchema = z.strictObject({
   registration: RegistrationDetailsSchema.optional()
 })
 
+export const createRbagVeranstaltungSchema = RbagEventSchema.pick({
+  details: true,
+  isPublished: true,
+  isCanceled: true,
+  workshopOffer: true,
+  alternativeProgram: true,
+  performance: true,
+  registration: true
+})
+
 export type RbagEvent = z.infer<typeof RbagEventSchema>
+export type CreateRbagVeranstaltungSchema = z.infer<typeof createRbagVeranstaltungSchema>
 
 export type EventDetails = z.infer<typeof EventDetailsSchema>
 export type Location = z.infer<typeof LocationSchema>
