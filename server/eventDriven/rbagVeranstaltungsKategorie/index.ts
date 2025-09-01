@@ -7,9 +7,9 @@ export const RbagVeranstaltungKategorieSubject = createSubject('RbagVeranstaltun
 
 export const getRbagVeranstaltungsStreamSubjectById = (id: string) => createStreamSubject(`${RbagVeranstaltungKategorieSubject}/${id}`)
 
-/////////////////////////////////////////
-/// /////// Events
-/////////////////////////////////////////
+// =============================================================================
+// Events
+// =============================================================================
 
 export type RbagVeranstaltungEventMetadata = {
   changedBy: string
@@ -38,9 +38,9 @@ export const initialState = (): KategorieSchema => {
   }
 }
 
-/////////////////////////////////////////
-/// /////// Evolve
-/////////////////////////////////////////
+// =============================================================================
+// Evolve
+// =============================================================================
 
 export const evolve = (
   state: KategorieSchema,
@@ -67,9 +67,9 @@ export const evolve = (
   }
 }
 
-/////////////////////////////////////////
-/// /////// Projections
-/////////////////////////////////////////
+// =============================================================================
+// Projections
+// =============================================================================
 
 export const RbagVeranstaltungKategorieProjectionName = 'RbagVeranstaltungKategorie' as const
 

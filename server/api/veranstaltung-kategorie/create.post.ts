@@ -7,16 +7,16 @@ import { createRbagVeranstaltungKategorie, type CreateRbagVeranstaltungKategorie
 import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
 
 export default defineEventHandler(async (event) => {
-  /////////////////////////////////////////
-  /// /////// Get user object fot event metadata
-  /////////////////////////////////////////
+  // =============================================================================
+  // Get user object for event metadata
+  // =============================================================================
 
   // const { user } = await requireUserSession(event)
   const user = { email: 'test@test.de', name: 'Larry' }
 
-  /////////////////////////////////////////
-  /// /////// Parse and validate request body
-  /////////////////////////////////////////
+  // =============================================================================
+  // Parse and validate request body
+  // =============================================================================
 
   const {
     success: isValidParams,
@@ -35,9 +35,9 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  /////////////////////////////////////////
-  /// /////// Handle command
-  /////////////////////////////////////////
+  // =============================================================================
+  // Handle command
+  // =============================================================================
 
   try {
     const eventStore = event.context.eventStore

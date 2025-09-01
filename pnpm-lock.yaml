@@ -54,8 +54,8 @@ importers:
         specifier: 4.15.0
         version: 4.15.0(vue@3.5.13(typescript@5.7.3))
       vorfall:
-        specifier: 0.0.4
-        version: 0.0.4
+        specifier: 0.0.7
+        version: 0.0.7
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.7.3)
@@ -4300,6 +4300,10 @@ packages:
     resolution: {integrity: sha512-tk2G5R2KRwBd+ZN0zaEXpmzdKyOYksXwywulIX95MBODjSzMIuQnQ3m8JxgbhnL1LeVo7lqQKsYa1O3Htl7K5g==}
     engines: {node: '>=18'}
 
+  tr46@5.1.1:
+    resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
+    engines: {node: '>=18'}
+
   truncatise@0.0.8:
     resolution: {integrity: sha512-cXzueh9pzBCsLzhToB4X4gZCb3KYkrsAcBAX97JnazE74HOl3cpBJYEV7nabHeG/6/WXCU5Yujlde/WPBUwnsg==}
 
@@ -4704,8 +4708,8 @@ packages:
       jsdom:
         optional: true
 
-  vorfall@0.0.4:
-    resolution: {integrity: sha512-plhpMmdHf7bElo6SLxrpEMQ+urL7NbsuiOD/eP0ruuxUwhstrzD1UYHCMYkV8tivr5sfaNwYudK0nHwEeytdvg==}
+  vorfall@0.0.7:
+    resolution: {integrity: sha512-rW9cgHYiI+s94s41Io/qcmEWvgCkZ21gxaMPTbfx8qjsiwVcqMbE0o5ap0o9PhHam2miyZWITyIbNGxBm7JyiA==}
 
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
@@ -4766,6 +4770,10 @@ packages:
 
   whatwg-url@14.1.0:
     resolution: {integrity: sha512-jlf/foYIKywAt3x/XWKZ/3rz8OSJPiWktjmk891alJUEjiVxKX9LEO92qH3hv4aJ0mN3MWPvGMCy8jQi95xK4w==}
+    engines: {node: '>=18'}
+
+  whatwg-url@14.2.0:
+    resolution: {integrity: sha512-De72GdQZzNTUBBChsXueQUnPKDkg/5A5zp7pFDuQAj5UFoENpiACU0wlCvzpAGnTkj++ihpKwKyYewn/XNUbKw==}
     engines: {node: '>=18'}
 
   whatwg-url@5.0.0:
@@ -8243,7 +8251,7 @@ snapshots:
   mongodb-connection-string-url@3.0.2:
     dependencies:
       '@types/whatwg-url': 11.0.5
-      whatwg-url: 14.1.0
+      whatwg-url: 14.2.0
 
   mongodb-memory-server-core@10.1.4:
     dependencies:
@@ -9532,6 +9540,10 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
+  tr46@5.1.1:
+    dependencies:
+      punycode: 2.3.1
+
   truncatise@0.0.8: {}
 
   ts-api-utils@2.0.1(typescript@5.7.3):
@@ -9911,7 +9923,7 @@ snapshots:
       - tsx
       - yaml
 
-  vorfall@0.0.4:
+  vorfall@0.0.7:
     dependencies:
       cloudevents: 10.0.0
       mongodb: 6.19.0
@@ -9983,6 +9995,11 @@ snapshots:
   whatwg-url@14.1.0:
     dependencies:
       tr46: 5.0.0
+      webidl-conversions: 7.0.0
+
+  whatwg-url@14.2.0:
+    dependencies:
+      tr46: 5.1.1
       webidl-conversions: 7.0.0
 
   whatwg-url@5.0.0:

@@ -3,9 +3,9 @@ import { useSafeValidatedParams, z } from 'h3-zod'
 import { getRbagVeranstaltungKategorieById } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
 
 export default defineEventHandler(async (event) => {
-  /////////////////////////////////////////
-  /// /////// Parse and validate request body
-  /////////////////////////////////////////
+  // =============================================================================
+  // Parse and validate request body
+  // =============================================================================
 
   const {
     success: isValidParams,
@@ -23,9 +23,9 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  /////////////////////////////////////////
-  /// /////// Get category by id
-  /////////////////////////////////////////
+  // =============================================================================
+  // Get category by id
+  // =============================================================================
 
   const eventStore = event.context.eventStore
 

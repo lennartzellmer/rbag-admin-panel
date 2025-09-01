@@ -27,7 +27,7 @@
     "typescript": "^5.7.3",
     "uuid": "11.1.0",
     "vee-validate": "4.15.0",
-    "vorfall": "0.0.4",
+    "vorfall": "0.0.7",
     "vue": "latest",
     "vue-router": "latest",
     "xstate": "^5.19.2",
