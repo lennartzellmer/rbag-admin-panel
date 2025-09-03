@@ -3,6 +3,7 @@ import { defineVitestProject } from '@nuxt/test-utils/config'
 
 export default defineConfig({
   test: {
+    silent: false,
     projects: [
       {
         test: {
