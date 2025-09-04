@@ -54,8 +54,8 @@ importers:
         specifier: 4.15.0
         version: 4.15.0(vue@3.5.13(typescript@5.7.3))
       vorfall:
-        specifier: 0.0.9
-        version: 0.0.9
+        specifier: 0.0.10
+        version: 0.0.10
       vue:
         specifier: latest
         version: 3.5.13(typescript@5.7.3)
@@ -4886,8 +4886,8 @@ packages:
       jsdom:
         optional: true
 
-  vorfall@0.0.9:
-    resolution: {integrity: sha512-8ge7F/pQw0SGq/49SOA4PbwncZIRXZJJPLc85ZpbNLBpZEmYDXgkecOs1pbjIRH6EbThwCT8mtlau7iDqE5lKw==}
+  vorfall@0.0.10:
+    resolution: {integrity: sha512-5olZcYeGjJDenEtJ5K6o6KZTKyJsycSJjlsYcrwt9K6vmk43I/YTb7sAKXGEbxKZa/ppVgXWZlWwyBHb1z+b1g==}
     engines: {node: '>=20.0.0'}
 
   vscode-uri@3.1.0:
@@ -10379,7 +10379,7 @@ snapshots:
       - tsx
       - yaml
 
-  vorfall@0.0.9:
+  vorfall@0.0.10:
     dependencies:
       cloudevents: 10.0.0
       mongodb: 6.19.0
