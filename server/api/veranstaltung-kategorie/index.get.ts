@@ -4,9 +4,9 @@ import { getRbagVeranstaltungKategorieCount, getRbagVeranstaltungsKategorienPagi
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
-  /////////////////////////////////////////
-  /// /////// Parse and validate request body
-  /////////////////////////////////////////
+  // =============================================================================
+  // Parse and validate request body
+  // =============================================================================
 
   const {
     success: isValidQuery,
@@ -24,9 +24,9 @@ export default defineEventHandler(async (event) => {
 
   const { offset, limit } = validatedQuery
 
-  /////////////////////////////////////////
-  /// /////// Get events
-  /////////////////////////////////////////
+  // =============================================================================
+  // Get events
+  // =============================================================================
 
   try {
     const eventStore = event.context.eventStore

@@ -2,11 +2,11 @@ import { randomUUID } from 'node:crypto'
 import { createDomainEvent, createSubject } from 'vorfall'
 import type { Command } from 'vorfall'
 import { getRbagVeranstaltungsStreamSubjectById, type RbagVeranstaltungKategorieCreated, type RbagVeranstaltungKategorieUpdated } from '.'
-import type { CreateRbagVeranstaltungKategorieSchema, UpdateRbagVeranstaltungKategorieSchema } from '~~/validation/categorySchema'
+import type { CreateRbagVeranstaltungKategorieSchema, UpdateRbagVeranstaltungKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 
-/////////////////////////////////////////
-/// /////// Commands
-/////////////////////////////////////////
+// =============================================================================
+// Commands
+// =============================================================================
 
 export type EventCommandMetadata = {
   requestedBy: string
@@ -24,9 +24,9 @@ export type UpdateRbagVeranstaltungKategorie = Command<
   EventCommandMetadata
 >
 
-/////////////////////////////////////////
-/// /////// Business Logic
-/////////////////////////////////////////
+// =============================================================================
+// Business Logic
+// =============================================================================
 
 export const createRbagVeranstaltungKategorie = (
   { command }: { command: CreateRbagVeranstaltungKategorie }

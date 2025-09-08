@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Veranstaltung Creation API - E2E Test > should successfully create veranstaltung with valid data 1`] = `
+{
+  "_id": Any<String>,
+  "events": [
+    {
+      "data": {
+        "details": {
+          "categoryId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+          "endDate": "2025-06-01T18:00:00.000Z",
+          "name": "Test Veranstaltung E2E",
+          "startDate": "2025-06-01T10:00:00.000Z",
+          "zielgruppe": "Erwachsene",
+        },
+        "isCanceled": false,
+        "isPublished": false,
+      },
+      "datacontenttype": "application/json",
+      "date": Any<String>,
+      "id": Any<String>,
+      "metadata": {
+        "changedBy": "test@test.de",
+      },
+      "source": "vorfall.eventsourcing.system",
+      "specversion": "1.0",
+      "subject": StringMatching /\\^RbagVeranstaltung\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+      "time": Any<String>,
+      "type": "RbagVeranstaltungCreated",
+      "version": "1.0",
+    },
+  ],
+  "metadata": {
+    "createdAt": Any<String>,
+    "updatedAt": Any<String>,
+  },
+  "streamId": Any<String>,
+  "streamSubject": StringMatching /\\^RbagVeranstaltung\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+}
+`;

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject, createSubject } from 'vorfall'
 import type { DomainEvent, EventStoreInstance } from 'vorfall'
-import type { CreateRbagVeranstaltungKategorieSchema, KategorieSchema, UpdateRbagVeranstaltungKategorieSchema } from '~~/validation/categorySchema'
+import type { CreateRbagVeranstaltungKategorieSchema, KategorieSchema, UpdateRbagVeranstaltungKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 
 export const RbagVeranstaltungKategorieSubject = createSubject('RbagVeranstaltungKategorie')
 
 export const getRbagVeranstaltungsStreamSubjectById = (id: string) => createStreamSubject(`${RbagVeranstaltungKategorieSubject}/${id}`)
 
-/////////////////////////////////////////
-/// /////// Events
-/////////////////////////////////////////
+// =============================================================================
+// Events
+// =============================================================================
 
 export type RbagVeranstaltungEventMetadata = {
   changedBy: string
@@ -38,9 +38,9 @@ export const initialState = (): KategorieSchema => {
   }
 }
 
-/////////////////////////////////////////
-/// /////// Evolve
-/////////////////////////////////////////
+// =============================================================================
+// Evolve
+// =============================================================================
 
 export const evolve = (
   state: KategorieSchema,
@@ -67,9 +67,9 @@ export const evolve = (
   }
 }
 
-/////////////////////////////////////////
-/// /////// Projections
-/////////////////////////////////////////
+// =============================================================================
+// Projections
+// =============================================================================
 
 export const RbagVeranstaltungKategorieProjectionName = 'RbagVeranstaltungKategorie' as const
 
