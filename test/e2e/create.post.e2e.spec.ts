@@ -1,8 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import type { WithId } from 'mongodb'
 
 import type { EventStream } from 'vorfall'
 import type { CreateRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
+import type { RbagVeranstaltungCreated } from '~~/server/eventDriven/rbagVeranstaltung'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setup({})
@@ -24,12 +26,10 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
   test('should successfully create veranstaltung with valid data', async () => {
     const validData = createValidVeranstaltungData()
 
-    const response = await $fetch<EventStream<'RbagVeranstaltungCreated', CreateRbagVeranstaltungSchema>>('/api/veranstaltung/create', {
+    const response = await $fetch<WithId<EventStream<RbagVeranstaltungCreated>>>('/api/veranstaltung/create', {
       method: 'POST',
       body: validData
     })
-
-    console.log(response)
 
     expect(response).toMatchSnapshot({
       _id: expect.any(String),
