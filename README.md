@@ -1,99 +1,27 @@
-# Nuxt Minimal Starter
+# RBAG Musik - Event Management Hub
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+**🚧 Work in Progress Repository**
 
-## Setup
+This is an event management application for [RBAG Musik e.V.](https://www.rbag-musik.de/), designed to manage, host, and facilitate music and learning events.
 
-Make sure to install dependencies:
+## About
 
-```bash
-# npm
-npm install
+RBAG Musik organizes musical projects for children, young adults, and families from all backgrounds. This admin panel helps streamline the management of our events, including our flagship **Music&AL** project with events throughout the year (Pfingsten, summer holidays, and Advent).
 
-# pnpm
-pnpm install
+## Purpose
 
-# yarn
-yarn install
+- **Event Management**: Create, organize, and manage music and learning events
+- **Participant Registration**: Handle registrations for children, youth, and families
+- **Administrative Tools**: Streamline event planning and coordination processes
 
-# bun
-bun install
-```
+## Target Audience
 
-## Docker
+Our events welcome:
+- Children and young adults
+- Families
+- People from all ethnicities and backgrounds
+- Music enthusiasts of all skill levels
 
-```bash
-docker-compose -f dev_docker/docker-compose.yml up -d
-```
-Set up mongo replica set
+---
 
-```bash
-docker exec -it mongodb mongosh -u root -p root --authenticationDatabase admin --eval "rs.initiate({
- _id: \"rs0\",
- members: [
-   {_id: 0, host: \"localhost:27017\"}
- ]
-})"
-```
-
-use this connection string to connect to the mongo replica set
-
-```bash
-mongodb://root:root@localhost:27017/admin?authSource=admin&replicaSet=rs0&readPreference=primary
-```
-
-
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+*For more information about RBAG Musik and our events, visit [www.rbag-musik.de](https://www.rbag-musik.de/) and [www.music-and-al.de](https://www.music-and-al.de)*
