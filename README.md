@@ -1,99 +1,61 @@
-# Nuxt Minimal Starter
+# RBAG Musik - Event Management Hub
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+> **🇩🇪 German version available below** | **🇬🇧 English version**
 
-## Setup
+**🚧 Work in Progress Repository**
 
-Make sure to install dependencies:
+This is an event management application for [RBAG Musik e.V.](https://www.rbag-musik.de/), designed to manage, host, and facilitate music and learning events.
 
-```bash
-# npm
-npm install
+## About
 
-# pnpm
-pnpm install
+RBAG Musik organizes musical projects for children, young adults, and families from all backgrounds. This admin panel helps streamline the management of our events, including our flagship **Music&AL** project with events throughout the year (Pfingsten, summer holidays, and Advent).
 
-# yarn
-yarn install
+## Purpose
 
-# bun
-bun install
-```
+- **Event Management**: Create, organize, and manage music and learning events
+- **Participant Registration**: Handle registrations for children, youth, and families
+- **Administrative Tools**: Streamline event planning and coordination processes
 
-## Docker
+## Target Audience
 
-```bash
-docker-compose -f dev_docker/docker-compose.yml up -d
-```
-Set up mongo replica set
+Our events welcome:
+- Children and young adults
+- Families
+- People from all ethnicities and backgrounds
+- Music enthusiasts of all skill levels
 
-```bash
-docker exec -it mongodb mongosh -u root -p root --authenticationDatabase admin --eval "rs.initiate({
- _id: \"rs0\",
- members: [
-   {_id: 0, host: \"localhost:27017\"}
- ]
-})"
-```
+---
 
-use this connection string to connect to the mongo replica set
+*For more information about RBAG Musik and our events, visit [www.rbag-musik.de](https://www.rbag-musik.de/) and [www.music-and-al.de](https://www.music-and-al.de)*
 
-```bash
-mongodb://root:root@localhost:27017/admin?authSource=admin&replicaSet=rs0&readPreference=primary
-```
+---
 
+# RBAG Musik - Event Management Hub
 
+> **🇩🇪 Deutsche Version** | **🇬🇧 English version available above**
 
-## Development Server
+**🚧 Repository in Bearbeitung**
 
-Start the development server on `http://localhost:3000`:
+Dies ist eine Event-Management-Anwendung für [RBAG Musik e.V.](https://www.rbag-musik.de/), die entwickelt wurde, um Musik- und Lernveranstaltungen zu verwalten, zu organisieren und zu erleichtern.
 
-```bash
-# npm
-npm run dev
+## Über uns
 
-# pnpm
-pnpm dev
+RBAG Musik organisiert Musikprojekte für Kinder, junge Erwachsene und Familien aus allen Hintergründen. Dieses Admin-Panel hilft dabei, die Verwaltung unserer Veranstaltungen zu optimieren, einschließlich unseres Flaggschiff-Projekts **Music&AL** mit Veranstaltungen das ganze Jahr über (Pfingsten, Sommerferien und Advent).
 
-# yarn
-yarn dev
+## Zweck
 
-# bun
-bun run dev
-```
+- **Event-Management**: Musik- und Lernveranstaltungen erstellen, organisieren und verwalten
+- **Teilnehmerregistrierung**: Registrierungen für Kinder, Jugendliche und Familien bearbeiten
+- **Administrative Tools**: Eventplanung und Koordinationsprozesse optimieren
 
-## Production
+## Zielgruppe
 
-Build the application for production:
+Unsere Veranstaltungen heißen willkommen:
+- Kinder und junge Erwachsene
+- Familien
+- Menschen aller Ethnien und Hintergründe
+- Musikbegeisterte aller Könnensstufen
 
-```bash
-# npm
-npm run build
+---
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+*Für weitere Informationen über RBAG Musik und unsere Veranstaltungen besuchen Sie [www.rbag-musik.de](https://www.rbag-musik.de/) und [www.music-and-al.de](https://www.music-and-al.de)*
