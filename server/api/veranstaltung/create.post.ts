@@ -8,11 +8,10 @@ import { evolve, getRbagVeranstaltungStreamSubjectById, initialState } from '~~/
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
-  // Get user object for event metadata
+  // Get user object for event context
   // =============================================================================
 
-  // const { user } = await requireUserSession(event)
-  const user = { email: 'test@test.de', name: 'Larry' }
+  const user = event.context.user!
 
   // =============================================================================
   // Parse and validate request body
