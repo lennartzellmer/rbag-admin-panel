@@ -3,8 +3,8 @@ import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { createRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/eventDriven/rbagVeranstaltung/businessLogic'
-import { evolve, getRbagVeranstaltungStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltung'
+import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/eventDriven/veranstaltung/businessLogic'
+import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltung'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -48,9 +48,12 @@ export default defineEventHandler(async (event) => {
 
     const result = await handleCommand({
       eventStore,
-      evolve,
-      initialState,
-      streamSubject: getRbagVeranstaltungStreamSubjectById(randomUUID()),
+      streams: [{
+        evolve,
+        initialState,
+        streamSubject: getVeranstaltungStreamSubjectById(randomUUID())
+      }
+      ],
       commandHandlerFunction: createRbagVeranstaltung,
       command: command
     })
