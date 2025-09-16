@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
 import { getVeranstaltungStreamSubjectById, type VeranstaltungErstellt } from '.'
-import type { CreateRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
+import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 
 // =============================================================================
 // Commands
@@ -14,7 +14,7 @@ export type EventCommandMetadata = {
 
 export type CreateRbagVeranstaltung = Command<
   'CreateRbagVeranstaltung',
-  CreateRbagVeranstaltungSchema,
+  CreateVeranstaltungSchema,
   EventCommandMetadata
 >
 

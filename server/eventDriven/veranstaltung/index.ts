@@ -1,7 +1,7 @@
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
 import type { DomainEvent, Subject } from 'vorfall'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
-import type { CreateRbagVeranstaltungSchema, RbagEvent } from '~~/validation/veranstaltungSchema'
+import type { CreateVeranstaltungSchema, Veranstaltung } from '~~/validation/veranstaltungSchema'
 
 export const VeranstaltungEntity = 'RbagVeranstaltung'
 
@@ -19,7 +19,7 @@ export type VeranstaltungEventMetadata = {
 
 export type VeranstaltungErstellt = DomainEvent<
   'VeranstaltungErstellt',
-  CreateRbagVeranstaltungSchema,
+  CreateVeranstaltungSchema,
   VeranstaltungEventMetadata,
   VeranstaltungSubject
 >
@@ -27,7 +27,7 @@ export type VeranstaltungErstellt = DomainEvent<
 export type VeranstaltungEvents =
   | VeranstaltungErstellt
 
-export const initialState = (): RbagEvent => {
+export const initialState = (): Veranstaltung => {
   return {
     details: {
       name: '',
@@ -46,9 +46,9 @@ export const initialState = (): RbagEvent => {
 // =============================================================================
 
 export const evolve = (
-  state: RbagEvent,
+  state: Veranstaltung,
   event: VeranstaltungEvents
-): RbagEvent => {
+): Veranstaltung => {
   const { type, data } = event
 
   switch (type) {

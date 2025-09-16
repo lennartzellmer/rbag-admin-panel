@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const LocationSchema = z.strictObject({
+export const OrtsSchema = z.strictObject({
   name: z.string().min(1),
   line1: z.string().min(1),
   line2: z.string().nullable(),
@@ -9,15 +9,15 @@ export const LocationSchema = z.strictObject({
   geoLocation: z.array(z.number())
 })
 
-export const PerformanceSchema = z.strictObject({
+export const AufführungsSchema = z.strictObject({
   description: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
-  location: LocationSchema,
+  location: OrtsSchema,
   posterDownloadUrl: z.string().url()
 })
 
-export const RegistrationDetailsSchema = z.strictObject({
+export const RegistrierungsDetailsSchema = z.strictObject({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   lateRegistration: z.boolean(),
@@ -31,20 +31,20 @@ export const EventDetailsSchema = z.strictObject({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
   zielgruppe: z.string().min(1),
-  location: LocationSchema.optional()
+  location: OrtsSchema.optional()
 })
 
-export const RbagEventSchema = z.strictObject({
+export const EventSchema = z.strictObject({
   details: EventDetailsSchema,
   isPublished: z.boolean(),
   isCanceled: z.boolean(),
   workshopOffer: z.array(z.string().uuid()).optional(),
   alternativeProgram: z.array(z.string().uuid()).optional(),
-  performance: PerformanceSchema.optional(),
-  registration: RegistrationDetailsSchema.optional()
+  performance: AufführungsSchema.optional(),
+  registration: RegistrierungsDetailsSchema.optional()
 })
 
-export const createRbagVeranstaltungSchema = RbagEventSchema.pick({
+export const createVeranstaltungSchema = EventSchema.pick({
   details: true,
   isPublished: true,
   isCanceled: true,
@@ -54,11 +54,11 @@ export const createRbagVeranstaltungSchema = RbagEventSchema.pick({
   registration: true
 })
 
-export type RbagEvent = z.infer<typeof RbagEventSchema>
-export type CreateRbagVeranstaltungSchema = z.infer<typeof createRbagVeranstaltungSchema>
+export type Veranstaltung = z.infer<typeof EventSchema>
+export type CreateVeranstaltungSchema = z.infer<typeof createVeranstaltungSchema>
 
-export type EventDetails = z.infer<typeof EventDetailsSchema>
-export type Location = z.infer<typeof LocationSchema>
-export type Performance = z.infer<typeof PerformanceSchema>
+export type VeranstaltungsDetails = z.infer<typeof EventDetailsSchema>
+export type Ort = z.infer<typeof OrtsSchema>
+export type Aufführung = z.infer<typeof AufführungsSchema>
 
-export type RegistrationDetails = z.infer<typeof RegistrationDetailsSchema>
+export type RegistrierungsDetails = z.infer<typeof RegistrierungsDetailsSchema>

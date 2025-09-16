@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
+import { createVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/eventDriven/veranstaltung/businessLogic'
 import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltung'
 
@@ -11,7 +11,8 @@ export default defineEventHandler(async (event) => {
   // Get user object for event context
   // =============================================================================
 
-  const user = event.context.user!
+  // TODO: Replace with real user from session
+  const user = event.context.user || { email: 'test@test.de', name: 'Testname' }
 
   // =============================================================================
   // Parse and validate request body
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     error: validationError
   } = await useSafeValidatedBody(
     event,
-    createRbagVeranstaltungSchema
+    createVeranstaltungSchema
   )
 
   if (!isValidParams) {

@@ -3,13 +3,13 @@ import { setup, $fetch } from '@nuxt/test-utils/e2e'
 import type { WithId } from 'mongodb'
 
 import type { EventStream } from 'vorfall'
-import type { CreateRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
+import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 import type { VeranstaltungErstellt } from '~~/server/eventDriven/veranstaltung'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setup({})
 
-  const createValidVeranstaltungData = (): CreateRbagVeranstaltungSchema => {
+  const createValidVeranstaltungData = (): CreateVeranstaltungSchema => {
     return {
       details: {
         name: 'Test Veranstaltung E2E',
