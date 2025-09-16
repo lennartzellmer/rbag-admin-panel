@@ -27,6 +27,10 @@ export type VeranstaltungErstellt = DomainEvent<
 export type VeranstaltungEvents =
   | VeranstaltungErstellt
 
+// =============================================================================
+// Evolve
+// =============================================================================
+
 export const initialState = (): Veranstaltung => {
   return {
     details: {
@@ -40,10 +44,6 @@ export const initialState = (): Veranstaltung => {
     isCanceled: false
   }
 }
-
-// =============================================================================
-// Evolve
-// =============================================================================
 
 export const evolve = (
   state: Veranstaltung,

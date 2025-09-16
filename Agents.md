@@ -7,7 +7,8 @@ This Agents.md file provides comprehensive guidance for OpenAI Codex and other A
 This project follows the standard Nuxt 4 project structure.
 
 - `/server`: A nitro server scructure with [file based routing](https://nuxt.com/docs/4.x/guide/directory-structure/server)
-- `/server/eventDriven/*`: 
+- `/server/eventDriven/*/businessLogic`: Holds the Command side of the API. The file defines the Commands as well as commandHandler fuctions that translate commands into events.
+- `/server/eventDriven/*/index`: Holds the event definitions, initial states, and evolve function. as well as projection definitions and their helper functions. The file covers the entire "event-side" of the API.
 
 ## API Structure
 
