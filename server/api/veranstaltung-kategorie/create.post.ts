@@ -2,17 +2,17 @@ import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createRbagVeranstaltungKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
-import { createRbagVeranstaltungKategorie, type CreateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
-import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
+import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/eventDriven/veranstaltungsKategorie/businessLogic'
+import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltungsKategorie'
+import { erstelleVeranstaltungKategorieSchema } from '~~/server/eventDriven/veranstaltungsKategorie/validation'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user object for event metadata
   // =============================================================================
 
-  // const { user } = await requireUserSession(event)
-  const user = { email: 'test@test.de', name: 'Larry' }
+  // TODO: Replace with real user from session
+  const user = event.context.user || { email: 'test@test.de', name: 'Testname' }
 
   // =============================================================================
   // Parse and validate request body
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     error: validationError
   } = await useSafeValidatedBody(
     event,
-    createRbagVeranstaltungKategorieSchema
+    erstelleVeranstaltungKategorieSchema
   )
 
   if (!isValidParams) {
@@ -41,18 +41,20 @@ export default defineEventHandler(async (event) => {
 
   try {
     const eventStore = event.context.eventStore
-    const command: CreateRbagVeranstaltungKategorie = createCommand({
-      type: 'CreateRbagVeranstaltungKategorie',
+    const command: ErstelleVeranstaltungKategorie = createCommand({
+      type: 'CreateVeranstaltungsKategorie',
       data: validatedData,
       metadata: { requestedBy: user.email, now: new Date() }
     })
 
     const result = await handleCommand({
       eventStore,
-      evolve,
-      initialState,
-      streamSubject: getRbagVeranstaltungsStreamSubjectById(randomUUID()),
-      commandHandlerFunction: createRbagVeranstaltungKategorie,
+      streams: [{
+        evolve,
+        initialState,
+        streamSubject: getVeranstaltungsKategorieStreamSubjectById(randomUUID())
+      }],
+      commandHandlerFunction: createVeranstaltungsKategorie,
       command: command
     })
 

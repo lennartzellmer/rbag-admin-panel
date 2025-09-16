@@ -2,17 +2,17 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { updateRbagVeranstaltungKategorie, type UpdateRbagVeranstaltungKategorie } from '~~/server/eventDriven/rbagVeranstaltungsKategorie/businessLogic'
-import { evolve, getRbagVeranstaltungsStreamSubjectById, initialState } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
-import { kategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
+import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/eventDriven/veranstaltungsKategorie/businessLogic'
+import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltungsKategorie'
+import { veranstaltungsKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user object for event metadata
   // =============================================================================
 
-  // const { user } = await requireUserSession(event)
-  const user = { email: 'test@test.de', name: 'Larry' }
+  // TODO: Replace with real user from session
+  const user = event.context.user || { email: 'test@test.de', name: 'Testname' }
 
   // =============================================================================
   // Parse and validate request params and body
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     error: validationErrorBody
   } = await useSafeValidatedBody(
     event,
-    kategorieSchema.partial()
+    veranstaltungsKategorieSchema.partial()
   )
 
   if (!isValidBody) {
@@ -57,20 +57,25 @@ export default defineEventHandler(async (event) => {
 
   try {
     const eventStore = event.context.eventStore
-    const command: UpdateRbagVeranstaltungKategorie = createCommand({
-      type: 'UpdateRbagVeranstaltungKategorie',
+    const command: AktualisiereVeranstaltungKategorie = createCommand({
+      type: 'UpdateVeranstaltungsKategorie',
       data: {
-        ...validatedBody,
-        streamSubject: getRbagVeranstaltungsStreamSubjectById(validatedParams.id)
+        ...validatedBody
       },
-      metadata: { requestedBy: user.email, now: new Date() }
+      metadata: {
+        requestedBy: user.email,
+        now: new Date(),
+        id: validatedParams.id
+      }
     })
 
     const result = await handleCommand({
       eventStore,
-      evolve,
-      initialState,
-      streamSubject: getRbagVeranstaltungsStreamSubjectById(validatedParams.id),
+      streams: [{
+        evolve,
+        initialState,
+        streamSubject: getVeranstaltungsKategorieStreamSubjectById(validatedParams.id)
+      }],
       commandHandlerFunction: updateRbagVeranstaltungKategorie,
       command: command
     })

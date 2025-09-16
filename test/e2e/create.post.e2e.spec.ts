@@ -4,7 +4,7 @@ import type { WithId } from 'mongodb'
 
 import type { EventStream } from 'vorfall'
 import type { CreateRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import type { RbagVeranstaltungCreated } from '~~/server/eventDriven/rbagVeranstaltung'
+import type { VeranstaltungErstellt } from '~~/server/eventDriven/veranstaltung'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setup({})
@@ -26,7 +26,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
   test('should successfully create veranstaltung with valid data', async () => {
     const validData = createValidVeranstaltungData()
 
-    const response = await $fetch<WithId<EventStream<RbagVeranstaltungCreated>>>('/api/veranstaltung/create', {
+    const response = await $fetch<WithId<EventStream<VeranstaltungErstellt>>>('/api/veranstaltung/create', {
       method: 'POST',
       body: validData
     })

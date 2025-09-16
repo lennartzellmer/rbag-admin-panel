@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { useSafeValidatedQuery } from 'h3-zod'
-import { getRbagVeranstaltungKategorieCount, getRbagVeranstaltungsKategorienPaginated } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
+import { getVeranstaltungKategorieCount, getVeranstaltungsKategorienPaginated } from '~~/server/eventDriven/veranstaltungsKategorie'
 import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
@@ -32,8 +32,8 @@ export default defineEventHandler(async (event) => {
     const eventStore = event.context.eventStore
 
     const [VeranstaltungsKategorien, total] = await Promise.all([
-      getRbagVeranstaltungsKategorienPaginated(eventStore, offset, limit),
-      getRbagVeranstaltungKategorieCount(eventStore)
+      getVeranstaltungsKategorienPaginated(eventStore, offset, limit),
+      getVeranstaltungKategorieCount(eventStore)
     ])
 
     return {

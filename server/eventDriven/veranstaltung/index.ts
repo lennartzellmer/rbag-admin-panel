@@ -1,0 +1,103 @@
+import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
+import type { DomainEvent, Subject } from 'vorfall'
+import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
+import type { CreateRbagVeranstaltungSchema, RbagEvent } from '~~/validation/veranstaltungSchema'
+
+export const VeranstaltungEntity = 'RbagVeranstaltung'
+
+export type VeranstaltungSubject = Subject<`${typeof VeranstaltungEntity}`>
+
+export const getVeranstaltungStreamSubjectById = (id: string) => createStreamSubject(`${VeranstaltungEntity}/${id}`)
+
+// =============================================================================
+// Events
+// =============================================================================
+
+export type VeranstaltungEventMetadata = {
+  changedBy: string
+}
+
+export type VeranstaltungErstellt = DomainEvent<
+  'VeranstaltungErstellt',
+  CreateRbagVeranstaltungSchema,
+  VeranstaltungEventMetadata,
+  VeranstaltungSubject
+>
+
+export type VeranstaltungEvents =
+  | VeranstaltungErstellt
+
+export const initialState = (): RbagEvent => {
+  return {
+    details: {
+      name: '',
+      categoryId: '',
+      startDate: new Date(),
+      endDate: new Date(),
+      zielgruppe: ''
+    },
+    isPublished: false,
+    isCanceled: false
+  }
+}
+
+// =============================================================================
+// Evolve
+// =============================================================================
+
+export const evolve = (
+  state: RbagEvent,
+  event: VeranstaltungEvents
+): RbagEvent => {
+  const { type, data } = event
+
+  switch (type) {
+    case 'VeranstaltungErstellt': {
+      return data
+    }
+    default: {
+      // Exhaustive matching of the event type - This will throw a TS error if a new event type is added and not handled here
+      const _exhaustiveCheck: never = type as never
+      return state
+    }
+  }
+}
+
+// =============================================================================
+// Projections
+// =============================================================================
+
+export const VeranstaltungProjectionName = 'Veranstaltung' as const
+
+export const veranstaltungProjectionDefinition = createProjectionDefinition({
+  name: VeranstaltungProjectionName,
+  evolve: evolve,
+  canHandle: ['VeranstaltungErstellt'],
+  initialState: initialState
+})
+
+export const getVeranstaltungenPaginated = (eventStore: RbagEventStoreInstance, skip: number, limit: number) => findMultipleProjections(
+  eventStore,
+  VeranstaltungEntity,
+  {
+    projectionName: VeranstaltungProjectionName
+  },
+  {
+    skip,
+    limit
+  })
+
+export const getVeranstaltungCount = (eventStore: RbagEventStoreInstance) => countProjections(
+  eventStore,
+  VeranstaltungEntity,
+  {
+    projectionName: VeranstaltungProjectionName
+  }
+)
+
+export const getVeranstaltungById = (eventStore: RbagEventStoreInstance, id: string) => findOneProjection(
+  eventStore,
+  getVeranstaltungStreamSubjectById(id),
+  {
+    projectionName: VeranstaltungProjectionName
+  })

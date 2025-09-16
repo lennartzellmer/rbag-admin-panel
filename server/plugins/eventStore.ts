@@ -1,5 +1,6 @@
 import { createEventStore } from 'vorfall'
-import { rbagVeranstaltungKategorieProjectionDefinition } from '../eventDriven/rbagVeranstaltungsKategorie'
+import { veranstaltungKategorieProjectionDefinition } from '../eventDriven/veranstaltungsKategorie'
+import { veranstaltungProjectionDefinition } from '../eventDriven/veranstaltung'
 
 const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
 
@@ -8,12 +9,14 @@ if (!connectionString) {
 }
 
 // Create a singleton instance of the MongoDB event store
-export const eventStoreSingleton = createEventStore({ connectionString, projections: [rbagVeranstaltungKategorieProjectionDefinition] })
+export const eventStoreSingleton = createEventStore({ connectionString, projections: [veranstaltungKategorieProjectionDefinition, veranstaltungProjectionDefinition] })
+
+export type RbagEventStoreInstance = typeof eventStoreSingleton
 
 // Extend the H3EventContext interface to include the eventStore property
 declare module 'h3' {
   interface H3EventContext {
-    eventStore: typeof eventStoreSingleton
+    eventStore: RbagEventStoreInstance
   }
 }
 

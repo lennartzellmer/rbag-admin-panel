@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { useSafeValidatedParams, z } from 'h3-zod'
-import { getRbagVeranstaltungKategorieById } from '~~/server/eventDriven/rbagVeranstaltungsKategorie'
+import { getVeranstaltungKategorieById } from '~~/server/eventDriven/veranstaltungsKategorie'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 
   const eventStore = event.context.eventStore
 
-  const rbagEventCategory = await getRbagVeranstaltungKategorieById(eventStore, validatedParams.id)
+  const rbagEventCategory = await getVeranstaltungKategorieById(eventStore, validatedParams.id)
 
   if (!rbagEventCategory) {
     throw createError({

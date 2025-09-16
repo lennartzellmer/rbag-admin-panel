@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
-import { getRbagVeranstaltungStreamSubjectById, type RbagVeranstaltungCreated } from '.'
+import { getVeranstaltungStreamSubjectById, type VeranstaltungErstellt } from '.'
 import type { CreateRbagVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 
 // =============================================================================
@@ -24,17 +24,17 @@ export type CreateRbagVeranstaltung = Command<
 
 export const createRbagVeranstaltung = (
   { command }: { command: CreateRbagVeranstaltung }
-): RbagVeranstaltungCreated => {
+): VeranstaltungErstellt => {
   const {
     data,
     metadata
   } = command
 
-  const subject = getRbagVeranstaltungStreamSubjectById(randomUUID())
+  const subject = getVeranstaltungStreamSubjectById(randomUUID())
 
   const event = createDomainEvent(
     {
-      type: 'RbagVeranstaltungCreated',
+      type: 'VeranstaltungErstellt',
       subject: subject,
       data: data,
       metadata: {
