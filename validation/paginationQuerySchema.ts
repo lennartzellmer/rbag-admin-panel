@@ -5,14 +5,15 @@ export const paginationQuerySchema = z.object({
   offset: z.string().transform(Number).default('0')
 })
 
-export const paginationResponseSchema = z.object({
-  data: z.array(z.any()),
-  meta: z.object({
-    total: z.number().min(0),
-    offset: z.number().min(0),
-    limit: z.number().min(1)
-  })
-})
+// =============================================================================
+// Types
+// =============================================================================
 
-export type PaginationQuerySchema = z.infer<typeof paginationQuerySchema>
-export type PaginationResponseSchema = z.infer<typeof paginationResponseSchema>
+export type PaginationResponseSchema<TData = unknown> = {
+  data: TData[]
+  meta: {
+    total: number
+    offset: number
+    limit: number
+  }
+}

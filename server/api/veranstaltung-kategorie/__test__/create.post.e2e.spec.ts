@@ -5,7 +5,9 @@ import type { ErstelleVeranstaltungKategorieSchema } from '~~/server/domain/vera
 import type { VeranstaltungsKategorieErstellt } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 
 describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
-  await setup({})
+  await setup({
+
+  })
 
   const validData: ErstelleVeranstaltungKategorieSchema = {
     name: 'Test Kategorie E2E'
