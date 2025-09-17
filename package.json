@@ -47,6 +47,7 @@
     "jsdom": "26.0.0",
     "playwright-core": "1.50.1",
     "vitest": "3.2.4",
-    "vitest-mock-extended": "2.0.2"
+    "vitest-mock-extended": "2.0.2",
+    "vue-tsc": "3.0.7"
   }
 }
