@@ -34,7 +34,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     expect(response).toMatchSnapshot({
       _id: expect.any(String),
       streamId: expect.any(String),
-      streamSubject: expect.stringMatching(/^RbagVeranstaltung\/[0-9a-f-]{36}$/),
+      streamSubject: expect.stringMatching(/^Veranstaltung\/[0-9a-f-]{36}$/),
       metadata: {
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
@@ -43,7 +43,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
         id: expect.any(String),
         date: expect.any(String),
         time: expect.any(String),
-        subject: expect.stringMatching(/^RbagVeranstaltung\/[0-9a-f-]{36}$/)
+        subject: expect.stringMatching(/^Veranstaltung\/[0-9a-f-]{36}$/)
       }]
     })
   })
