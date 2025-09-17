@@ -1,10 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
-import type { WithId } from 'mongodb'
-
-import type { EventStream } from 'vorfall'
+import type { MultiStreamAppendResult } from 'vorfall'
 import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import type { VeranstaltungErstellt } from '~~/server/eventDriven/veranstaltung'
+import type { VeranstaltungErstellt } from '~~/server/modules/veranstaltung/eventHandling'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setup({})
@@ -26,25 +24,35 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
   test('should successfully create veranstaltung with valid data', async () => {
     const validData = createValidVeranstaltungData()
 
-    const response = await $fetch<WithId<EventStream<VeranstaltungErstellt>>>('/api/veranstaltung/create', {
+    const response = await $fetch<MultiStreamAppendResult<VeranstaltungErstellt>>('/api/veranstaltung/create', {
       method: 'POST',
       body: validData
     })
 
     expect(response).toMatchSnapshot({
-      _id: expect.any(String),
-      streamId: expect.any(String),
-      streamSubject: expect.stringMatching(/^Veranstaltung\/[0-9a-f-]{36}$/),
-      metadata: {
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      },
-      events: [{
-        id: expect.any(String),
-        date: expect.any(String),
-        time: expect.any(String),
-        subject: expect.stringMatching(/^Veranstaltung\/[0-9a-f-]{36}$/)
-      }]
+      streamSubjects: [
+        expect.stringMatching(/^RbagVeranstaltung\/[0-9a-f-]{36}$/)
+      ],
+      streams: [
+        {
+          _id: expect.any(String),
+          streamId: expect.any(String),
+          streamSubject: expect.stringMatching(/^RbagVeranstaltung\/[0-9a-f-]{36}$/),
+          metadata: {
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String)
+          },
+          events: [
+            {
+              id: expect.any(String),
+              date: expect.any(String),
+              time: expect.any(String),
+              subject: expect.stringMatching(/^RbagVeranstaltung\/[0-9a-f-]{36}$/)
+            }
+          ]
+        }
+      ],
+      totalEventsAppended: expect.any(Number)
     })
   })
 
