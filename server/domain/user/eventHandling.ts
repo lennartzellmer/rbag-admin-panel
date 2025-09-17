@@ -1,6 +1,6 @@
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
 import type { DomainEvent, Subject } from 'vorfall'
-import type { User } from './validation'
+import type { AttachUserProfilePictureSchema, User } from './validation'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
 
 export const UserEntity = 'User'
@@ -24,7 +24,14 @@ export type UserCreated = DomainEvent<
   UserSubject
 >
 
-export type UserEvents = UserCreated
+export type UserProfilePictureAttached = DomainEvent<
+  'UserProfilePictureAttached',
+  AttachUserProfilePictureSchema,
+  UserEventMetadata,
+  UserSubject
+>
+
+export type UserEvents = UserCreated | UserProfilePictureAttached
 
 // =============================================================================
 // Evolve
@@ -40,6 +47,12 @@ export const evolve = (state: User, event: UserEvents): User => {
       return {
         ...state,
         ...data
+      }
+    }
+    case 'UserProfilePictureAttached': {
+      return {
+        ...state,
+        profilePictureUrl: data.profilePictureUrl
       }
     }
     default: {
@@ -58,7 +71,7 @@ export const UserProjectionName = 'User' as const
 export const userProjectionDefinition = createProjectionDefinition({
   name: UserProjectionName,
   evolve,
-  canHandle: ['UserCreated'],
+  canHandle: ['UserCreated', 'UserProfilePictureAttached'],
   initialState
 })
 

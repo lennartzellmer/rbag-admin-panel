@@ -15,10 +15,15 @@ export const userSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email().min(5).max(255),
   role: z.enum(['admin', 'user']).default('user'),
-  provider: z.enum(['linear'])
+  provider: z.enum(['linear']),
+  profilePictureUrl: z.string().url().max(2048).optional()
 })
 
 export const CreateUserSchema = userSchema.omit({ id: true })
+
+export const attachUserProfilePictureSchema = z.object({
+  profilePictureUrl: z.string().url().max(2048)
+})
 
 // =============================================================================
 // Types
@@ -26,3 +31,4 @@ export const CreateUserSchema = userSchema.omit({ id: true })
 
 export type User = z.infer<typeof userSchema>
 export type CreateUserSchema = z.infer<typeof userSchema>
+export type AttachUserProfilePictureSchema = z.infer<typeof attachUserProfilePictureSchema>
