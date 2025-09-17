@@ -1,7 +1,14 @@
 {
   "files.associations": {
-    "*.css": "postcss"
+    "*.css": "tailwindcss"
   },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "tailwindCSS.classAttributes": ["class", "ui"],
+  "tailwindCSS.experimental.classRegex": [
+    ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
   "scss.lint.unknownAtRules": "ignore",
   // Enable the ESlint flat config support
   "eslint.useFlatConfig": true,
