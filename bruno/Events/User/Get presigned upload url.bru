@@ -1,0 +1,20 @@
+meta {
+  name: Get presigned upload url
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/user/profile-upload-url?contentType=image/jpeg&fileExtension=jpeg
+  body: none
+  auth: inherit
+}
+
+params:query {
+  contentType: image/jpeg
+  fileExtension: jpeg
+}
+
+settings {
+  encodeUrl: true
+}
