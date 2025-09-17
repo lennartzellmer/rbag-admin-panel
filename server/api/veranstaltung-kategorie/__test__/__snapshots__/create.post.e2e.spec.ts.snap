@@ -1,0 +1,133 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Veranstaltung Creation API - E2E Test > should successfully create veranstaltungsKategorie with valid data 1`] = `
+{
+  "streamSubjects": [
+    StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+  ],
+  "streams": [
+    {
+      "_id": Any<String>,
+      "events": [
+        {
+          "data": {
+            "name": "Test Kategorie E2E",
+          },
+          "datacontenttype": "application/json",
+          "date": Any<String>,
+          "id": Any<String>,
+          "metadata": {
+            "requestedBy": "test@test.de",
+          },
+          "source": "vorfall.eventsourcing.system",
+          "specversion": "1.0",
+          "subject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+          "time": Any<String>,
+          "type": "VeranstaltungsKategorie.Erstellt",
+          "version": "1.0",
+        },
+      ],
+      "metadata": {
+        "createdAt": Any<String>,
+        "updatedAt": Any<String>,
+      },
+      "projections": {
+        "VeranstaltungKategorie": {
+          "name": "Test Kategorie E2E",
+        },
+      },
+      "streamId": Any<String>,
+      "streamSubject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+    },
+  ],
+  "totalEventsAppended": Any<Number>,
+}
+`;
+
+exports[`VeranstaltungsKategorie Creation API - E2E Test > should successfully create veranstaltungsKategorie with valid data 1`] = `
+{
+  "streamSubjects": [
+    StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+  ],
+  "streams": [
+    {
+      "_id": Any<String>,
+      "events": [
+        {
+          "data": {
+            "name": "Test Kategorie E2E",
+          },
+          "datacontenttype": "application/json",
+          "date": Any<String>,
+          "id": Any<String>,
+          "metadata": {
+            "requestedBy": "test@test.de",
+          },
+          "source": "vorfall.eventsourcing.system",
+          "specversion": "1.0",
+          "subject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+          "time": Any<String>,
+          "type": "VeranstaltungsKategorie.Erstellt",
+          "version": "1.0",
+        },
+      ],
+      "metadata": {
+        "createdAt": Any<String>,
+        "updatedAt": Any<String>,
+      },
+      "projections": {
+        "VeranstaltungKategorie": {
+          "name": "Test Kategorie E2E",
+        },
+      },
+      "streamId": Any<String>,
+      "streamSubject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+    },
+  ],
+  "totalEventsAppended": Any<Number>,
+}
+`;
+
+exports[`VeranstaltungsKategorie Creation API - E2E Test > should successfully create veranstaltungsKategorie with valid data 2`] = `
+{
+  "streamSubjects": [
+    StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+  ],
+  "streams": [
+    {
+      "_id": Any<String>,
+      "events": [
+        {
+          "data": {
+            "name": "Test Kategorie E2E",
+          },
+          "datacontenttype": "application/json",
+          "date": Any<String>,
+          "id": Any<String>,
+          "metadata": {
+            "requestedBy": "test@test.de",
+          },
+          "source": "vorfall.eventsourcing.system",
+          "specversion": "1.0",
+          "subject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+          "time": Any<String>,
+          "type": "VeranstaltungsKategorie.Erstellt",
+          "version": "1.0",
+        },
+      ],
+      "metadata": {
+        "createdAt": Any<String>,
+        "updatedAt": Any<String>,
+      },
+      "projections": {
+        "VeranstaltungKategorie": {
+          "name": "Test Kategorie E2E",
+        },
+      },
+      "streamId": Any<String>,
+      "streamSubject": StringMatching /\\^VeranstaltungKategorie\\\\/\\[0-9a-f-\\]\\{36\\}\\$/,
+    },
+  ],
+  "totalEventsAppended": Any<Number>,
+}
+`;
