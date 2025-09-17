@@ -3,10 +3,15 @@ import { setup, $fetch } from '@nuxt/test-utils/e2e'
 import type { MultiStreamAppendResult } from 'vorfall'
 import type { ErstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 import type { VeranstaltungsKategorieErstellt } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
+import { setupMongoMemoryServer } from '~~/test/utils/mongoMemoryServer'
+
+const connectionString = await setupMongoMemoryServer()
 
 describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
   await setup({
-
+    env: {
+      NUXT_MONGODB_EVENT_STORE_URI: connectionString
+    }
   })
 
   const validData: ErstelleVeranstaltungKategorieSchema = {
@@ -56,7 +61,7 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400,
       data: expect.objectContaining({
-        message: 'Invalid event data'
+        statusMessage: 'Invalid event data'
       })
     }))
   })

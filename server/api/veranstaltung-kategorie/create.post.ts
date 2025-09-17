@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
-      message: 'Invalid event data',
+      statusMessage: 'Invalid event data',
       statusText: validationError?.message
     })
   }
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
     console.error(error)
     throw createError({
       statusCode: 500,
-      message: 'Error creating event'
+      statusMessage: 'Error creating event'
     })
   }
 })

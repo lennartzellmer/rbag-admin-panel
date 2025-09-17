@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
-      message: 'Invalid event data',
+      statusMessage: 'Invalid event data',
       statusText: validationError?.message
     })
   }
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   if (!rbagEventCategory) {
     throw createError({
       statusCode: 404,
-      message: 'Event not found'
+      statusMessage: 'Event not found'
     })
   }
 

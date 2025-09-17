@@ -1,9 +1,15 @@
 import { beforeAll, describe, expect, test } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
 import type { PaginationResponseSchema } from '~~/validation/paginationQuerySchema'
+import { setupMongoMemoryServer } from '~~/test/utils/mongoMemoryServer'
 
 describe('VeranstaltungsKategorie GET - E2E Test', async () => {
-  await setup({})
+  const connectionString = await setupMongoMemoryServer()
+  await setup({
+    env: {
+      NUXT_MONGODB_EVENT_STORE_URI: connectionString
+    }
+  })
 
   beforeAll(async () => {
     await $fetch('/api/veranstaltung-kategorie/create', {
@@ -42,8 +48,6 @@ describe('VeranstaltungsKategorie GET - E2E Test', async () => {
       }
     })
 
-    console.log('djkashkjdhajkshdkakjshdjkahskhwqwe', response)
-
     expect(response).toBeDefined()
     expect(response.data).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -57,14 +61,14 @@ describe('VeranstaltungsKategorie GET - E2E Test', async () => {
     expect(response.meta.total).toBeGreaterThanOrEqual(2)
   })
 
-  // test('should return 400 for invalid pagination query params', async () => {
-  //   await expect(() => $fetch('/api/veranstaltung-kategorie', {
-  //     query: {
-  //       limit: 'abc',
-  //       offset: '0'
-  //     }
-  //   })).rejects.toThrowError(expect.objectContaining({
-  //     statusCode: 400
-  //   }))
-  // })
+  test('should return 400 for invalid pagination query params', async () => {
+    await expect(() => $fetch('/api/veranstaltung-kategorie', {
+      query: {
+        limit: 'abc',
+        offset: '0'
+      }
+    })).rejects.toThrowError(expect.objectContaining({
+      statusCode: 400
+    }))
+  })
 })

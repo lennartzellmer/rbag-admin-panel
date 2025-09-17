@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-export const paginationQuerySchema = z.object({
-  limit: z.string().transform(Number).default('10'),
-  offset: z.string().transform(Number).default('0')
+export const paginationQuerySchema = z.strictObject({
+  limit: z.coerce.number().int().default(10),
+  offset: z.coerce.number().int().default(0)
 })
 
 // =============================================================================

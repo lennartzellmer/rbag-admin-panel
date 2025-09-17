@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   if (!isValidQuery) {
     throw createError({
       statusCode: 400,
-      message: 'Invalid event data',
+      statusMessage: 'Invalid event data',
       statusText: validationErrorQuery?.message
     })
   }
@@ -47,9 +47,9 @@ export default defineEventHandler(async (event) => {
   }
   catch (error) {
     console.error('Failed to get events', error)
-    createError({
+    throw createError({
       statusCode: 500,
-      message: 'Failed to get events'
+      statusMessage: 'Failed to get events'
     })
   }
 })
