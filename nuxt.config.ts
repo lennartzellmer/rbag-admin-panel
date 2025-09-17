@@ -8,8 +8,7 @@ export default defineNuxtConfig({
   ],
   ssr: false,
   devtools: { enabled: false },
-  future: { compatibilityVersion: 4 },
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2025-09-17',
   nitro: {
     ignore: ['**/*.spec.ts', '**/__test__/**']
   },

@@ -23,7 +23,7 @@
     "eslint": "9.21.0",
     "h3-zod": "^0.5.3",
     "mongodb-memory-server": "10.1.4",
-    "nuxt": "^3.16.0",
+    "nuxt": "^4.1.2",
     "nuxt-auth-utils": "0.5.14",
     "nuxt-server-utils": "0.0.7",
     "typescript": "^5.7.3",
