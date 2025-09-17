@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { useSafeValidatedParams, z } from 'h3-zod'
-import { getVeranstaltungKategorieById } from '~~/server/eventDriven/veranstaltungsKategorie'
+import { getVeranstaltungKategorieById } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================

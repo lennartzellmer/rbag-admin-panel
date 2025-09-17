@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
 import type { AktualisiereVeranstaltungKategorieSchema, AktualisiereVoreinstellungenSchema, ErstelleVeranstaltungKategorieSchema } from './validation'
-import { type VeranstaltungsKategorieErstellt, type VeranstaltungsKategorieAktualisiert, type KategorieVoreinstellungenAktualisiert, getVeranstaltungsKategorieStreamSubjectById } from '.'
+import { type VeranstaltungsKategorieErstellt, type VeranstaltungsKategorieAktualisiert, type KategorieVoreinstellungenAktualisiert, getVeranstaltungsKategorieStreamSubjectById } from './eventHandling'
 
 // =============================================================================
 // Commands

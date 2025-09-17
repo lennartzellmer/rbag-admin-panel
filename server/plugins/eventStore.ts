@@ -1,6 +1,6 @@
 import { createEventStore } from 'vorfall'
-import { veranstaltungKategorieProjectionDefinition } from '../eventDriven/veranstaltungsKategorie'
-import { veranstaltungProjectionDefinition } from '../eventDriven/veranstaltung'
+import { veranstaltungKategorieProjectionDefinition } from '../domain/veranstaltungsKategorie/eventHandling'
+import { veranstaltungProjectionDefinition } from '../domain/veranstaltung/eventHandling'
 
 const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
 

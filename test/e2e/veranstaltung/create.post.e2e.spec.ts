@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { setup, $fetch } from '@nuxt/test-utils/e2e'
 import type { MultiStreamAppendResult } from 'vorfall'
 import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import type { VeranstaltungErstellt } from '~~/server/modules/veranstaltung/eventHandling'
+import type { VeranstaltungErstellt } from '~~/server/domain/veranstaltung/eventHandling'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setup({})

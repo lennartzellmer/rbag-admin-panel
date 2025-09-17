@@ -3,8 +3,8 @@ import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { createVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/eventDriven/veranstaltung/businessLogic'
-import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltung'
+import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/domain/veranstaltung/commandHandling'
+import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/domain/veranstaltung/eventHandling'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================

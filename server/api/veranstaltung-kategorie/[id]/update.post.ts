@@ -2,8 +2,8 @@ import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/eventDriven/veranstaltungsKategorie/businessLogic'
-import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltungsKategorie'
+import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { veranstaltungsKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
 
 export default defineEventHandler(async (event) => {

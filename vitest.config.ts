@@ -5,13 +5,13 @@ export default defineConfig({
   test: {
     silent: false,
     projects: [
-      {
+      await defineVitestProject({
         test: {
-          name: 'unit',
-          include: ['test/{e2e,unit}/*.{test,spec}.ts'],
-          environment: 'node'
+          name: 'e2e',
+          include: ['test/e2e/**/*.e2e.spec.ts'],
+          environment: 'nuxt'
         }
-      },
+      }),
       await defineVitestProject({
         test: {
           name: 'nuxt',

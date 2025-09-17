@@ -2,9 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/eventDriven/veranstaltungsKategorie/businessLogic'
-import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/eventDriven/veranstaltungsKategorie'
-import { erstelleVeranstaltungKategorieSchema } from '~~/server/eventDriven/veranstaltungsKategorie/validation'
+import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
+import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
