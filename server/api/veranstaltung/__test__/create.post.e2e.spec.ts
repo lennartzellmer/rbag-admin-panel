@@ -1,18 +1,12 @@
 import { describe, expect, test } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch } from '@nuxt/test-utils/e2e'
 import type { MultiStreamAppendResult } from 'vorfall'
 import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 import type { VeranstaltungErstellt } from '~~/server/domain/veranstaltung/eventHandling'
-import { setupMongoMemoryServer } from '~~/test/utils/mongoMemoryServer'
-
-const connectionString = await setupMongoMemoryServer()
+import { setupCleanNuxtEnvironment } from '~~/test/utils/mongoMemoryServer'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
-  await setup({
-    env: {
-      NUXT_MONGODB_EVENT_STORE_URI: connectionString
-    }
-  })
+  await setupCleanNuxtEnvironment()
 
   const createValidVeranstaltungData = (): CreateVeranstaltungSchema => {
     return {

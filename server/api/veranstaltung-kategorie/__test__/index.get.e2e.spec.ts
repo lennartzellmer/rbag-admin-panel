@@ -1,15 +1,10 @@
 import { beforeAll, describe, expect, test } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch } from '@nuxt/test-utils/e2e'
 import type { PaginationResponseSchema } from '~~/validation/paginationQuerySchema'
-import { setupMongoMemoryServer } from '~~/test/utils/mongoMemoryServer'
+import { setupCleanNuxtEnvironment } from '~~/test/utils/mongoMemoryServer'
 
 describe('VeranstaltungsKategorie GET - E2E Test', async () => {
-  const connectionString = await setupMongoMemoryServer()
-  await setup({
-    env: {
-      NUXT_MONGODB_EVENT_STORE_URI: connectionString
-    }
-  })
+  await setupCleanNuxtEnvironment()
 
   beforeAll(async () => {
     await $fetch('/api/veranstaltung-kategorie/create', {
