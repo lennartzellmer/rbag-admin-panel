@@ -30,13 +30,7 @@ export type UserEvents = UserCreated
 // Evolve
 // =============================================================================
 
-export const initialState = (): User => ({
-  id: '',
-  name: '',
-  email: '',
-  role: 'user',
-  active: false
-})
+export const initialState = () => null
 
 export const evolve = (state: User, event: UserEvents): User => {
   const { type, data } = event

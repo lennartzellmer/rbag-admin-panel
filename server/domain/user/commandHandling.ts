@@ -22,9 +22,9 @@ export type CreateUser = Command<
 // Command Handlers
 // =============================================================================
 
-export const createUser = (
+export const createUser = async (
   { command }: { command: CreateUser }
-): UserCreated => {
+): Promise<UserCreated> => {
   const { data, metadata } = command
 
   const userId = data.id ?? randomUUID()
@@ -37,7 +37,7 @@ export const createUser = (
       name: data.name,
       role: data.role,
       email: data.email,
-      active: data.active ?? true
+      provider: data.provider
     },
     metadata: { requestedBy: metadata.requestedBy }
   })
