@@ -5,7 +5,11 @@ const providers = ref<Array<any>>([
     label: 'Linear',
     icon: 'i-simple-icons-linear',
     color: 'neutral',
-    variant: 'subtle'
+    variant: 'subtle',
+    onClick: () => {
+      // redirect to linear oauth
+      window.location.href = '/api/auth/linear'
+    }
   }
 ])
 </script>

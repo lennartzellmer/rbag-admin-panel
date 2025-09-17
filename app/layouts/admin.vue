@@ -5,7 +5,7 @@
 <template>
   <AuthState v-slot="{ loggedIn }">
     <template v-if="loggedIn">
-      Logged in
+      <NuxtPage />
     </template>
     <template v-else>
       <div class="flex justify-center items-center h-screen">

@@ -1,4 +1,4 @@
-export default defineOAuthGoogleEventHandler({
+export default defineOAuthLinearEventHandler({
   async onSuccess(event, { user }) {
     await setUserSession(event, { user })
     return sendRedirect(event, '/')

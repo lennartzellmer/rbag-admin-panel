@@ -1,5 +1,18 @@
 <template>
-  <main class="flex flex-col gap-4 mx-auto py-10 px-4 sm:px-6 md:px-10">
-    Placeholder
-  </main>
+  <UDashboardPanel id="home">
+    <template #header>
+      <UDashboardNavbar
+        title="Home"
+        :ui="{ right: 'gap-3' }"
+      >
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+      </UDashboardNavbar>
+    </template>
+
+    <template #body>
+      Body
+    </template>
+  </UDashboardPanel>
 </template>
