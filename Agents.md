@@ -5,11 +5,19 @@ This Agents.md file provides comprehensive guidance for OpenAI Codex and other A
 ## Project Structure for OpenAI Codex Navigation
 
 This project follows the standard Nuxt 4 project structure.
+For the Nuxt documentation check: [condensed version](https://nuxt.com/llms.txt) 
+For advance Nuxt patterns check: [comprehensive version](https://nuxt.com/llms-full.txt)
+
+The UI is built with Nuxt UI. For the next UI documentation check:
+[condensed version](https://ui.nuxt.com/llms-full.txt)
+[comprehensive version](https://ui.nuxt.com/llms-full.txt)
 
 - `/server`: A nitro server scructure with [file based routing](https://nuxt.com/docs/4.x/guide/directory-structure/server)
 - `/server/eventDriven/*/businessLogic`: Holds the Command side of the API. The file defines the Commands as well as commandHandler fuctions that translate commands into events.
 - `/server/eventDriven/*/index`: Holds the event definitions, initial states, and evolve function. as well as projection definitions and their helper functions. The file covers the entire "event-side" of the API.
 - `/test/e2e`: Holds integration tests for the API endpoints. We run snapshot tests wherever possible for success cases. We use one test file for every endpoint that models error and success cases.
+
+
 
 ## API Structure
 
