@@ -1,18 +1,15 @@
+import { defineEventHandler } from 'h3'
+
 export default defineEventHandler(async (event) => {
   if (event.path.startsWith('/api/admin')) {
-    const { user } = await requireUserSession(event) as unknown as { user: User }
+    const { user } = await requireUserSession(event)
     event.context.user = user
   }
 })
 
-interface User {
-  email: string
-  name: string
-}
-
 // Extend the H3EventContext interface to include the eventStore property
 declare module 'h3' {
   interface H3EventContext {
-    user?: User
+    user?: ReturnType<typeof requireUserSession>['user']
   }
 }

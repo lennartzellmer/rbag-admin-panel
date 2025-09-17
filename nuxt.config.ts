@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
-    '@nuxt/ui-pro'
+    '@nuxt/ui'
   ],
   ssr: false,
   devtools: { enabled: false },
