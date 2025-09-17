@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VeranstaltungsKategorie GET - E2E Test > should return paginated veranstaltungsKategorien with metadata 1`] = `
+{
+  "data": ArrayContaining [
+    ObjectContaining {
+      "name": Any<String>,
+    },
+  ],
+  "meta": {
+    "limit": 10,
+    "offset": 0,
+    "total": Any<Number>,
+  },
+}
+`;
