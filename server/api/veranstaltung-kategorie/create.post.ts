@@ -11,8 +11,7 @@ export default defineEventHandler(async (event) => {
   // Get user object for event metadata
   // =============================================================================
 
-  // TODO: Replace with real user from session
-  const user = event.context.user || { email: 'test@test.de', name: 'Testname' }
+  const { user } = await requireUserSession(event)
 
   // =============================================================================
   // Parse and validate request body

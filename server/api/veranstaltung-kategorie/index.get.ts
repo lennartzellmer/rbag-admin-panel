@@ -5,6 +5,12 @@ import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
+  // Get user object for event metadata
+  // =============================================================================
+
+  const { user } = await requireUserSession(event)
+
+  // =============================================================================
   // Parse and validate request body
   // =============================================================================
 

@@ -4,6 +4,12 @@ import { getVeranstaltungKategorieById } from '~~/server/domain/veranstaltungsKa
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
+  // Get user object for event metadata
+  // =============================================================================
+
+  await requireUserSession(event)
+
+  // =============================================================================
   // Parse and validate request body
   // =============================================================================
 

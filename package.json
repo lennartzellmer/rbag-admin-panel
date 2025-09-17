@@ -12,8 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "3.733.0",
-    "@aws-sdk/s3-request-presigner": "3.733.0",
+    "@aws-sdk/client-s3": "3.891.0",
+    "@aws-sdk/s3-request-presigner": "3.891.0",
     "@iconify-json/lucide": "1.2.68",
     "@internationalized/date": "^3.7.0",
     "@nuxt/eslint": "1.1.0",
@@ -26,7 +26,7 @@
     "h3-zod": "^0.5.3",
     "mongodb-memory-server": "10.1.4",
     "nuxt": "^4.1.2",
-    "nuxt-auth-utils": "0.5.14",
+    "nuxt-auth-utils": "0.5.25",
     "nuxt-server-utils": "0.0.7",
     "typescript": "^5.7.3",
     "uuid": "11.1.0",
