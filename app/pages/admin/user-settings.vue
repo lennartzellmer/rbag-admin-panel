@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { getVeranstaltungsKategorienPaginated } from '../../service/veranstaltung-kategorie'
+
+const test = await getVeranstaltungsKategorienPaginated()
+</script>
+
 <template>
   <UDashboardPanel id="home">
     <template #header>
@@ -12,7 +18,7 @@
     </template>
 
     <template #body>
-      Body
+      <pre>{{ test }}</pre>
     </template>
   </UDashboardPanel>
 </template>
