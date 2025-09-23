@@ -9,15 +9,15 @@ auth {
 
 auth:oauth2 {
   grant_type: authorization_code
-  callback_url: http://localhost:3000/api/auth/linear
-  authorization_url: https://linear.app/oauth/authorize
-  access_token_url: https://api.linear.app/oauth/token
-  refresh_token_url: https://api.linear.app/oauth/token
-  client_id: c6680b901b80618e7e81f0f432074bae
+  callback_url: http://localhost:3000/
+  authorization_url: http://localhost:8080/oauth/v2/authorize
+  access_token_url: http://localhost:8080/oauth/v2/token
+  refresh_token_url: http://localhost:8080/oauth/v2/token
+  client_id: 338432892084486147
   client_secret: e34f31407e3530996af8aeafd7659517
-  scope: read
+  scope: openid profile email offline_access
   state: 
-  pkce: false
+  pkce: true
   credentials_placement: body
   credentials_id: credentials
   token_placement: header
