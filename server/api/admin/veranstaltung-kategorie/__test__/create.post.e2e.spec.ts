@@ -13,7 +13,7 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
   }
 
   test('should successfully create veranstaltungsKategorie with valid data', async () => {
-    const response = await $fetch<MultiStreamAppendResult<VeranstaltungsKategorieErstellt>>('/api/veranstaltung-kategorie/create', {
+    const response = await $fetch<MultiStreamAppendResult<VeranstaltungsKategorieErstellt>>('/api/admin/veranstaltung-kategorie/create', {
       method: 'POST',
       body: validData
     })
@@ -49,7 +49,7 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
     const invalidData = { ...validData }
     invalidData.name = ''
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -64,7 +64,7 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
     const invalidData = { ...validData }
     invalidData.name = 'a'
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -77,7 +77,7 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (invalidData.name as any).name
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({

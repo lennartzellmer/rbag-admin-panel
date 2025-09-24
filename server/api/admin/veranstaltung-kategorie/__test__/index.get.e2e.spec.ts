@@ -7,14 +7,14 @@ describe('VeranstaltungsKategorie GET - E2E Test', async () => {
   await setupCleanNuxtEnvironment()
 
   beforeAll(async () => {
-    await $fetch('/api/veranstaltung-kategorie/create', {
+    await $fetch('/api/admin/veranstaltung-kategorie/create', {
       method: 'POST',
       body: {
         name: 'Kategorie A'
       }
     })
 
-    await $fetch('/api/veranstaltung-kategorie/create', {
+    await $fetch('/api/admin/veranstaltung-kategorie/create', {
       method: 'POST',
       body: {
         name: 'Kategorie B'
@@ -23,7 +23,7 @@ describe('VeranstaltungsKategorie GET - E2E Test', async () => {
   })
 
   test('should return paginated veranstaltungsKategorien with metadata', async () => {
-    const response = await $fetch<PaginationResponseSchema>('/api/veranstaltung-kategorie', {
+    const response = await $fetch<PaginationResponseSchema>('/api/admin/veranstaltung-kategorie', {
       query: {
         limit: '10',
         offset: '0'
@@ -57,7 +57,7 @@ describe('VeranstaltungsKategorie GET - E2E Test', async () => {
   })
 
   test('should return 400 for invalid pagination query params', async () => {
-    await expect(() => $fetch('/api/veranstaltung-kategorie', {
+    await expect(() => $fetch('/api/admin/veranstaltung-kategorie', {
       query: {
         limit: 'abc',
         offset: '0'
