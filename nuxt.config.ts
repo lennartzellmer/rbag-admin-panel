@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
-    'nuxt-auth-utils',
     '@nuxt/eslint',
     '@nuxt/test-utils/module',
     '@nuxt/ui'
@@ -11,8 +10,16 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     auth: {
-      jwksUri: process.env.AUTH_JWKS_URI || '',
-      issuer: process.env.AUTH_ISSUER || ''
+      enabled: process.env.AUTH_ENABLED ? process.env.AUTH_ENABLED === 'true' : false,
+      jwksUri: process.env.AUTH_JWKS_URI,
+      audience: process.env.AUTH_AUDIENCE,
+      issuer: process.env.AUTH_ISSUER
+    },
+    public: {
+      auth: {
+        clientId: process.env.AUTH_CLIENT_ID,
+        domain: process.env.AUTH_DOMAIN
+      }
     }
   },
   devServer: {

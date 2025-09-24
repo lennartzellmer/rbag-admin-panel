@@ -8,11 +8,9 @@ type ValidateAuthResult = {
 }
 
 type AuthConfig = {
-  auth: {
-    jwksUri: string
-    issuer: string
-    audience?: string | string[]
-  }
+  jwksUri: string
+  issuer: string
+  audience?: string | string[]
 }
 
 const ZITADEL_ROLE_CLAIM = 'roles'
@@ -83,7 +81,7 @@ function resolveRoles(payload: JWTPayload): string[] {
  * @returns Promise that resolves to a discriminated union indicating validity and, on success, the authenticated user.
  */
 export async function validateAuth(event: H3Event, config: AuthConfig): Promise<ValidateAuthResult> {
-  const { jwksUri, issuer, audience } = config.auth
+  const { jwksUri, issuer, audience } = config
 
   if (!jwksUri || !issuer || !audience) {
     console.error('Auth runtime configuration is incomplete.')

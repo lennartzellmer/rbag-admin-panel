@@ -25,6 +25,11 @@ export type RbagEventStoreInstance = typeof eventStoreSingleton
 declare module 'h3' {
   interface H3EventContext {
     eventStore: RbagEventStoreInstance
+    user: {
+      id: string
+      roles: string[]
+      email: string
+    }
   }
 }
 

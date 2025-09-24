@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   // Get user object for event metadata
   // =============================================================================
 
-  const { user } = await requireUserSession(event)
+  const user = event.context.user
 
   // =============================================================================
   // Parse and validate request body
