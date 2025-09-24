@@ -120,7 +120,7 @@ services:
     depends_on:
       zitadel:
         condition: service_healthy
-        restart: false
+        # restart: false
 
   db:
     restart: unless-stopped
@@ -135,7 +135,7 @@ services:
       - -d
       - zitadel
       - -U
-      - postgres
+      - db
       interval: 10s
       timeout: 30s
       retries: 5
@@ -147,6 +147,20 @@ services:
     volumes:
       - 'data_zitadel:/var/lib/postgresql/data:rw'
 
+  pgbackweb:
+    image: eduardolat/pgbackweb:latest
+    ports:
+      - "8085:8085" # Access the web interface at http://localhost:8085
+    volumes:
+      - backups:/backups # If you only use S3 destinations, you don't need this volume
+    environment:
+      PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
+      PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
+      TZ: "America/Guatemala" # Set your timezone, optional
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 networks:
   zitadel:
 
@@ -155,3 +169,4 @@ volumes:
   mongo-data:
   mongo-config:
   data_zitadel:
+  backups:
