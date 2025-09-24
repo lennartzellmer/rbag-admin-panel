@@ -2,16 +2,17 @@ import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
-import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/domain/veranstaltung/commandHandling'
-import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/domain/veranstaltung/eventHandling'
+import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
+import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
+import { extractAuthUser } from '~~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user object for event metadata
   // =============================================================================
 
-  const { user } = event.context.user
+  const user = extractAuthUser(event)
 
   // =============================================================================
   // Parse and validate request body
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     error: validationError
   } = await useSafeValidatedBody(
     event,
-    createVeranstaltungSchema
+    erstelleVeranstaltungKategorieSchema
   )
 
   if (!isValidParams) {
@@ -40,8 +41,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     const eventStore = event.context.eventStore
-    const command: CreateRbagVeranstaltung = createCommand({
-      type: 'CreateRbagVeranstaltung',
+    const command: ErstelleVeranstaltungKategorie = createCommand({
+      type: 'CreateVeranstaltungsKategorie',
       data: validatedData,
       metadata: { requestedBy: user.email, now: new Date() }
     })
@@ -51,10 +52,9 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getVeranstaltungStreamSubjectById(randomUUID())
-      }
-      ],
-      commandHandlerFunction: createRbagVeranstaltung,
+        streamSubject: getVeranstaltungsKategorieStreamSubjectById(randomUUID())
+      }],
+      commandHandlerFunction: createVeranstaltungsKategorie,
       command: command
     })
 
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
     console.error(error)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Error creating veranstaltung'
+      statusMessage: 'Error creating event'
     })
   }
 })

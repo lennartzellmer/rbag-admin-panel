@@ -1,11 +1,8 @@
 import type { H3Event } from 'h3'
 import { createError, getRequestHeader } from 'h3'
-import { createRemoteJWKSet, jwtVerify, type JWTPayload, type JWTVerifyGetKey } from 'jose'
+import { createRemoteJWKSet, decodeJwt, jwtVerify, type JWTPayload, type JWTVerifyGetKey } from 'jose'
 
-type ValidateAuthResult = {
-  isValid: true
-  user: { id: string, email: string, roles: string[] }
-}
+export type AuthUser = { id: string, email: string, roles: string[] }
 
 type AuthConfig = {
   jwksUri: string
@@ -80,7 +77,7 @@ function resolveRoles(payload: JWTPayload): string[] {
  * @param config Auth configuration including `jwksUri`, `issuer`, and optional `audience`.
  * @returns Promise that resolves to a discriminated union indicating validity and, on success, the authenticated user.
  */
-export async function validateAuth(event: H3Event, config: AuthConfig): Promise<ValidateAuthResult> {
+export async function validateAuth(event: H3Event, config: AuthConfig): Promise<void> {
   const { jwksUri, issuer, audience } = config
 
   if (!jwksUri || !issuer || !audience) {
@@ -126,30 +123,7 @@ export async function validateAuth(event: H3Event, config: AuthConfig): Promise<
       issuer,
       audience: Array.isArray(audience) ? audience : [audience]
     }
-
-    const { payload } = await jwtVerify(token, key, verifyOptions)
-
-    const userId = resolveUserId(payload)
-    const email = resolveEmail(payload)
-    const roles = resolveRoles(payload)
-
-    if (!userId || !email || roles.length === 0) {
-      console.error('Token payload is missing required claims.')
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Unauthorized',
-        statusText: 'Token payload is missing required claims.'
-      })
-    }
-
-    return {
-      isValid: true,
-      user: {
-        id: userId,
-        email,
-        roles
-      }
-    }
+    await jwtVerify(token, key, verifyOptions)
   }
   catch (error) {
     console.error('Failed to verify access token.', error)
@@ -157,6 +131,66 @@ export async function validateAuth(event: H3Event, config: AuthConfig): Promise<
       statusCode: 401,
       statusMessage: 'Unauthorized',
       statusText: 'Failed to verify access token.'
+    })
+  }
+}
+
+/**
+ * Decode the Authorization bearer token to extract user claims without verifying the signature.
+ * This should only be used in trusted environments where the token has already been verified.
+ *
+ * @param event H3Event carrying the HTTP request from which to read the Authorization header.
+ * @returns The authenticated user extracted from the token claims.
+ * @throws An H3Error with status code 401 if the token is missing or invalid.
+ */
+export function extractAuthUser(event: H3Event): AuthUser {
+  const authorizationHeader = getRequestHeader(event, 'authorization')
+
+  if (typeof authorizationHeader !== 'string' || !authorizationHeader.startsWith('Bearer ')) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+      statusText: 'Invalid Authorization header.'
+    })
+  }
+
+  const token = authorizationHeader.slice('Bearer '.length).trim()
+
+  if (token.length === 0) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+      statusText: 'Invalid Authorization header.'
+    })
+  }
+
+  try {
+    const payload = decodeJwt(token)
+
+    const userId = resolveUserId(payload)
+    const email = resolveEmail(payload)
+    const roles = resolveRoles(payload)
+
+    if (!userId || !email || roles.length === 0) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized',
+        statusText: 'Invalid Authorization header.'
+      })
+    }
+
+    return {
+      id: userId,
+      email,
+      roles
+    }
+  }
+  catch (error) {
+    console.error('Failed to decode access token.', error)
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+      statusText: 'Invalid Authorization header.'
     })
   }
 }

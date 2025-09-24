@@ -1,30 +1,30 @@
-import { randomUUID } from 'node:crypto'
+import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody } from 'h3-zod'
+import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
-import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
-import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
+import { veranstaltungsKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
+import { extractAuthUser } from '~~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user object for event metadata
   // =============================================================================
 
-  const user = event.context.user
+  const user = extractAuthUser(event)
 
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate request params and body
   // =============================================================================
 
   const {
     success: isValidParams,
-    data: validatedData,
+    data: validatedParams,
     error: validationError
-  } = await useSafeValidatedBody(
-    event,
-    erstelleVeranstaltungKategorieSchema
-  )
+  } = await useSafeValidatedParams(event, {
+    id: z.string().uuid()
+  })
 
   if (!isValidParams) {
     throw createError({
@@ -34,16 +34,39 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const {
+    success: isValidBody,
+    data: validatedBody,
+    error: validationErrorBody
+  } = await useSafeValidatedBody(
+    event,
+    veranstaltungsKategorieSchema.partial()
+  )
+
+  if (!isValidBody) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid event data',
+      statusText: validationErrorBody?.message
+    })
+  }
+
   // =============================================================================
   // Handle command
   // =============================================================================
 
   try {
     const eventStore = event.context.eventStore
-    const command: ErstelleVeranstaltungKategorie = createCommand({
-      type: 'CreateVeranstaltungsKategorie',
-      data: validatedData,
-      metadata: { requestedBy: user.email, now: new Date() }
+    const command: AktualisiereVeranstaltungKategorie = createCommand({
+      type: 'UpdateVeranstaltungsKategorie',
+      data: {
+        ...validatedBody
+      },
+      metadata: {
+        requestedBy: user.email,
+        now: new Date(),
+        id: validatedParams.id
+      }
     })
 
     const result = await handleCommand({
@@ -51,9 +74,9 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getVeranstaltungsKategorieStreamSubjectById(randomUUID())
+        streamSubject: getVeranstaltungsKategorieStreamSubjectById(validatedParams.id)
       }],
-      commandHandlerFunction: createVeranstaltungsKategorie,
+      commandHandlerFunction: updateRbagVeranstaltungKategorie,
       command: command
     })
 
@@ -65,7 +88,7 @@ export default defineEventHandler(async (event) => {
     console.error(error)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Error creating event'
+      statusMessage: 'Error updating event'
     })
   }
 })
