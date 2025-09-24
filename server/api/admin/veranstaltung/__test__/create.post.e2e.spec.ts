@@ -25,7 +25,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
   test('should successfully create veranstaltung with valid data', async () => {
     const validData = createValidVeranstaltungData()
 
-    const response = await $fetch<MultiStreamAppendResult<VeranstaltungErstellt>>('/api/veranstaltung/create', {
+    const response = await $fetch<MultiStreamAppendResult<VeranstaltungErstellt>>('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: validData
     })
@@ -61,7 +61,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     const invalidData = createValidVeranstaltungData()
     invalidData.details.name = ''
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -76,7 +76,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     const invalidData = createValidVeranstaltungData()
     invalidData.details.name = 'ab'
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -88,7 +88,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     const invalidData = createValidVeranstaltungData()
     invalidData.details.categoryId = 'invalid-uuid'
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -101,7 +101,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     invalidData.details.startDate = 'invalid-date' as any
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({
@@ -114,7 +114,7 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (invalidData.details as any).zielgruppe
 
-    await expect(() => $fetch('/api/veranstaltung/create', {
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
       body: invalidData
     })).rejects.toThrowError(expect.objectContaining({

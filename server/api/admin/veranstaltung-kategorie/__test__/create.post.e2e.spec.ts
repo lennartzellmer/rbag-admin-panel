@@ -1,11 +1,23 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { $fetch } from '@nuxt/test-utils/e2e'
 import type { MultiStreamAppendResult } from 'vorfall'
 import type { ErstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 import type { VeranstaltungsKategorieErstellt } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { setupCleanNuxtEnvironment } from '~~/test/utils/mongoMemoryServer'
+import type { AuthUser } from '~~/server/utils/auth'
 
 describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
+  const demoUser: AuthUser = {
+    id: 'demo-user-id',
+    email: 'demo@example.com',
+    roles: ['admin']
+  }
+
+  vi.mock('~~/server/utils/auth', () => ({
+    validateAuth: vi.fn().mockResolvedValue(undefined),
+    extractAuthUser: vi.fn(() => demoUser)
+  }))
+
   await setupCleanNuxtEnvironment()
 
   const validData: ErstelleVeranstaltungKategorieSchema = {
