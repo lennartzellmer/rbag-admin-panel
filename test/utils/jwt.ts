@@ -29,3 +29,11 @@ export async function createTestJwt(payload?: Record<string, unknown>): Promise<
 
   return token
 }
+
+/**
+ * Creates an auth header for tests.
+ */
+export async function createTestAuthHeader(payload?: Record<string, unknown>): Promise<{ authorization: string }> {
+  const jwt = await createTestJwt(payload)
+  return { authorization: `Bearer ${jwt}` }
+}

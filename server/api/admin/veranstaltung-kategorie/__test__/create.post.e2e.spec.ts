@@ -4,7 +4,7 @@ import type { MultiStreamAppendResult } from 'vorfall'
 import type { ErstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 import type { VeranstaltungsKategorieErstellt } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { setupCleanNuxtEnvironment } from '~~/test/utils/mongoMemoryServer'
-import { createTestJwt } from '~~/test/utils/jwt'
+import { createTestAuthHeader } from '~~/test/utils/jwt'
 
 describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
   await setupCleanNuxtEnvironment()
@@ -14,14 +14,14 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
   }
 
   // Create a test JWT for the tests
-  const jwt = await createTestJwt()
+  const authHeader = await createTestAuthHeader()
 
   test('should successfully create veranstaltungsKategorie with valid data', async () => {
     const result = await $fetch<MultiStreamAppendResult<VeranstaltungsKategorieErstellt>>('/api/admin/veranstaltung-kategorie/create', {
       method: 'POST',
       body: validData,
       headers: {
-        authorization: `Bearer ${jwt}`
+        ...authHeader
       }
     })
 
@@ -52,52 +52,52 @@ describe('VeranstaltungsKategorie Creation API - E2E Test', async () => {
     })
   })
 
-  // test('should return 400 for empty name', async () => {
-  //   const invalidData = { ...validData }
-  //   invalidData.name = ''
+  test('should return 400 for empty name', async () => {
+    const invalidData = { ...validData }
+    invalidData.name = ''
 
-  //   await expect(() => $fetch('/api/admin/veranstaltung/create', {
-  //     method: 'POST',
-  //     body: invalidData,
-  //     headers: {
-  //       authorization: `Bearer ${jwt}`
-  //     }
-  //   })).rejects.toThrowError(expect.objectContaining({
-  //     statusCode: 400,
-  //     data: expect.objectContaining({
-  //       statusMessage: 'Invalid event data'
-  //     })
-  //   }))
-  // })
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
+      method: 'POST',
+      body: invalidData,
+      headers: {
+        ...authHeader
+      }
+    })).rejects.toThrowError(expect.objectContaining({
+      statusCode: 400,
+      data: expect.objectContaining({
+        statusMessage: 'Invalid event data'
+      })
+    }))
+  })
 
-  // test('should return 400 for name shorter than 3 characters', async () => {
-  //   const invalidData = { ...validData }
-  //   invalidData.name = 'a'
+  test('should return 400 for name shorter than 3 characters', async () => {
+    const invalidData = { ...validData }
+    invalidData.name = 'a'
 
-  //   await expect(() => $fetch('/api/admin/veranstaltung/create', {
-  //     method: 'POST',
-  //     body: invalidData,
-  //     headers: {
-  //       authorization: `Bearer ${jwt}`
-  //     }
-  //   })).rejects.toThrowError(expect.objectContaining({
-  //     statusCode: 400
-  //   }))
-  // })
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
+      method: 'POST',
+      body: invalidData,
+      headers: {
+        ...authHeader
+      }
+    })).rejects.toThrowError(expect.objectContaining({
+      statusCode: 400
+    }))
+  })
 
-  // test('should return 400 for missing required fields', async () => {
-  //   const invalidData = { ...validData }
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   delete (invalidData.name as any).name
+  test('should return 400 for missing required fields', async () => {
+    const invalidData = { ...validData }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete (invalidData.name as any).name
 
-  //   await expect(() => $fetch('/api/admin/veranstaltung/create', {
-  //     method: 'POST',
-  //     body: invalidData,
-  //     headers: {
-  //       authorization: `Bearer ${jwt}`
-  //     }
-  //   })).rejects.toThrowError(expect.objectContaining({
-  //     statusCode: 400
-  //   }))
-  // })
+    await expect(() => $fetch('/api/admin/veranstaltung/create', {
+      method: 'POST',
+      body: invalidData,
+      headers: {
+        ...authHeader
+      }
+    })).rejects.toThrowError(expect.objectContaining({
+      statusCode: 400
+    }))
+  })
 })

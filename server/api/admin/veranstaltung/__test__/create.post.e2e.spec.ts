@@ -4,9 +4,13 @@ import type { MultiStreamAppendResult } from 'vorfall'
 import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
 import type { VeranstaltungErstellt } from '~~/server/domain/veranstaltung/eventHandling'
 import { setupCleanNuxtEnvironment } from '~~/test/utils/mongoMemoryServer'
+import { createTestAuthHeader } from '~~/test/utils/jwt'
 
 describe('Veranstaltung Creation API - E2E Test', async () => {
   await setupCleanNuxtEnvironment()
+
+  // Create a test JWT for the tests
+  const authHeader = await createTestAuthHeader()
 
   const createValidVeranstaltungData = (): CreateVeranstaltungSchema => {
     return {
@@ -27,7 +31,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     const response = await $fetch<MultiStreamAppendResult<VeranstaltungErstellt>>('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: validData
+      body: validData,
+      headers: { ...authHeader }
     })
 
     expect(response).toMatchSnapshot({
@@ -63,7 +68,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: invalidData
+      body: invalidData,
+      headers: { ...authHeader }
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400,
       data: expect.objectContaining({
@@ -78,7 +84,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: invalidData
+      body: invalidData,
+      headers: { ...authHeader }
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400
     }))
@@ -90,7 +97,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: invalidData
+      body: invalidData,
+      headers: { ...authHeader }
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400
     }))
@@ -103,7 +111,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: invalidData
+      body: invalidData,
+      headers: { ...authHeader }
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400
     }))
@@ -116,7 +125,8 @@ describe('Veranstaltung Creation API - E2E Test', async () => {
 
     await expect(() => $fetch('/api/admin/veranstaltung/create', {
       method: 'POST',
-      body: invalidData
+      body: invalidData,
+      headers: { ...authHeader }
     })).rejects.toThrowError(expect.objectContaining({
       statusCode: 400
     }))

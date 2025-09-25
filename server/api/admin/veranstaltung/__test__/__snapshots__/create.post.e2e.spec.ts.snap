@@ -25,7 +25,7 @@ exports[`Veranstaltung Creation API - E2E Test > should successfully create vera
           "date": Any<String>,
           "id": Any<String>,
           "metadata": {
-            "changedBy": "test@test.de",
+            "changedBy": "test@rbag-musik.de",
           },
           "source": "vorfall.eventsourcing.system",
           "specversion": "1.0",
