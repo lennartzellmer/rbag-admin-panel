@@ -1,4 +1,4 @@
-import { extractAuthUser, validateAuth } from '../utils/auth'
+import { extractAuthUser, validateAuth } from '~~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   if (event.path.startsWith('/api/admin')) {
@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
       audience: runtimeConfig.auth.audience,
       issuer: runtimeConfig.auth.issuer
     }
+
     await validateAuth(event, authConfig)
 
     const user = extractAuthUser(event)

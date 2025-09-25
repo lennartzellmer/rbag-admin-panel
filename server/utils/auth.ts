@@ -1,6 +1,7 @@
 import type { H3Event } from 'h3'
 import { createError, getRequestHeader } from 'h3'
 import { createRemoteJWKSet, decodeJwt, jwtVerify, type JWTPayload, type JWTVerifyGetKey } from 'jose'
+import { ZITADEL_EMAIL_CLAIM, ZITADEL_ROLE_CLAIM, ZITADEL_USERID_CLAIM } from '~~/constants'
 
 export type AuthUser = { id: string, email: string, roles: string[] }
 
@@ -9,10 +10,6 @@ type AuthConfig = {
   issuer: string
   audience?: string | string[]
 }
-
-const ZITADEL_ROLE_CLAIM = 'roles'
-const ZITADEL_EMAIL_CLAIM = 'email'
-const ZITADEL_USERID_CLAIM = 'sub'
 
 let remoteJwkSet: JWTVerifyGetKey | null = null
 
@@ -55,7 +52,7 @@ function resolveUserId(payload: JWTPayload): string | null {
 function resolveRoles(payload: JWTPayload): string[] {
   const rawRoles = payload[ZITADEL_ROLE_CLAIM]
 
-  if (!rawRoles || typeof rawRoles == 'object' || !Array.isArray(rawRoles)) {
+  if (!rawRoles || !Array.isArray(rawRoles)) {
     return []
   }
 
@@ -81,11 +78,11 @@ export async function validateAuth(event: H3Event, config: AuthConfig): Promise<
   const { jwksUri, issuer, audience } = config
 
   if (!jwksUri || !issuer || !audience) {
-    console.error('Auth runtime configuration is incomplete.')
+    console.error('Auth configuration is incomplete.')
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
-      statusText: 'Auth runtime configuration is incomplete.'
+      statusText: 'Auth configuration is incomplete.'
     })
   }
 
@@ -148,8 +145,8 @@ export function extractAuthUser(event: H3Event): AuthUser {
 
   if (typeof authorizationHeader !== 'string' || !authorizationHeader.startsWith('Bearer ')) {
     throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusCode: 400,
+      statusMessage: 'Could not extract user from auth token',
       statusText: 'Invalid Authorization header.'
     })
   }
@@ -158,8 +155,8 @@ export function extractAuthUser(event: H3Event): AuthUser {
 
   if (token.length === 0) {
     throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusCode: 400,
+      statusMessage: 'Could not extract user from auth token',
       statusText: 'Invalid Authorization header.'
     })
   }
@@ -173,8 +170,8 @@ export function extractAuthUser(event: H3Event): AuthUser {
 
     if (!userId || !email || roles.length === 0) {
       throw createError({
-        statusCode: 401,
-        statusMessage: 'Unauthorized',
+        statusCode: 400,
+        statusMessage: 'Could not extract user from auth token',
         statusText: 'Invalid Authorization header.'
       })
     }
@@ -189,7 +186,7 @@ export function extractAuthUser(event: H3Event): AuthUser {
     console.error('Failed to decode access token.', error)
     throw createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      statusMessage: 'Could not extract user from auth token',
       statusText: 'Invalid Authorization header.'
     })
   }

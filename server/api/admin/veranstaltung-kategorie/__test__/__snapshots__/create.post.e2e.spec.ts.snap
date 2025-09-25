@@ -17,7 +17,7 @@ exports[`VeranstaltungsKategorie Creation API - E2E Test > should successfully c
           "date": Any<String>,
           "id": Any<String>,
           "metadata": {
-            "requestedBy": "test@test.de",
+            "requestedBy": "test@rbag-musik.de",
           },
           "source": "vorfall.eventsourcing.system",
           "specversion": "1.0",
