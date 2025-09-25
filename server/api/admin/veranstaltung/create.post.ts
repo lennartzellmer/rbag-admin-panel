@@ -9,7 +9,7 @@ import { extractAuthUser } from '~~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
-  // Get user object for event metadata
+  // Get user details from auth token for event metadata
   // =============================================================================
 
   const user = extractAuthUser(event)
