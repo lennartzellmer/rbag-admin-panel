@@ -27,7 +27,6 @@
     "jose": "6.1.0",
     "mongodb-memory-server": "10.1.4",
     "nuxt": "^4.1.2",
-    "nuxt-auth-utils": "0.5.25",
     "nuxt-server-utils": "0.0.7",
     "typescript": "^5.9.2",
     "uuid": "11.1.0",
