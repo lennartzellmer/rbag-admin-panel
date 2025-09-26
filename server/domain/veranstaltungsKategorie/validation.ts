@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import { veranstaltungsKategorieSchema, voreinstellungenSchema } from '~~/validation/veranstaltungKategorieSchema'
+import { veranstaltungsKategorieSchema, voreinstellungenSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 
 export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.pick({
   name: true

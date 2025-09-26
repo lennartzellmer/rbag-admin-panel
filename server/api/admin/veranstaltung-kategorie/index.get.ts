@@ -1,7 +1,7 @@
 import { defineEventHandler } from 'h3'
 import { useSafeValidatedQuery } from 'h3-zod'
 import { getVeranstaltungKategorieCount, getVeranstaltungsKategorienPaginated } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
-import { paginationQuerySchema } from '~~/validation/paginationQuerySchema'
+import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================

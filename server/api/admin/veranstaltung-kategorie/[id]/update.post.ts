@@ -4,7 +4,7 @@ import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
-import { veranstaltungsKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
+import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 import { federatedUserSchema } from '~~/server/domain/user/validation'
 
 export default defineEventHandler(async (event) => {

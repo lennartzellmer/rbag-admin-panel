@@ -2,7 +2,7 @@
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
 import type { DomainEvent, EventStoreInstance, Subject } from 'vorfall'
 import type { AktualisiereVeranstaltungKategorieSchema, AktualisiereVoreinstellungenSchema, ErstelleVeranstaltungKategorieSchema } from './validation'
-import type { VeranstaltungsKategorieSchema } from '~~/validation/veranstaltungKategorieSchema'
+import type { VeranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
 
 export const VeranstaltungKategorieEntity = 'VeranstaltungKategorie'
