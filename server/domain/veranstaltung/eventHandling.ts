@@ -1,7 +1,7 @@
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
 import type { DomainEvent, Subject } from 'vorfall'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
-import type { CreateVeranstaltungSchema, Veranstaltung } from '~~/validation/veranstaltungSchema'
+import type { CreateVeranstaltungSchema, Veranstaltung } from '~~/shared/validation/veranstaltungSchema'
 
 export const VeranstaltungEntity = 'RbagVeranstaltung'
 

@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
 import { getVeranstaltungStreamSubjectById, type VeranstaltungErstellt } from './eventHandling'
-import type { CreateVeranstaltungSchema } from '~~/validation/veranstaltungSchema'
+import type { CreateVeranstaltungSchema } from '~~/shared/validation/veranstaltungSchema'
 
 // =============================================================================
 // Commands
