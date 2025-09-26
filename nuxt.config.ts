@@ -10,6 +10,16 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
+    session: {
+      password: process.env.NUXT_SESSION_PASSWORD ?? '',
+      cookie: {
+        secure: false,
+        httpOnly: false,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7
+      }
+    },
     oauth: {
       zitadel: {
         scope: ['openid', 'profile', 'email']

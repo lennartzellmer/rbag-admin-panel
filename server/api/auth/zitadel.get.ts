@@ -4,14 +4,7 @@ import { createUser, type CreateUser } from '~~/server/domain/user/commandHandli
 import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 
 export default defineOAuthZitadelEventHandler({
-  async onSuccess(event, { user, tokens }) {
-    console.log('Zitadel OAuth successful for user:', user)
-    console.log('Zitadel OAuth successful for tokens:', tokens)
-
-    const session = await getUserSession(event)
-
-    console.log('Zitadel OAuth successful for session:', session)
-
+  async onSuccess(event, { user }) {
     // =============================================================================
     // Create or update user in event store
     // =============================================================================
@@ -20,6 +13,7 @@ export default defineOAuthZitadelEventHandler({
     const { success: isValidUser, data: validUser, error } = federatedUserSchema.safeParse(sessionUser)
 
     if (!isValidUser) {
+      console.error('Invalid user data', error)
       throw createError({ statusCode: 400, statusMessage: 'Invalid user data', statusText: error?.message })
     }
 
@@ -27,7 +21,9 @@ export default defineOAuthZitadelEventHandler({
     const command: CreateUser = createCommand({
       type: 'CreateUser',
       data: {
-        ...validUser,
+        id: validUser.sub,
+        name: validUser.name,
+        email: validUser.email,
         provider: 'linear',
         role: 'user'
       },
@@ -37,7 +33,7 @@ export default defineOAuthZitadelEventHandler({
       }
     })
 
-    const existingUser = await getUserById(eventStore, validUser.id)
+    const existingUser = await getUserById(eventStore, validUser.sub)
 
     if (existingUser) {
       return sendRedirect(event, '/admin')
