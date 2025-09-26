@@ -9,13 +9,13 @@ auth {
 
 auth:oauth2 {
   grant_type: authorization_code
-  callback_url: http://localhost:3001
-  authorization_url: http://localhost:8080/oauth/v2/authorize
-  access_token_url: http://localhost:8080/oauth/v2/token
+  callback_url: http://localhost:3001/auth/zitadel
+  authorization_url: https://rbag-hw2gng.us1.zitadel.cloud/oauth/v2/authorize
+  access_token_url: https://rbag-hw2gng.us1.zitadel.cloud/oauth/v2/token
   refresh_token_url: http://localhost:8080/oauth/v2/token
-  client_id: 339529950598070275
+  client_id: 339543238841112657
   client_secret: 
-  scope: openid profile email offline_access
+  scope: openid profile email offline_access roles urn:zitadel:iam:org:projects:roles
   state: 
   pkce: true
   credentials_placement: body

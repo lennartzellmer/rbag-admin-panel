@@ -9,6 +9,13 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    oauth: {
+      zitadel: {
+        scope: ['openid', 'profile', 'email']
+      }
+    }
+  },
   devServer: {
     port: 3001
   },

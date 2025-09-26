@@ -2,13 +2,12 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providers = ref<Array<any>>([
   {
-    label: 'Linear',
-    icon: 'i-simple-icons-linear',
+    label: 'Zitadel',
+    icon: 'i-lucide-lock',
     color: 'neutral',
     variant: 'subtle',
     onClick: () => {
-      // redirect to linear oauth
-      window.location.href = '/api/auth/linear'
+      window.location.href = '/api/auth/zitadel'
     }
   }
 ])

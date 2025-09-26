@@ -1,0 +1,15 @@
+meta {
+  name: User roles
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://rbag-hw2gng.us1.zitadel.cloud/oidc/v1/userinfo
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

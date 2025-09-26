@@ -4,8 +4,13 @@ import { createUser, type CreateUser } from '~~/server/domain/user/commandHandli
 import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 
 export default defineOAuthZitadelEventHandler({
-  async onSuccess(event, { user }) {
+  async onSuccess(event, { user, tokens }) {
     console.log('Zitadel OAuth successful for user:', user)
+    console.log('Zitadel OAuth successful for tokens:', tokens)
+
+    const session = await getUserSession(event)
+
+    console.log('Zitadel OAuth successful for session:', session)
 
     // =============================================================================
     // Create or update user in event store
