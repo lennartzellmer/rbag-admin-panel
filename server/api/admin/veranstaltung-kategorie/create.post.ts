@@ -5,14 +5,13 @@ import { createCommand, handleCommand } from 'vorfall'
 import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
-import { extractAuthUser } from '~~/server/utils/auth'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user details from auth token for event metadata
   // =============================================================================
 
-  const user = extractAuthUser(event)
+  const { user } = getUserSession(event)
 
   // =============================================================================
   // Parse and validate request body
