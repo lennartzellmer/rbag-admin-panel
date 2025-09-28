@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { useUserSession } from '#imports'
 
+const { loggedIn, user, session, clear, ready } = useUserSession()
+
+const isAdmin = computed(() => user.value?.roles.includes('admin'))
 </script>
 
 <template>
-  <AuthState v-slot="{ loggedIn }">
-    <template v-if="loggedIn">
+  <div>
+    <template v-if="loggedIn && isAdmin">
       <NuxtPage />
     </template>
     <template v-else>
@@ -12,5 +16,5 @@
         <RbagAuthForm />
       </div>
     </template>
-  </AuthState>
+  </div>
 </template>

@@ -1,6 +1,11 @@
 export default defineEventHandler(async (event) => {
   if (event.path.startsWith('/api/admin/')) {
     const { user } = await requireUserSession(event)
-    console.log('Admin auth middleware', user)
+    if (!user.roles.includes('admin')) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: 'Forbidden'
+      })
+    }
   }
 })

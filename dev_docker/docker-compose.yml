@@ -30,7 +30,7 @@ services:
       ZITADEL_TLS_ENABLED: false
 
       # Database connection settings.
-      ZITADEL_DATABASE_POSTGRES_HOST: db
+      ZITADEL_DATABASE_POSTGRES_HOST: zitadel-db
       ZITADEL_DATABASE_POSTGRES_PORT: 5432
       # The database is created by the init job if it does not exist.
       ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
@@ -102,10 +102,10 @@ services:
     networks:
       - zitadel
     depends_on:
-      db:
+      zitadel-db:
         condition: service_healthy
 
-  login:
+  zitadel-login:
     restart: unless-stopped
     image: ghcr.io/zitadel/zitadel-login:latest
     # If you can't use the network_mode service:zitadel, you can pass the environment variables ZITADEL_API_URL=http://zitadel:8080 and CUSTOM_REQUEST_HEADERS=Host:localhost instead.
@@ -122,7 +122,7 @@ services:
         condition: service_healthy
         # restart: false
 
-  db:
+  zitadel-db:
     restart: unless-stopped
     image: postgres:17-alpine
     environment:
@@ -135,7 +135,7 @@ services:
       - -d
       - zitadel
       - -U
-      - db
+      - postgres
       interval: 10s
       timeout: 30s
       retries: 5
@@ -147,19 +147,27 @@ services:
     volumes:
       - 'data_zitadel:/var/lib/postgresql/data:rw'
 
-  pgbackweb:
-    image: eduardolat/pgbackweb:latest
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
     ports:
-      - "8085:8085" # Access the web interface at http://localhost:8085
-    volumes:
-      - backups:/backups # If you only use S3 destinations, you don't need this volume
+      - "9000:9000"   # MinIO API
+      - "9001:9001"   # MinIO Console
     environment:
-      PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
-      PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
-      TZ: "America/Guatemala" # Set your timezone, optional
-    depends_on:
-      postgres:
-        condition: service_healthy
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - zitadel
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
 
 networks:
   zitadel:
@@ -170,3 +178,4 @@ volumes:
   mongo-config:
   data_zitadel:
   backups:
+  minio-data:
