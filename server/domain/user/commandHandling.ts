@@ -43,8 +43,7 @@ export const createUser = async (
       name: data.name,
       role: data.role,
       email: data.email,
-      provider: data.provider,
-      profilePictureUrl: data.profilePictureUrl
+      profilePicture: data.profilePicture
     },
     metadata: { requestedBy: metadata.requestedBy }
   })

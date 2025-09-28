@@ -52,7 +52,7 @@ export const evolve = (state: User, event: UserEvents): User => {
     case 'UserProfilePictureAttached': {
       return {
         ...state,
-        profilePictureUrl: data.profilePictureUrl
+        profilePicture: data.profilePicture
       }
     }
     default: {
