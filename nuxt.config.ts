@@ -13,16 +13,25 @@ export default defineNuxtConfig({
     session: {
       password: process.env.NUXT_SESSION_PASSWORD ?? '',
       cookie: {
-        secure: false,
-        httpOnly: false,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7
+        secure: process.env.NUXT_SESSION_COOKIE_SECURE === 'false' ? false : true,
+        httpOnly: process.env.NUXT_SESSION_COOKIE_HTTP_ONLY === 'false' ? false : true,
+        sameSite: process.env.NUXT_SESSION_COOKIE_SAME_SITE === 'false' ? 'lax' : 'strict'
       }
     },
     oauth: {
       zitadel: {
         scope: ['openid', 'profile', 'email']
+      }
+    },
+    storage: {
+      s3: {
+        endpoint: process.env.NUXT_STORAGE_S3_ENDPOINT ?? '',
+        region: process.env.NUXT_STORAGE_S3_REGION ?? 'eu-central-1',
+        bucket: process.env.NUXT_STORAGE_S3_BUCKET ?? '',
+        accessKeyId: process.env.NUXT_STORAGE_S3_ACCESS_KEY ?? '',
+        secretAccessKey: process.env.NUXT_STORAGE_S3_SECRET_KEY ?? '',
+        ssl: process.env.NUXT_STORAGE_S3_SSL === 'false' ? false : true,
+        uploadUrlExpirationSeconds: Number.parseInt(process.env.NUXT_STORAGE_S3_UPLOAD_EXPIRES_IN ?? '900', 10)
       }
     }
   },

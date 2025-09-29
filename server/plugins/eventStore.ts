@@ -2,6 +2,7 @@ import { createEventStore } from 'vorfall'
 import { veranstaltungKategorieProjectionDefinition } from '../domain/veranstaltungsKategorie/eventHandling'
 import { veranstaltungProjectionDefinition } from '../domain/veranstaltung/eventHandling'
 import { userProjectionDefinition } from '../domain/user/eventHandling'
+import { mediaProjectionDefinition } from '../domain/media/eventHandling'
 
 const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
 
@@ -15,7 +16,8 @@ export const eventStoreSingleton = createEventStore({
   projections: [
     veranstaltungKategorieProjectionDefinition,
     veranstaltungProjectionDefinition,
-    userProjectionDefinition
+    userProjectionDefinition,
+    mediaProjectionDefinition
   ]
 })
 
