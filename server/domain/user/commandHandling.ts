@@ -1,27 +1,31 @@
 import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
-import { getUserStreamSubjectById, type UserCreated, type UserProfilePictureAttached } from './eventHandling'
-import type { AttachUserProfilePictureSchema, CreateUserSchema } from './validation'
+import { getMediaStreamSubjectById, type MediaCreated } from '../media/eventHandling'
+import { getUserStreamSubjectById, type UserCreated, type UserProfileImageAttached } from './eventHandling'
+import type { AttachProfileImageSchema, CreateUserSchema } from './validation'
 
 // =============================================================================
 // Commands
 // =============================================================================
 
-export type EventCommandMetadata = {
-  requestedBy: string
+export type CommandMetadata = {
+  requestedBy: {
+    userId: string
+    email: string
+  }
 }
 
 export type CreateUser = Command<
   'CreateUser',
   CreateUserSchema,
-  EventCommandMetadata
+  CommandMetadata
 >
 
-export type AttachUserProfilePicture = Command<
-  'AttachUserProfilePicture',
-  AttachUserProfilePictureSchema,
-  EventCommandMetadata & { id: string }
+export type AttachProfileImage = Command<
+  'AttachProfileImage',
+  AttachProfileImageSchema,
+  CommandMetadata
 >
 
 // =============================================================================
@@ -43,21 +47,38 @@ export const createUser = async (
       name: data.name,
       role: data.role,
       email: data.email,
-      profilePicture: data.profilePicture
+      profileImage: data.profileImage
     },
-    metadata: { requestedBy: metadata.requestedBy }
+    metadata: metadata
   })
 }
 
-export const attachUserProfilePicture = (
-  { command }: { command: AttachUserProfilePicture }
-): UserProfilePictureAttached => {
+export const attachProfileImage = (
+  { command }: { command: AttachProfileImage }
+): Array<UserProfileImageAttached | MediaCreated> => {
   const { data, metadata } = command
 
-  return createDomainEvent({
-    type: 'UserProfilePictureAttached',
-    subject: getUserStreamSubjectById(metadata.id),
-    data,
-    metadata: { requestedBy: metadata.requestedBy }
-  })
+  const mediaCreatedData = {
+    id: randomUUID(),
+    key: data.profileImageKey,
+    ownerId: command.data.userId,
+    visibility: 'internal',
+    status: 'active',
+    size: 123
+  } as const
+
+  return [
+    createDomainEvent({
+      type: 'UserProfileImageAttached',
+      subject: getUserStreamSubjectById(command.data.userId),
+      data,
+      metadata: { requestedBy: metadata.requestedBy }
+    }),
+    createDomainEvent({
+      type: 'MediaCreated',
+      subject: getMediaStreamSubjectById(randomUUID()),
+      data: mediaCreatedData,
+      metadata: { requestedBy: metadata.requestedBy, userId: command.metadata.requestedBy.userId }
+    })
+  ]
 }

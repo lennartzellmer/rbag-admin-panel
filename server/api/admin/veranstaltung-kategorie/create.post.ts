@@ -14,8 +14,6 @@ export default defineEventHandler(async (event) => {
 
   const { user } = await getUserSession(event)
 
-  console.log('User', user!.roles)
-
   const {
     success: isValidUser,
     error: userValidationError,

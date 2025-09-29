@@ -26,11 +26,12 @@ export default defineNuxtConfig({
     storage: {
       s3: {
         endpoint: process.env.NUXT_STORAGE_S3_ENDPOINT ?? '',
+        port: Number.parseInt(process.env.NUXT_STORAGE_S3_PORT ?? '9000'),
+        ssl: process.env.NUXT_STORAGE_S3_SSL === 'false' ? false : true,
         region: process.env.NUXT_STORAGE_S3_REGION ?? 'eu-central-1',
         bucket: process.env.NUXT_STORAGE_S3_BUCKET ?? '',
         accessKeyId: process.env.NUXT_STORAGE_S3_ACCESS_KEY ?? '',
         secretAccessKey: process.env.NUXT_STORAGE_S3_SECRET_KEY ?? '',
-        ssl: process.env.NUXT_STORAGE_S3_SSL === 'false' ? false : true,
         uploadUrlExpirationSeconds: Number.parseInt(process.env.NUXT_STORAGE_S3_UPLOAD_EXPIRES_IN ?? '900', 10)
       }
     }

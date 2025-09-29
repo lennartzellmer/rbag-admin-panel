@@ -1,0 +1,23 @@
+meta {
+  name: init
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/api/admin/upload/init
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "filename": "123.jpeg",
+    "contentType": "image/jpeg",
+    "size": 123
+  }
+}
+
+settings {
+  encodeUrl: true
+}

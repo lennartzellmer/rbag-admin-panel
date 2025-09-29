@@ -1,6 +1,6 @@
 import { countProjections, createProjectionDefinition, findMultipleProjections, findOneProjection, createStreamSubject } from 'vorfall'
 import type { DomainEvent, Subject } from 'vorfall'
-import type { AttachUserProfilePictureSchema, User } from './validation'
+import type { AttachProfileImageSchema, User } from './validation'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
 
 export const UserEntity = 'User'
@@ -14,7 +14,10 @@ export const getUserStreamSubjectById = (id: string) => createStreamSubject(`${U
 // =============================================================================
 
 export type UserEventMetadata = {
-  requestedBy: string
+  requestedBy: {
+    userId: string
+    email: string
+  }
 }
 
 export type UserCreated = DomainEvent<
@@ -24,14 +27,14 @@ export type UserCreated = DomainEvent<
   UserSubject
 >
 
-export type UserProfilePictureAttached = DomainEvent<
-  'UserProfilePictureAttached',
-  AttachUserProfilePictureSchema,
+export type UserProfileImageAttached = DomainEvent<
+  'UserProfileImageAttached',
+  AttachProfileImageSchema,
   UserEventMetadata,
   UserSubject
 >
 
-export type UserEvents = UserCreated | UserProfilePictureAttached
+export type UserEvents = UserCreated | UserProfileImageAttached
 
 // =============================================================================
 // Evolve
@@ -49,10 +52,10 @@ export const evolve = (state: User, event: UserEvents): User => {
         ...data
       }
     }
-    case 'UserProfilePictureAttached': {
+    case 'UserProfileImageAttached': {
       return {
         ...state,
-        profilePicture: data.profilePicture
+        profileImage: data.profileImageKey
       }
     }
     default: {
@@ -71,7 +74,7 @@ export const UserProjectionName = 'User' as const
 export const userProjectionDefinition = createProjectionDefinition({
   name: UserProjectionName,
   evolve,
-  canHandle: ['UserCreated', 'UserProfilePictureAttached'],
+  canHandle: ['UserCreated', 'UserProfileImageAttached'],
   initialState
 })
 

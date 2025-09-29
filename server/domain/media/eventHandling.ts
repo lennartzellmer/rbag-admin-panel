@@ -14,7 +14,10 @@ export const getMediaStreamSubjectById = (id: string) => createStreamSubject(`${
 // =============================================================================
 
 export type MediaEventMetadata = {
-  requestedBy: string
+  requestedBy: {
+    userId: string
+    email: string
+  }
 }
 
 export type MediaCreated = DomainEvent<

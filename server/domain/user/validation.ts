@@ -16,13 +16,14 @@ export const userSchema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email().min(5).max(255),
   role: z.enum(['admin', 'user']).default('user'),
-  profilePicture: z.string().url().max(2048).optional()
+  profileImage: z.string().url().max(2048).optional()
 })
 
 export const CreateUserSchema = userSchema.omit({ id: true })
 
-export const attachUserProfilePictureSchema = z.object({
-  profilePicture: z.string()
+export const attachProfileImageSchema = z.object({
+  userId: z.string().uuid(),
+  profileImageKey: z.string()
 })
 
 // =============================================================================
@@ -31,4 +32,4 @@ export const attachUserProfilePictureSchema = z.object({
 
 export type User = z.infer<typeof userSchema>
 export type CreateUserSchema = z.infer<typeof userSchema>
-export type AttachUserProfilePictureSchema = z.infer<typeof attachUserProfilePictureSchema>
+export type AttachProfileImageSchema = z.infer<typeof attachProfileImageSchema>
