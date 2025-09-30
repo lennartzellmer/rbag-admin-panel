@@ -6,9 +6,7 @@ import type { VeranstaltungsKategorieSchema } from '~~/shared/validation/veranst
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
 
 export const VeranstaltungKategorieEntity = 'VeranstaltungKategorie'
-
 export type VeranstaltungKategorieSubject = Subject<`${typeof VeranstaltungKategorieEntity}`>
-
 export const getVeranstaltungsKategorieStreamSubjectById = (id: string) => createStreamSubject(`${VeranstaltungKategorieEntity}/${id}`)
 
 // =============================================================================

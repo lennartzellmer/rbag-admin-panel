@@ -89,11 +89,19 @@ export const getMediaCount = (eventStore: RbagEventStoreInstance) => countProjec
   }
 )
 
-export const getMediaByKey = (eventStore: RbagEventStoreInstance, id: string) => findOneProjection(
-  eventStore,
-  MediaEntity as MediaSubject,
-  {
+export const getMediaByKey = (eventStore: RbagEventStoreInstance, key: string) => {
+  const projectionQuery = {
     projectionName: MediaProjectionName,
-    projectionQuery: { key: id }
-  }
-)
+    projectionQuery: {
+      key: {
+        $eq: key
+      }
+    },
+    matchAll: true
+  } as const
+  return findOneProjection(
+    eventStore,
+    MediaEntity as MediaSubject,
+    projectionQuery
+  )
+}

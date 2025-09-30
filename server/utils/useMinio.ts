@@ -12,10 +12,10 @@ export const useMinio = () => {
     useSSL: false
   })
 
-  async function ensureBucketExists() {
-    const exists = await minioClient.bucketExists(runtimeConfig.storage.s3.bucket).catch(() => false)
+  async function ensureBucketExists(bucketName: string) {
+    const exists = await minioClient.bucketExists(bucketName).catch(() => false)
     if (!exists) {
-      await minioClient.makeBucket(runtimeConfig.storage.s3.bucket, '')
+      await minioClient.makeBucket(bucketName, '')
     }
   }
 
@@ -24,5 +24,8 @@ export const useMinio = () => {
     return idx >= 0 ? name.slice(idx + 1) : ''
   }
 
-  return { minioClient, ensureBucketExists, getExtensionOf, bucket: runtimeConfig.storage.s3.bucket }
+  return { minioClient,
+    ensureBucketExists,
+    getExtensionOf
+  }
 }

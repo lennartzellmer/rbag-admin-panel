@@ -4,9 +4,7 @@ import type { AttachProfileImageSchema, User } from './validation'
 import type { RbagEventStoreInstance } from '~~/server/plugins/eventStore'
 
 export const UserEntity = 'User'
-
 export type UserSubject = Subject<`${typeof UserEntity}`>
-
 export const getUserStreamSubjectById = (id: string) => createStreamSubject(`${UserEntity}/${id}`)
 
 // =============================================================================
@@ -34,7 +32,14 @@ export type UserProfileImageAttached = DomainEvent<
   UserSubject
 >
 
-export type UserEvents = UserCreated | UserProfileImageAttached
+export type UserProfileImageRemoved = DomainEvent<
+  'UserProfileImageRemoved',
+  undefined,
+  UserEventMetadata,
+  UserSubject
+>
+
+export type UserEvents = UserCreated | UserProfileImageAttached | UserProfileImageRemoved
 
 // =============================================================================
 // Evolve

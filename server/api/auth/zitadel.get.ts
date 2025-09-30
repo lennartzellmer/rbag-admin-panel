@@ -4,6 +4,10 @@ import { createUser, type CreateUser } from '~~/server/domain/user/commandHandli
 import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 
 export default defineOAuthZitadelEventHandler({
+  onError(event, error) {
+    console.error('Zitadel OAuth error:', error)
+    throw createError({ statusCode: 500, statusMessage: 'Authentication error', statusText: error.message })
+  },
   async onSuccess(event, { user }) {
     // =============================================================================
     // Create or update user in event store

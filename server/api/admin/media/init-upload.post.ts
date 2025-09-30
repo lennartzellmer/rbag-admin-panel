@@ -1,30 +1,16 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { useSafeValidatedBody } from 'h3-zod'
-import { federatedUserSchema } from '~~/server/domain/user/validation'
 import { initUploadSchema } from '~~/server/domain/media/validation'
 import { useMinio } from '~~/server/utils/useMinio'
+import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user details
   // =============================================================================
 
-  const { user } = await getUserSession(event)
-
-  const {
-    success: isValidUser,
-    error: userValidationError,
-    data: validatedUserData
-  } = await federatedUserSchema.safeParse(user)
-
-  if (!isValidUser) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid user data',
-      statusText: userValidationError?.message
-    })
-  }
+  const authUser = await useAuthenticatedUser(event)
 
   // =============================================================================
   // Parse and validate request body
@@ -48,11 +34,11 @@ export default defineEventHandler(async (event) => {
   }
 
   // =============================================================================
-  // Validate file size and generate upload URL
+  // Validate file size and type
   // =============================================================================
   const { filename, contentType, size } = validatedData
-  const { minioClient, ensureBucketExists, getExtensionOf } = useMinio()
-  const { storage: { s3: { bucket: MEDIA_S3_BUCKET, uploadUrlExpirationSeconds: UPLOAD_URL_EXPIRATION_SECONDS } } } = useRuntimeConfig()
+  const { minioClient, getExtensionOf } = useMinio()
+  const { storage: { s3: { tempBucket: TEMP_BUCKET, uploadUrlExpirationSeconds: UPLOAD_URL_EXPIRATION_SECONDS } } } = useRuntimeConfig()
 
   if (size > 5 * 1024 * 1024) {
     throw createError({ statusCode: 413, statusMessage: 'File too large' })
@@ -66,16 +52,19 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 415, statusMessage: `Unsupported content type: ${contentType}. Use one of the following: ${allowedContentTypes.join(', ')}` })
   }
 
-  const key = `users/${validatedUserData.sub}/uploads/${randomUUID()}${extension ? '.' + extension : ''}`
+  // =============================================================================
+  // Generate presigned upload URL
+  // =============================================================================
 
-  await ensureBucketExists()
+  const key = `users/${authUser.sub}/uploads/${randomUUID()}${extension ? '.' + extension : ''}`
 
-  const uploadUrl = await minioClient.presignedPutObject(MEDIA_S3_BUCKET, key, UPLOAD_URL_EXPIRATION_SECONDS)
+  const uploadUrl = await minioClient.presignedPutObject(TEMP_BUCKET, key, UPLOAD_URL_EXPIRATION_SECONDS)
 
   return {
     uploadUrl,
     filename,
     contentType,
-    size
+    size,
+    key
   }
 })

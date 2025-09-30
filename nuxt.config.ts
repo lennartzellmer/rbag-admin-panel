@@ -30,6 +30,7 @@ export default defineNuxtConfig({
         ssl: process.env.NUXT_STORAGE_S3_SSL === 'false' ? false : true,
         region: process.env.NUXT_STORAGE_S3_REGION ?? 'eu-central-1',
         bucket: process.env.NUXT_STORAGE_S3_BUCKET ?? '',
+        tempBucket: process.env.NUXT_STORAGE_S3_TEMP_BUCKET ?? '',
         accessKeyId: process.env.NUXT_STORAGE_S3_ACCESS_KEY ?? '',
         secretAccessKey: process.env.NUXT_STORAGE_S3_SECRET_KEY ?? '',
         uploadUrlExpirationSeconds: Number.parseInt(process.env.NUXT_STORAGE_S3_UPLOAD_EXPIRES_IN ?? '900', 10)

@@ -5,28 +5,14 @@ import { createCommand, handleCommand } from 'vorfall'
 import { createVeranstaltungSchema } from '~~/shared/validation/veranstaltungSchema'
 import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/domain/veranstaltung/commandHandling'
 import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/domain/veranstaltung/eventHandling'
-import { federatedUserSchema } from '~~/server/domain/user/validation'
+import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user details
   // =============================================================================
 
-  const { user } = await getUserSession(event)
-
-  const {
-    success: isValidUser,
-    error: userValidationError,
-    data: validatedUserData
-  } = await federatedUserSchema.safeParse(user)
-
-  if (!isValidUser) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid user data',
-      statusText: userValidationError?.message
-    })
-  }
+  const user = await useAuthenticatedUser(event)
 
   // =============================================================================
   // Parse and validate request body
@@ -58,7 +44,7 @@ export default defineEventHandler(async (event) => {
     const command: CreateRbagVeranstaltung = createCommand({
       type: 'CreateRbagVeranstaltung',
       data: validatedData,
-      metadata: { requestedBy: validatedUserData.email, now: new Date() }
+      metadata: { requestedBy: user.email, now: new Date() }
     })
 
     const result = await handleCommand({

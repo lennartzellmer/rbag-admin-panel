@@ -22,8 +22,11 @@ export const userSchema = z.object({
 export const CreateUserSchema = userSchema.omit({ id: true })
 
 export const attachProfileImageSchema = z.object({
-  userId: z.string().uuid(),
   profileImageKey: z.string()
+})
+
+export const removeProfileImageSchema = z.object({
+  userId: z.string().uuid()
 })
 
 // =============================================================================
@@ -33,3 +36,4 @@ export const attachProfileImageSchema = z.object({
 export type User = z.infer<typeof userSchema>
 export type CreateUserSchema = z.infer<typeof userSchema>
 export type AttachProfileImageSchema = z.infer<typeof attachProfileImageSchema>
+export type RemoveProfileImageSchema = z.infer<typeof removeProfileImageSchema>

@@ -4,35 +4,21 @@ import { useSafeValidatedBody, z } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { attachProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
-import { federatedUserSchema } from '~~/server/domain/user/validation'
 import type { AttachProfileImage } from '~~/server/domain/user/commandHandling'
+import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Get user details
   // =============================================================================
 
-  const { user } = await getUserSession(event)
-
-  const {
-    success: isValidUser,
-    error: userValidationError,
-    data: validatedUserData
-  } = await federatedUserSchema.safeParse(user)
-
-  if (!isValidUser) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid user data',
-      statusText: userValidationError?.message
-    })
-  }
+  const authUser = await useAuthenticatedUser(event)
 
   // =============================================================================
   // Parse and validate request body
   // =============================================================================
   const setProfileImageSchema = z.object({
-    userId: z.string().uuid(),
+    userId: z.string(),
     uploadedFileKey: z.string()
   })
 
@@ -56,13 +42,15 @@ export default defineEventHandler(async (event) => {
   // =============================================================================
   // Copy data to final destination
   // =============================================================================
-  const { minioClient, bucket } = useMinio()
+  const { minioClient } = useMinio()
+  const { storage: { s3: { bucket, tempBucket } } } = useRuntimeConfig()
 
-  const finalDestinationKey = `/${bucket}/profile/${randomUUID()}`
+  const sourceKeyWithBucket = `/${tempBucket}/${validatedData.uploadedFileKey}`
+  const destinationKey = `profile/${randomUUID()}`
 
   try {
-    await minioClient.copyObject(bucket, validatedData.uploadedFileKey, finalDestinationKey)
-    await minioClient.removeObject(bucket, validatedData.uploadedFileKey)
+    await minioClient.copyObject(bucket, destinationKey, sourceKeyWithBucket)
+    await minioClient.removeObject(tempBucket, validatedData.uploadedFileKey)
   }
   catch (error) {
     console.error('Error copying object to final destination:', error)
@@ -77,16 +65,17 @@ export default defineEventHandler(async (event) => {
   // =============================================================================
 
   const eventStore = event.context.eventStore
+
   const command: AttachProfileImage = createCommand({
     type: 'AttachProfileImage',
     data: {
       userId: validatedData.userId,
-      profileImageKey: finalDestinationKey
+      profileImageKey: destinationKey
     },
     metadata: {
       requestedBy: {
-        email: validatedUserData.email,
-        userId: validatedUserData.sub
+        email: authUser.email,
+        userId: authUser.sub
       }
     }
   })
@@ -102,12 +91,13 @@ export default defineEventHandler(async (event) => {
       commandHandlerFunction: attachProfileImage,
       command: command
     })
+
     return {
       ...result
     }
   }
   catch (error) {
-    minioClient.removeObject(bucket, finalDestinationKey).catch((removeError) => {
+    minioClient.removeObject(bucket, destinationKey).catch((removeError) => {
       console.error('Error removing object after command failure:', removeError)
     })
     console.error(error)

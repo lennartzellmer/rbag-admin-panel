@@ -2,8 +2,9 @@ import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
 import { getMediaStreamSubjectById, type MediaCreated } from '../media/eventHandling'
-import { getUserStreamSubjectById, type UserCreated, type UserProfileImageAttached } from './eventHandling'
-import type { AttachProfileImageSchema, CreateUserSchema } from './validation'
+import type { UserCreated, UserProfileImageAttached, UserProfileImageRemoved } from './eventHandling'
+import { getUserStreamSubjectById } from './eventHandling'
+import type { CreateUserSchema } from './validation'
 
 // =============================================================================
 // Commands
@@ -24,7 +25,16 @@ export type CreateUser = Command<
 
 export type AttachProfileImage = Command<
   'AttachProfileImage',
-  AttachProfileImageSchema,
+  {
+    profileImageKey: string
+    userId: string
+  },
+  CommandMetadata
+>
+
+export type RemoveProfileImage = Command<
+  'RemoveProfileImage',
+  { userId: string },
   CommandMetadata
 >
 
@@ -81,4 +91,16 @@ export const attachProfileImage = (
       metadata: { requestedBy: metadata.requestedBy, userId: command.metadata.requestedBy.userId }
     })
   ]
+}
+
+export const removeProfileImage = (
+  { command }: { command: RemoveProfileImage }
+): UserProfileImageRemoved => {
+  const { data, metadata } = command
+
+  return createDomainEvent({
+    type: 'UserProfileImageRemoved',
+    subject: getUserStreamSubjectById(data.userId),
+    metadata: metadata
+  })
 }
