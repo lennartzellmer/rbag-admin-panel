@@ -42,8 +42,9 @@ export default defineEventHandler(async (event) => {
   // Copy data to final destination
   // =============================================================================
   const { minioClient } = useMinio()
-  const { storage: { s3: { bucket, tempBucket } } } = useRuntimeConfig()
 
+  const bucket = useRuntimeConfig().storage.s3.bucket
+  const tempBucket = useRuntimeConfig().storage.s3.tempBucket
   const sourceKeyWithBucket = `/${tempBucket}/${body.uploadedFileKey}`
   const destinationKey = `user-profile-images/${body.userId}/${randomUUID()}`
 

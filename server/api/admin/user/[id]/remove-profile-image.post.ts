@@ -2,7 +2,7 @@ import { defineEventHandler, createError } from 'h3'
 import { createCommand, handleCommand } from 'vorfall'
 import { z } from 'h3-zod'
 import { removeProfileImage } from '~~/server/domain/user/commandHandling'
-import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
+import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 import type { RemoveProfileImage } from '~~/server/domain/user/commandHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 import { useValidatedBody } from '~~/server/utils/useValidated'
@@ -25,13 +25,28 @@ export default defineEventHandler(async (event) => {
   const body = await useValidatedBody(event, removeProfileImageSchema)
 
   // =============================================================================
+  // Get profile image from user
+  // =============================================================================
+
+  const rbagUser = await getUserById(event.context.eventStore, body.userId)
+  const profileImage = rbagUser?.projections.User.profileImage
+
+  if (!profileImage) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'No profile image to remove'
+    })
+  }
+
+  // =============================================================================
   // Handle Command
   // =============================================================================
   const eventStore = event.context.eventStore
   const command: RemoveProfileImage = createCommand({
     type: 'RemoveProfileImage',
     data: {
-      userId: body.userId
+      userId: body.userId,
+      profileImageKey: profileImage
     },
     metadata: {
       requestedBy: {

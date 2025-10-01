@@ -35,7 +35,10 @@ export type AttachProfileImage = Command<
 
 export type RemoveProfileImage = Command<
   'RemoveProfileImage',
-  { userId: string },
+  {
+    profileImageKey: string
+    userId: string
+  },
   CommandMetadata
 >
 
@@ -107,7 +110,7 @@ export const removeProfileImage = (
     }),
     createDomainEvent({
       type: 'MediaDeleted',
-      subject: getMediaStreamSubjectById(state.id),
+      subject: getMediaStreamSubjectById(command.data.profileImageKey),
       metadata: metadata
     })
   ]
