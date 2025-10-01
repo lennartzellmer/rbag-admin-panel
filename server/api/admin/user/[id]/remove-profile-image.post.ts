@@ -1,4 +1,3 @@
-import { defineEventHandler, createError } from 'h3'
 import { createCommand, handleCommand } from 'vorfall'
 import { z } from 'h3-zod'
 import { removeProfileImage } from '~~/server/domain/user/commandHandling'
@@ -32,10 +31,8 @@ export default defineEventHandler(async (event) => {
   const profileImage = rbagUser?.projections.User.profileImage
 
   if (!profileImage) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'No profile image to remove'
-    })
+    // When no profile image, we don't need to do anything
+    return sendNoContent(event)
   }
 
   // =============================================================================
@@ -69,7 +66,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const { minioClient } = useMinio()
-    const { storage: { s3: { bucket } } } = useRuntimeConfig()
+    const bucket = useRuntimeConfig().storage.s3.bucket
     minioClient.removeObject(bucket, `profile/${body.userId}`).catch((removeError) => {
       console.error('Error removing object:', removeError)
     })
