@@ -27,7 +27,14 @@ export type MediaCreated = DomainEvent<
   MediaSubject
 >
 
-export type MediaEvents = MediaCreated
+export type MediaDeleted = DomainEvent<
+  'MediaDeleted',
+  undefined,
+  MediaEventMetadata,
+  MediaSubject
+>
+
+export type MediaEvents = MediaCreated | MediaDeleted
 
 // =============================================================================
 // Evolve
@@ -43,6 +50,12 @@ export const evolve = (state: MediaMetadata, event: MediaEvents): MediaMetadata 
       return {
         ...state,
         ...data
+      }
+    }
+    case 'MediaDeleted': {
+      return {
+        ...state,
+        status: 'deleted'
       }
     }
     default: {

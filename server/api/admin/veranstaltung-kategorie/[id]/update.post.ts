@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody, useSafeValidatedParams } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
+import { useValidatedBody, useValidatedParams } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -15,41 +15,14 @@ export default defineEventHandler(async (event) => {
   const user = await useAuthenticatedUser(event)
 
   // =============================================================================
-  // Parse and validate request params and body
+  // Parse and validate
   // =============================================================================
 
-  const {
-    success: isValidParams,
-    data: validatedParams,
-    error: validationError
-  } = await useSafeValidatedParams(event, {
+  const query = await useValidatedParams(event, z.object({
     id: z.string().uuid()
-  })
+  }))
 
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
-
-  const {
-    success: isValidBody,
-    data: validatedBody,
-    error: validationErrorBody
-  } = await useSafeValidatedBody(
-    event,
-    veranstaltungsKategorieSchema.partial()
-  )
-
-  if (!isValidBody) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationErrorBody?.message
-    })
-  }
+  const body = await useValidatedBody(event, veranstaltungsKategorieSchema.partial())
 
   // =============================================================================
   // Handle command
@@ -60,12 +33,12 @@ export default defineEventHandler(async (event) => {
     const command: AktualisiereVeranstaltungKategorie = createCommand({
       type: 'UpdateVeranstaltungsKategorie',
       data: {
-        ...validatedBody
+        ...body
       },
       metadata: {
         requestedBy: user.email,
         now: new Date(),
-        id: validatedParams.id
+        id: query.id
       }
     })
 
@@ -74,7 +47,7 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getVeranstaltungsKategorieStreamSubjectById(validatedParams.id)
+        streamSubject: getVeranstaltungsKategorieStreamSubjectById(query.id)
       }],
       commandHandlerFunction: updateRbagVeranstaltungKategorie,
       command: command

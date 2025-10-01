@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody, z } from 'h3-zod'
+import { z } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { attachProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 import type { AttachProfileImage } from '~~/server/domain/user/commandHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
+import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -15,29 +16,27 @@ export default defineEventHandler(async (event) => {
   const authUser = await useAuthenticatedUser(event)
 
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate
   // =============================================================================
   const setProfileImageSchema = z.object({
     userId: z.string(),
     uploadedFileKey: z.string()
   })
 
-  const {
-    success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = await useSafeValidatedBody(
-    event,
-    setProfileImageSchema
-  )
+  const body = await useValidatedBody(event, setProfileImageSchema)
 
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
+  // =============================================================================
+  // Remove old profile image if exists
+  // =============================================================================
+
+  await event.$fetch('/api/admin/user/:id/remove-profile-image'.replace(':id', body.userId), {
+    method: 'POST',
+    body: {
+      userId: body.userId
+    }
+  }).catch((error) => {
+    console.error('Error removing old profile image:', error)
+  })
 
   // =============================================================================
   // Copy data to final destination
@@ -45,12 +44,12 @@ export default defineEventHandler(async (event) => {
   const { minioClient } = useMinio()
   const { storage: { s3: { bucket, tempBucket } } } = useRuntimeConfig()
 
-  const sourceKeyWithBucket = `/${tempBucket}/${validatedData.uploadedFileKey}`
-  const destinationKey = `profile/${randomUUID()}`
+  const sourceKeyWithBucket = `/${tempBucket}/${body.uploadedFileKey}`
+  const destinationKey = `user-profile-images/${body.userId}/${randomUUID()}`
 
   try {
     await minioClient.copyObject(bucket, destinationKey, sourceKeyWithBucket)
-    await minioClient.removeObject(tempBucket, validatedData.uploadedFileKey)
+    await minioClient.removeObject(tempBucket, body.uploadedFileKey)
   }
   catch (error) {
     console.error('Error copying object to final destination:', error)
@@ -64,12 +63,10 @@ export default defineEventHandler(async (event) => {
   // Handle Command
   // =============================================================================
 
-  const eventStore = event.context.eventStore
-
   const command: AttachProfileImage = createCommand({
     type: 'AttachProfileImage',
     data: {
-      userId: validatedData.userId,
+      userId: body.userId,
       profileImageKey: destinationKey
     },
     metadata: {
@@ -81,12 +78,13 @@ export default defineEventHandler(async (event) => {
   })
 
   try {
+    const eventStore = event.context.eventStore
     const result = await handleCommand({
       eventStore,
       streams: [{
         evolve,
         initialState,
-        streamSubject: getUserStreamSubjectById(validatedData.userId)
+        streamSubject: getUserStreamSubjectById(body.userId)
       }],
       commandHandlerFunction: attachProfileImage,
       command: command

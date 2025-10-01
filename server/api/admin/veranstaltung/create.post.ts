@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { createVeranstaltungSchema } from '~~/shared/validation/veranstaltungSchema'
 import { createRbagVeranstaltung, type CreateRbagVeranstaltung } from '~~/server/domain/veranstaltung/commandHandling'
 import { evolve, getVeranstaltungStreamSubjectById, initialState } from '~~/server/domain/veranstaltung/eventHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
+import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -15,25 +15,13 @@ export default defineEventHandler(async (event) => {
   const user = await useAuthenticatedUser(event)
 
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate
   // =============================================================================
 
-  const {
-    success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = await useSafeValidatedBody(
+  const body = await useValidatedBody(
     event,
     createVeranstaltungSchema
   )
-
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
 
   // =============================================================================
   // Handle command
@@ -43,7 +31,7 @@ export default defineEventHandler(async (event) => {
     const eventStore = event.context.eventStore
     const command: CreateRbagVeranstaltung = createCommand({
       type: 'CreateRbagVeranstaltung',
-      data: validatedData,
+      data: body,
       metadata: { requestedBy: user.email, now: new Date() }
     })
 

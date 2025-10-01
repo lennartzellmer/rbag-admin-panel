@@ -1,27 +1,16 @@
 import { defineEventHandler } from 'h3'
-import { useSafeValidatedParams, z } from 'h3-zod'
+import { z } from 'h3-zod'
 import { getVeranstaltungKategorieById } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
+import { useValidatedParams } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate
   // =============================================================================
 
-  const {
-    success: isValidParams,
-    data: validatedParams,
-    error: validationError
-  } = await useSafeValidatedParams(event, {
+  const validatedParams = await useValidatedParams(event, z.object({
     id: z.string().uuid()
-  })
-
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
+  }))
 
   // =============================================================================
   // Get category by id

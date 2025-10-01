@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody } from 'h3-zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
+import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -15,25 +15,13 @@ export default defineEventHandler(async (event) => {
   const user = await useAuthenticatedUser(event)
 
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate
   // =============================================================================
 
-  const {
-    success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = await useSafeValidatedBody(
+  const validatedData = await useValidatedBody(
     event,
     erstelleVeranstaltungKategorieSchema
   )
-
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
 
   // =============================================================================
   // Handle command

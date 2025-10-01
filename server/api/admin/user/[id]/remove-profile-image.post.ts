@@ -1,10 +1,11 @@
 import { defineEventHandler, createError } from 'h3'
 import { createCommand, handleCommand } from 'vorfall'
-import { useSafeValidatedBody, z } from 'h3-zod'
+import { z } from 'h3-zod'
 import { removeProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 import type { RemoveProfileImage } from '~~/server/domain/user/commandHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
+import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -14,28 +15,14 @@ export default defineEventHandler(async (event) => {
   const user = await useAuthenticatedUser(event)
 
   // =============================================================================
-  // Parse and validate request body
+  // Parse and validate
   // =============================================================================
+
   const removeProfileImageSchema = z.object({
     userId: z.string()
   })
 
-  const {
-    success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = await useSafeValidatedBody(
-    event,
-    removeProfileImageSchema
-  )
-
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
+  const body = await useValidatedBody(event, removeProfileImageSchema)
 
   // =============================================================================
   // Handle Command
@@ -44,7 +31,7 @@ export default defineEventHandler(async (event) => {
   const command: RemoveProfileImage = createCommand({
     type: 'RemoveProfileImage',
     data: {
-      userId: validatedData.userId
+      userId: body.userId
     },
     metadata: {
       requestedBy: {
@@ -60,7 +47,7 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getUserStreamSubjectById(validatedData.userId)
+        streamSubject: getUserStreamSubjectById(body.userId)
       }],
       commandHandlerFunction: removeProfileImage,
       command: command
@@ -68,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
     const { minioClient } = useMinio()
     const { storage: { s3: { bucket } } } = useRuntimeConfig()
-    minioClient.removeObject(bucket, `profile/${validatedData.userId}`).catch((removeError) => {
+    minioClient.removeObject(bucket, `profile/${body.userId}`).catch((removeError) => {
       console.error('Error removing object:', removeError)
     })
     return {
