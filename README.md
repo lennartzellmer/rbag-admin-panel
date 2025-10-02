@@ -22,6 +22,24 @@ Unsere Veranstaltungen heißen willkommen:
 - Menschen aller Ethnien und Hintergründe
 - Musikbegeisterte aller Könnensstufen
 
+## Externe Services
+
+Diese Anwendung benötigt folgende externe Services, um vollständig funktionsfähig zu sein:
+
+### 🔐 Zitadel (Identity & Access Management)
+- **Zweck**: Benutzerauthentifizierung und Autorisierung
+
+### 🗄️ MongoDB (Datenbank)
+- **Zweck**: Hauptdatenbank für Event-Management und Benutzerdaten
+
+### 📦 MinIO (S3-kompatible Objektspeicherung)
+- **Zweck**: Datei-Upload und -Speicherung (z.B. Profilbilder, Event-Medien)
+
+
+### 🚀 Schnellstart mit Docker
+
+Alle Services können über Docker Compose gestartet werden. Für detaillierte Anweisungen, siehe [Docker Development Environment](dev_docker/README.md). 
+
 ---
 
 *Für weitere Informationen über RBAG Musik und unsere Veranstaltungen besuchen Sie [www.rbag-musik.de](https://www.rbag-musik.de/) und [www.music-and-al.de](https://www.music-and-al.de)*
