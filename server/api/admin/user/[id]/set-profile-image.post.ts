@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
   const bucket = useRuntimeConfig().storage.s3.bucket
   const tempBucket = useRuntimeConfig().storage.s3.tempBucket
   const sourceKeyWithBucket = `/${tempBucket}/${body.uploadedFileKey}`
-  const destinationKey = `user-profile-images/${body.userId}/${randomUUID()}`
+  const destinationKey = randomUUID()
 
   try {
     await minioClient.copyObject(bucket, destinationKey, sourceKeyWithBucket)

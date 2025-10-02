@@ -90,7 +90,7 @@ export const attachProfileImage = (
     }),
     createDomainEvent({
       type: 'MediaCreated',
-      subject: getMediaStreamSubjectById(randomUUID()),
+      subject: getMediaStreamSubjectById(command.data.profileImageKey),
       data: mediaCreatedData,
       metadata: { requestedBy: metadata.requestedBy, userId: command.metadata.requestedBy.userId }
     })

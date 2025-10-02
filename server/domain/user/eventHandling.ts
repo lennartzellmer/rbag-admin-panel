@@ -63,6 +63,12 @@ export const evolve = (state: User, event: UserEvents): User => {
         profileImage: data.profileImageKey
       }
     }
+    case 'UserProfileImageRemoved': {
+      return {
+        ...state,
+        profileImage: undefined
+      }
+    }
     default: {
       const _exhaustiveCheck: never = type as never
       return state
@@ -79,7 +85,7 @@ export const UserProjectionName = 'User' as const
 export const userProjectionDefinition = createProjectionDefinition({
   name: UserProjectionName,
   evolve,
-  canHandle: ['UserCreated', 'UserProfileImageAttached'],
+  canHandle: ['UserCreated', 'UserProfileImageAttached', 'UserProfileImageRemoved'],
   initialState
 })
 

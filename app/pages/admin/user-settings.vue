@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { updateProfileImage, removeProfileImage, getUserById, getProfileImageUrl } from '~/service/user'
+import { updateProfileImage, removeProfileImage, getUserById } from '~/service/user'
 
 const value = ref(null)
 const { user } = useUserSession()
 
 const domainUser = await getUserById(user.value?.sub || '')
-const presignedUrl = await getProfileImageUrl(domainUser.profileImage || '')
 
 const onFileChange = (file: File | null | undefined) => {
   if (!user.value) {
@@ -35,10 +34,7 @@ const onFileChange = (file: File | null | undefined) => {
     <template #body>
       <h2>User Settings</h2>
       <h3>Profile picture</h3>
-      <img
-        :src="presignedUrl.url"
-        alt=""
-      >
+      <pre>{{ domainUser }}</pre>
       <UFileUpload
         v-model="value"
         class="w-96 min-h-48"

@@ -74,7 +74,7 @@ export const MediaProjectionName = 'Media' as const
 export const mediaProjectionDefinition = createProjectionDefinition({
   name: MediaProjectionName,
   evolve,
-  canHandle: ['MediaCreated'],
+  canHandle: ['MediaCreated', 'MediaDeleted'],
   initialState
 })
 

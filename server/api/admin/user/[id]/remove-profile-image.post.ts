@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
 
     const { minioClient } = useMinio()
     const bucket = useRuntimeConfig().storage.s3.bucket
-    minioClient.removeObject(bucket, `profile/${body.userId}`).catch((removeError) => {
+    minioClient.removeObject(bucket, profileImage).catch((removeError) => {
       console.error('Error removing object:', removeError)
     })
     return {
