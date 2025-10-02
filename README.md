@@ -24,21 +24,22 @@ Unsere Veranstaltungen heißen willkommen:
 
 ## Externe Services
 
-Diese Anwendung benötigt folgende externe Services, um vollständig funktionsfähig zu sein:
+Diese Anwendung benötigt folgende externe Services, um vollständig funktionsfähig zu sein.
+Für Development können diese über Docker zur Verfügung gestellt werden, siehe [hier](dev_docker/README.md). 
 
-### Zitadel (Identity & Access Management)
-- **Zweck**: Benutzerauthentifizierung und Autorisierung
+**Zitadel (Identity & Access Management)**
+Benutzerauthentifizierung und Autorisierung
 
-### MongoDB (Datenbank)
-- **Zweck**: Hauptdatenbank für Event-Management und Benutzerdaten
+**MongoDB (Datenbank)**
+Hauptdatenbank für Event-Management und Benutzerdaten
 
-### MinIO (S3-kompatible Objektspeicherung)
-- **Zweck**: Datei-Upload und -Speicherung (z.B. Profilbilder, Event-Medien)
+**MinIO (S3-kompatible Objektspeicherung)**
+Datei-Upload und -Speicherung (z.B. Profilbilder, Event-Medien)
 
 
 ### Schnellstart mit Docker
 
-Alle Services können über Docker Compose gestartet werden. Für detaillierte Anweisungen, siehe [Docker Development Environment](dev_docker/README.md). 
+Alle Services können über Docker Compose gestartet werden. Für detaillierte Anweisungen, siehe [hier](dev_docker/README.md). 
 
 ---
 
