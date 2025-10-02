@@ -4,7 +4,7 @@ import { updateProfileImage, removeProfileImage, getUserById } from '~/service/u
 const value = ref(null)
 const { user } = useUserSession()
 
-const domainUser = await getUserById(user.value?.sub || '')
+const userDetails = await getUserById(user.value?.sub || '')
 
 const onFileChange = (file: File | null | undefined) => {
   if (!user.value) {
@@ -32,9 +32,17 @@ const onFileChange = (file: File | null | undefined) => {
     </template>
 
     <template #body>
-      <h2>User Settings</h2>
-      <h3>Profile picture</h3>
-      <pre>{{ domainUser }}</pre>
+      <h3>Profile picture2</h3>
+      <pre>{{ user?.roles }}</pre>
+      <NuxtImg
+        v-if="userDetails.media"
+        alt="Profile picture"
+        width="100"
+        height="100"
+        class="rounded-2xl"
+        :src="userDetails.media.profileImage.url"
+      />
+
       <UFileUpload
         v-model="value"
         class="w-96 min-h-48"

@@ -17,6 +17,7 @@
     "@iconify-json/lucide": "1.2.68",
     "@internationalized/date": "^3.7.0",
     "@nuxt/eslint": "1.1.0",
+    "@nuxt/image": "1.11.0",
     "@nuxt/ui": "4.0.0",
     "@types/geojson": "7946.0.16",
     "@vee-validate/zod": "4.15.0",

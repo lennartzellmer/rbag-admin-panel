@@ -60,13 +60,18 @@ export const evolve = (state: User, event: UserEvents): User => {
     case 'UserProfileImageAttached': {
       return {
         ...state,
-        profileImage: data.profileImageKey
+        media: {
+          profileImage: {
+            objectName: data.profileImageObjectName,
+            type: 'image'
+          }
+        }
       }
     }
     case 'UserProfileImageRemoved': {
       return {
         ...state,
-        profileImage: undefined
+        media: undefined
       }
     }
     default: {

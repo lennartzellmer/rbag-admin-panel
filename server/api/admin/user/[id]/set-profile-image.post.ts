@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
     type: 'AttachProfileImage',
     data: {
       userId: body.userId,
-      profileImageKey: destinationKey
+      profileImageObjectName: destinationKey
     },
     metadata: {
       requestedBy: {

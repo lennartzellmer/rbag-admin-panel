@@ -1,5 +1,4 @@
-import type { EventStream } from 'vorfall'
-import type { UserEvents, userProjectionDefinition } from '~~/server/domain/user/eventHandling'
+import type { WithMediaUrls } from '~/types/media.types'
 import type { User } from '~~/server/domain/user/validation'
 
 export const updateProfileImage = async (userId: string, file: File) => {
@@ -50,10 +49,10 @@ export const getProfileImageUrl = (key: string) => {
   return response
 }
 
-export const getUserById = async (id: string): Promise<User> => {
-  const response = await useRequestFetch()<EventStream<UserEvents, typeof userProjectionDefinition[]>>('/api/admin/user/:id'.replace(':id', id), {
+export const getUserById = async (id: string): Promise<WithMediaUrls<User>> => {
+  const response = await useRequestFetch()<WithMediaUrls<User>>('/api/admin/user/:id'.replace(':id', id), {
     method: 'GET'
   })
 
-  return response.projections!.User || null
+  return response || null
 }

@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   // =============================================================================
 
   const rbagUser = await getUserById(event.context.eventStore, body.userId)
-  const profileImage = rbagUser?.projections.User.profileImage
+  const profileImage = rbagUser?.projections.User.media?.profileImage.objectName
 
   if (!profileImage) {
     // When no profile image, we don't need to do anything
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
     type: 'RemoveProfileImage',
     data: {
       userId: body.userId,
-      profileImageKey: profileImage
+      profileImageObjectName: profileImage
     },
     metadata: {
       requestedBy: {

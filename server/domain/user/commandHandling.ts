@@ -27,7 +27,7 @@ export type CreateUser = Command<
 export type AttachProfileImage = Command<
   'AttachProfileImage',
   {
-    profileImageKey: string
+    profileImageObjectName: string
     userId: string
   },
   CommandMetadata
@@ -36,7 +36,7 @@ export type AttachProfileImage = Command<
 export type RemoveProfileImage = Command<
   'RemoveProfileImage',
   {
-    profileImageKey: string
+    profileImageObjectName: string
     userId: string
   },
   CommandMetadata
@@ -57,11 +57,7 @@ export const createUser = async (
     type: 'UserCreated',
     subject: getUserStreamSubjectById(userId),
     data: {
-      id: userId,
-      name: data.name,
-      role: data.role,
-      email: data.email,
-      profileImage: data.profileImage
+      id: userId
     },
     metadata: metadata
   })
@@ -74,7 +70,7 @@ export const attachProfileImage = (
 
   const mediaCreatedData = {
     id: randomUUID(),
-    key: data.profileImageKey,
+    key: data.profileImageObjectName,
     ownerId: command.data.userId,
     visibility: 'internal',
     status: 'active',
@@ -90,7 +86,7 @@ export const attachProfileImage = (
     }),
     createDomainEvent({
       type: 'MediaCreated',
-      subject: getMediaStreamSubjectById(command.data.profileImageKey),
+      subject: getMediaStreamSubjectById(command.data.profileImageObjectName),
       data: mediaCreatedData,
       metadata: { requestedBy: metadata.requestedBy, userId: command.metadata.requestedBy.userId }
     })
@@ -110,7 +106,7 @@ export const removeProfileImage = (
     }),
     createDomainEvent({
       type: 'MediaDeleted',
-      subject: getMediaStreamSubjectById(command.data.profileImageKey),
+      subject: getMediaStreamSubjectById(command.data.profileImageObjectName),
       metadata: metadata
     })
   ]

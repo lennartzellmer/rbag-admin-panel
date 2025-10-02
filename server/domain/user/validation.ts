@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { mediaSchema } from '~~/shared/validation/mediaSchema'
 
 // =============================================================================
 // Schemas
@@ -13,16 +14,15 @@ export const federatedUserSchema = z.object({
 
 export const userSchema = z.object({
   id: z.string().uuid(),
-  name: z.string().min(2).max(100),
-  email: z.string().email().min(5).max(255),
-  role: z.enum(['admin', 'user']).default('user'),
-  profileImage: z.string().url().max(2048).optional()
+  media: z.object({
+    profileImage: mediaSchema
+  }).optional()
 })
 
 export const CreateUserSchema = userSchema.omit({ id: true })
 
 export const attachProfileImageSchema = z.object({
-  profileImageKey: z.string()
+  profileImageObjectName: z.string()
 })
 
 export const removeProfileImageSchema = z.object({
