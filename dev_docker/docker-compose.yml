@@ -20,7 +20,7 @@ services:
   zitadel:
     restart: unless-stopped
     image: ghcr.io/zitadel/zitadel:latest
-    command: start-from-init --masterkey "MasterkeyNeedsToHave32Characters"
+    command: start-from-init --masterkey "${ZITADEL_MASTERKEY}"
     environment:
       # See "What's next" to learn about how to serve Zitadel on a different domain or IP.
       ZITADEL_EXTERNALDOMAIN: localhost
