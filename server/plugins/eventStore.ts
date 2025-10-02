@@ -4,11 +4,17 @@ import { veranstaltungProjectionDefinition } from '../domain/veranstaltung/event
 import { userProjectionDefinition } from '../domain/user/eventHandling'
 import { mediaProjectionDefinition } from '../domain/media/eventHandling'
 
-const connectionString = process.env.NUXT_MONGODB_EVENT_STORE_URI
+const runtimeConfig = useRuntimeConfig()
 
-if (!connectionString) {
-  throw new Error('Missing required environment variable NUXT_MONGODB_EVENT_STORE_URI')
+const url = runtimeConfig.mongodb.eventStoreUri
+const user = runtimeConfig.mongodb.user
+const password = runtimeConfig.mongodb.password
+
+if (!user || !password || !url) {
+  throw new Error('Missing required environment variable NUXT_MONGODB_USER, NUXT_MONGODB_PASSWORD, or NUXT_MONGODB_EVENT_STORE_URI')
 }
+
+const connectionString = `mongodb://${user}:${password}@${url}`
 
 // Create a singleton instance of the MongoDB event store
 export const eventStoreSingleton = createEventStore({

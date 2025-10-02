@@ -11,22 +11,27 @@ This directory contains the Docker Compose configuration for the development env
 
 The development environment includes:
 
-1. **MongoDB** - Event store database with replica set configuration
-2. **Zitadel** - Identity and access management
-3. **Zitadel Database** - PostgreSQL database for Zitadel
-4. **Zitadel Login** - Login UI for Zitadel
-5. **MinIO** - S3-compatible object storage
+1. **MongoDB** - Database with replica set configuration
+2. **MinIO** - S3-compatible object storage
+3. **Zitadel** - Identity and access management
+4. **Zitadel Database** - PostgreSQL database for Zitadel
+5. **Zitadel Login** - Login UI for Zitadel
+
+## Environment Variables
+
+Some configuration and secrets need to be shared between the Nuxt application and Docker environment.
+That's why the .env file in the root folder of this project holds This information in a central place.
 
 ## Usage
 
 ### Starting the Development Environment
 
 ```bash
-# From the dev_docker directory
-docker-compose up -d
+# From the project root
+docker-compose --env-file .env -f dev_docker/docker-compose.yml up -d
 
-# Or from the project root
-cd dev_docker && docker-compose up -d
+# From the dev_docker directory
+docker-compose --env-file ../.env up -d
 ```
 
 ### Stopping the Development Environment
@@ -50,20 +55,6 @@ docker-compose logs -f mongodb
 docker-compose logs -f zitadel
 docker-compose logs -f minio
 ```
-
-## Environment Variables
-
-All environment variables are defined in `docker.env`. This file contains:
-
-- **MongoDB Configuration** - Database credentials and connection settings
-- **MinIO Configuration** - Object storage credentials and settings
-- **Zitadel Configuration** - Identity management settings
-- **PostgreSQL Configuration** - Database settings for Zitadel
-- **Session Configuration** - Application session settings
-
-### Synchronization with Application
-
-The application's `.env.example` file references the same values as `docker.env` to ensure consistency. When you update values in `docker.env`, make sure to update the corresponding values in `.env.example` (or your local `.env` file).
 
 ## Ports
 
@@ -89,19 +80,18 @@ Data is persisted using Docker volumes:
 
 ### MongoDB Replica Set
 
-If MongoDB fails to start, you may need to initialize the replica set:
+MongoDB will fail starting on first launch.
+You need to initialize the replica set:
 
 ```bash
 # Connect to MongoDB container
 docker exec -it mongodb mongosh
 
+# Promote to root (with password from .env)
+db.auth("root", "root")
+
 # Initialize replica set
-rs.initiate({
-  _id: "rs0",
-  members: [
-    { _id: 0, host: "localhost:27017" }
-  ]
-})
+rs.initiate({ _id: "rs0", members:[{ _id: 0, host: "localhost:27017" }]})
 ```
 
 ### Zitadel Setup
@@ -116,16 +106,16 @@ docker-compose logs -f zitadel
 
 - **Console**: http://localhost:9001
 - **API**: http://localhost:9000
-- **Credentials**: minioadmin / minioadmin123
+- **Credentials**: see .env file
 
 ## Development Workflow
 
-1. Start the development environment: `docker-compose up -d`
-2. Copy `.env.example` to `.env` in the project root
-3. Update `.env` with any custom values if needed
+1. Copy `.env.example` to `.env` in the project root
+2. Update `.env` with any custom values if needed
+3. Start the development environment: `docker-compose up -d`
 4. Start your Nuxt application: `pnpm dev`
-5. Access the application at http://localhost:3000
+5. Access the application at http://localhost:3001
 
 ## Security Note
 
-The credentials in `docker.env` are for development only. Do not use these credentials in production environments.
+The credentials in `.env` are for development only. Do not use these credentials in production environments.

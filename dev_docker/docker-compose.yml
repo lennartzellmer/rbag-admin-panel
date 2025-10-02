@@ -7,8 +7,8 @@ services:
     hostname: mongodb
     restart: always
     environment:
-      - MONGO_INITDB_ROOT_PASSWORD=root
-      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=${NUXT_MONGODB_USER}
+      - MONGO_INITDB_ROOT_USERNAME=${NUXT_MONGODB_PASSWORD}
     command: mongod --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all --port 27017
     ports:
       - "27017:27017"
@@ -152,18 +152,18 @@ services:
     container_name: minio
     restart: unless-stopped
     ports:
-      - "9000:9000"   # MinIO API
+      - "${NUXT_STORAGE_S3_PORT}:9000"   # MinIO API
       - "9001:9001"   # MinIO Console
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin123
+      MINIO_ROOT_USER: ${NUXT_STORAGE_S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${NUXT_STORAGE_S3_SECRET_KEY}
     command: server /data --console-address ":9001"
     volumes:
       - minio-data:/data
     networks:
       - zitadel
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:${NUXT_STORAGE_S3_PORT}/minio/health/live"]
       interval: 30s
       timeout: 20s
       retries: 3

@@ -23,6 +23,11 @@ export default defineNuxtConfig({
         scope: ['openid', 'profile', 'email']
       }
     },
+    mongodb: {
+      eventStoreUri: process.env.NUXT_MONGODB_URL ?? '',
+      user: process.env.NUXT_MONGODB_USER ?? '',
+      password: process.env.NUXT_MONGODB_PASSWORD ?? ''
+    },
     storage: {
       s3: {
         endpoint: process.env.NUXT_STORAGE_S3_ENDPOINT ?? '',
