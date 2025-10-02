@@ -102,6 +102,8 @@ Zitadel will automatically initialize on first run. The setup process may take a
 docker-compose logs -f zitadel
 ```
 
+Log in to zitadel via http://localhost:8080/ui/console?login_hint=zitadel-admin@zitadel.localhost and enter `Password1!` to log in.
+
 ### MinIO Access
 
 - **Console**: http://localhost:9001
