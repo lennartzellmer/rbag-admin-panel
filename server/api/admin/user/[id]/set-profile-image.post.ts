@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const eventStore = event.context.eventStore
-    const result = await handleCommand({
+    await handleCommand({
       eventStore,
       streams: [{
         evolve,
@@ -91,12 +91,10 @@ export default defineEventHandler(async (event) => {
       command: command
     })
 
-    return {
-      ...result
-    }
+    return sendNoContent(event)
   }
   catch (error) {
-    minioClient.removeObject(bucket, destinationKey).catch((removeError) => {
+    await minioClient.removeObject(bucket, destinationKey).catch((removeError) => {
       console.error('Error removing object after command failure:', removeError)
     })
     console.error(error)

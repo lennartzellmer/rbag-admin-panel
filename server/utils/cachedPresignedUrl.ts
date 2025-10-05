@@ -24,7 +24,7 @@ export const cachedPresignedUrl = defineCachedFunction(async (media: Media) => {
 }, {
   maxAge: (() => {
     const runtimeConfig = useRuntimeConfig()
-    return runtimeConfig.storage.s3.uploadUrlExpirationSeconds - 60
+    return Math.round(runtimeConfig.storage.s3.uploadUrlExpirationSeconds * 0.5)
   })(),
   name: 'minioPresignedUrl',
   getKey: (media: Media) => media.objectName

@@ -17,7 +17,7 @@ export const updateProfileImage = async (userId: string, file: File) => {
     headers: { 'Content-Type': contentType }
   })
 
-  const response = await useRequestFetch()('/api/admin/user/:id/set-profile-image'.replace(':id', userId), {
+  const response = await useRequestFetch()<WithMediaUrls<User>>('/api/admin/user/:id/set-profile-image'.replace(':id', userId), {
     method: 'POST',
     body: {
       userId,
@@ -33,16 +33,6 @@ export const removeProfileImage = async (userId: string) => {
     method: 'POST',
     body: {
       userId
-    }
-  })
-
-  return response
-}
-
-export const getProfileImageUrl = (key: string) => {
-  const response = useRequestFetch()('/api/admin/media/get-media-url', {
-    query: {
-      key
     }
   })
 

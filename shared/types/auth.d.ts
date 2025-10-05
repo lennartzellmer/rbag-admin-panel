@@ -1,9 +1,25 @@
 declare module '#auth-utils' {
   interface User {
-    name: string
-    email: string
-    sub: string
-    roles: string[]
+    'email': string
+    'email_verified': boolean
+    'family_name': string
+    'given_name': string
+    'locale': string | null
+    'name': string
+    'preferred_username': string
+    'roles': string[]
+    'sub': string
+    'updated_at': number
+    'urn:zitadel:iam:org:project:339543160659176242:roles': {
+      [role: string]: {
+        [orgId: string]: string
+      }
+    }
+    'urn:zitadel:iam:org:project:roles': {
+      [role: string]: {
+        [orgId: string]: string
+      }
+    }
   }
 }
 
