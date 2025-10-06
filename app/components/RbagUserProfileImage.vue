@@ -48,7 +48,7 @@ const onFileChange = (file: File | null | undefined) => {
         width="100"
         height="100"
         class="rounded-2xl inset-0 block"
-        :src="snapshot.context.url"
+        :src="snapshot.context.objectName!"
       />
     </div>
     <UButton

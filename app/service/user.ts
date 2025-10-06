@@ -1,4 +1,3 @@
-import type { WithMediaUrls } from '~/types/media.types'
 import type { User } from '~~/server/domain/user/validation'
 
 export const updateProfileImage = async (userId: string, file: File) => {
@@ -17,7 +16,7 @@ export const updateProfileImage = async (userId: string, file: File) => {
     headers: { 'Content-Type': contentType }
   })
 
-  const response = await useRequestFetch()<WithMediaUrls<User>>('/api/admin/user/:id/set-profile-image'.replace(':id', userId), {
+  const response = await useRequestFetch()<User>('/api/admin/user/:id/set-profile-image'.replace(':id', userId), {
     method: 'POST',
     body: {
       userId,
@@ -39,8 +38,8 @@ export const removeProfileImage = async (userId: string) => {
   return response
 }
 
-export const getUserById = async (id: string): Promise<WithMediaUrls<User>> => {
-  const response = await useRequestFetch()<WithMediaUrls<User>>('/api/admin/user/:id'.replace(':id', id), {
+export const getUserById = async (id: string): Promise<User> => {
+  const response = await useRequestFetch()<User>('/api/admin/user/:id'.replace(':id', id), {
     method: 'GET'
   })
 

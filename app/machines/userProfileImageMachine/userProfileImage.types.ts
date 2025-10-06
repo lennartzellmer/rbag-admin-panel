@@ -1,5 +1,5 @@
 export type MachineContext = {
-  url?: string
+  objectName?: string
   userId: string
 }
 

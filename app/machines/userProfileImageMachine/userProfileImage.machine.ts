@@ -1,7 +1,6 @@
 import { assertEvent, fromPromise, setup, assign } from 'xstate'
 import type { MachineContext, MachineEvents, MachineInput } from './userProfileImage.types'
 import { getUserById, removeProfileImage, updateProfileImage } from '~/service/user'
-import type { WithMediaUrls } from '~/types/media.types'
 
 export const machine = setup({
   types: {
@@ -31,16 +30,16 @@ export const machine = setup({
         return
       }
     ),
-    getUserProfileImageUrl: fromPromise<WithMediaUrls<string | undefined>, { id: string }>(
+    getUserProfileImageObjectName: fromPromise<string | undefined, { id: string }>(
       async ({ input }) => {
         const user = await getUserById(input.id)
-        return user.media?.profileImage.url || undefined
+        return user.media?.profileImage.objectName || undefined
       }
     )
   },
   guards: {
     hasProfileImage: function ({ context }) {
-      return !!context.url
+      return !!context.objectName
     }
   }
 }).createMachine({
@@ -56,12 +55,12 @@ export const machine = setup({
       states: {
         getUser: {
           invoke: {
-            src: 'getUserProfileImageUrl',
+            src: 'getUserProfileImageObjectName',
             input: ({ context }) => ({ id: context.userId }),
             onDone: {
               target: 'Done',
               description: 'Assign fetched URL to context',
-              actions: assign({ url: ({ event }) => event.output }),
+              actions: assign({ objectName: ({ event }) => event.output }),
               reenter: true
             },
             onError: {
@@ -104,7 +103,7 @@ export const machine = setup({
               target: '#userProfileImage.noProfileImage',
               reenter: true,
               description: 'Remove profile image url from context',
-              actions: assign({ url: undefined })
+              actions: assign({ objectName: undefined })
             },
             onError: {
               target: '#userProfileImage.showImage.imageSet',
