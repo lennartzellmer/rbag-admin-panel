@@ -43,7 +43,7 @@ export const machine = setup({
     }
   }
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QFdZgE4AV0HsBmAlgDZgCSAtgIYwB0MALqQHYH0GVEDK9l9YAxBBxMwNWDz41UGbPmJkqtBs1bsuEsAG0ADAF1EoAA45Yq4QZAAPRABYAHHZoA2GwE4bAJgDsT7dq+uAKwAjAA0IACeiMEAzB40HoEernZedk6BgdqBMQC+ueHSWLiEJBTUososbBzcvAJCImIaUmjFcmWKlWCM1Wp1fJrB+kggxqZs5qPWCB6xzjFeXolOMcF2Nj4e4VEIsfGJyanpmdl5BSBFsqUKFXQ9KjXq9ff0AKptgsKiBEwAbjgANaiK4leTlJQPPq1FoMD4YBC-AEAY14BGEOl0mIs4zMTAsM2CSRoyxs-i8a20rg8MScTh2iAAtMFtPEbMF2TFKTZNq5gvlCm1ruCuq9Hv1YT14eh+BhcOgaIYiLw8Dh0ORWjIwZ07lVVDCXnC2oj-jhUZMmJjsaNcRaCUzgq4nDQOe5AnZqSyHP4GQgnMESesfDEHEsPDY6QLLkLtbdaLAABY4ADuEJ+XU4PX4ACUAKIAWQA8gA1XMAfVI+YAggBxXPWowmPH2hCuJY0EPLbQhuyLJZhSKILI2F1knnaYKJPmBLyBKOgjpx0SJlNpmjoMDkHB-X5QNNfJpIoEgmOLtcr1OijdbndMPddE0otEYvQNsZNu3TaLrQLOTYzkJfDmLxfTpZ0li5VxtHZTYYlcc5BS1M9RQvNdr23Xd9zlNVFWVehVXVTV2huc8k0vO50Nve8KkfM1n0tV89BxD90XxL9Wx8GhPECJwaXDdZeNcX0PG0RwZypQJPBifwUnnU8SNFJgcGFHUYH4KsABENIras6zfW1WJbdZHBpOCKXcWJgicIJfRiTwuKSGwYiyJJaRZLw5KQhS7mQJUcEoCB90aH5TWBIiVKXKQ-ICtNaPNVirSYm0WKmUAZl47QaEyOw5jsfxglif1bLcBJvGCCk-DJI5POIkUfOiwKulldB5VwlU1Q1BdvNoXyiH8xqaKPeKXyxJLGwmQz2J-DsKQ2Nz-DmJw7GE0Ssq8CSpJkvKbHyC4lIgOALC6uqYGYibUqsJlpOdJwlh5FxEhncNfUZbxXCynLe3dXinoQ6MvJO7pen1Z4+DO5t2Ne91nDuiNuKemwXsdA5AlcakuXWok7FiGqIrXPUngGIHpXBz80qZOZMturx7vh5ZaSR6CaHg6yXBSPlnI8DxcdjfGoRBomaA075Scm8mEBCTK7BnB7ezcNtAhenKSSWp1Nlu6y0Y8i5jtU5cyLTUWLpmPLfxCVIknDbwfUHPY5gSexYnWmxJPcP7dci1DRQIDMeiNtjxelmIsqDS3PHWkDbdpTKgmcqzUmcoJ+R1+TAbEA2r03DC70N5LzoDy69nKgM0msnjjPZaDiq8Gg5q8AqAlEnInB55C7iUvGun9lsbpZRbe3SZyqUj3YuWdWlFuguIqXSVvupBBrc-GiHxZDANsbcev-XrrZEajydmc2CNYkySc4LnXagA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QFdZgE4AV0HsBmAlgDZgCSAtgIYwB0MALqQHYH0GVEDK9l9YAxBBxMwNWDz41UGbPmJkqtBs1bsuEsAG0ADAF1EoAA45Yq4QZAAPRAEZtAZgAsNAOwA2AExvHH7R4CsHi4u9gA0IACeiF4eNAAc-to+NnH2dnEeNgC+WeHSWLiEJBTUososbBzcvAJCImIaUmgFcsWKZWCMFWrVfJo2+kggxqZs5kPWCC42LjQ23gCc-v4Lvh5LbuFRCDHxicmp6Zk5ec2yRQqldJ0qleo11-QAqs2CwqIETABuOADWovlzvISkobt0qo0GC8MAhPj8AMa8AjCHS6VEWEZmJgWSZuBb2eJpOIudaOFz+RyrLbRfxzfxufxOTIuSn2bRuOInECAwrA9qPW49SGdaHofgYXDoGiGIi8PA4dDkJoyXltK7lVQQh5Q5qw744RFjJio9FDTFGnGIAC0dgWrgWjhSaQC7jiS2pCEcbho2m0Nns9hc7IDDmWXJ5rUutFgAAscAB3EEfdqcTr8ABKAFEALIAeQAapmAPqkbMAQQA4pnTUYTFjLQgbL44jQyQtUvYFuzpuyPW4Oa2bPi3PY8S5iSFw2dVVHRLGE0maOgwOQcF9PlAk296nC-gDp5HF-PE-zl6v10xN+09QikSi9DXhnWLRNbJltDQgoHUtN7AkPXEniuP444MvSQT0tkuTcgeFxHnGJ5XGea4bluEoKtKsr0PKirKi0cH8sei7IReV6lDeBp3saD56Biz7Itir6Nr4BIuAsbj+qsQQsvYHgeo4f40Gy9KJJ2bjuMEU4qoehEIQAYgqSpMDgQJqjA-BlgAIppJbllWj7mgxDZtjQ-Zeg4+K+toKwuH2eKfuSjpDnixKOI4Un4XyVzHgpuHIDKOCUBAW51B8+r-HhqmzmI8mKVIAVBUmFGGgxJq0Wa9HjKAkzma2wQ2I6QQLO4DKbJE0RAQkSSZIc2gZFBpzSQR3mxX5CXBe04roJKmFynFEbNdGrVKv5RCBR15G7il95oultajEZTFejYcyOIk45xJtCwOnx5WeoGraUgyQYzG5Xg5NBykQHAFgDV5MB0QtWVWNaNggfajqHC6HIOh6NqUvEAluZ4wZxL67nQXdakdF0mr3Hwj31kxEE+kyvGbWyfgLH9QFOHjPhrV4CRuB5UWLhqdy9DDoqIy+2WILxBIOD46OpL66weoJGN2HV7ZLBS52Q7B90w4KWqSJp7y04t9ONtZ3r+Gzf4jnEMw2H2K3+myxV1Qkjiqw1MFNSLMULu00vPZMdg2Ct6zjp2qu+oyZXbPYiTxPLCxNor7giaTM7wWbVwECmnQW4xst2Csn7Fak7Y887Hogd6XbWasuv4qs-syS1Qe0CRqHmxlT0Ry9jYCd6NtBuJG2beJSeMq2vr9oGXoMpyQvG9Dpvxr55Dhw2KR2pSvvzCEQYgXEnMAw67E+O24kcvY2eDXOw00MpZNF-NSOyx4B0jwyY+BtZ45J24H5ONoJKrKOc8Q41nndz5-XtUmA9MRPNCZ8rqvOknZI5gsnZEOcyIF-AXSyEAA */
   context: ({ input }) => ({
     userId: input.userId
   }),
@@ -64,13 +64,16 @@ export const machine = setup({
               reenter: true
             },
             onError: {
-              target: '#userProfileImage.noProfileImage',
+              target: '#userProfileImage.showForm',
+
               actions: {
                 type: 'showToast',
                 params: {
                   message: 'Benutzer konnte nicht geladen werden'
                 }
-              }
+              },
+
+              reenter: true
             }
           }
         },
@@ -79,12 +82,14 @@ export const machine = setup({
         }
       },
       onDone: [{
-        target: 'showImage',
+        target: '#userProfileImage.showImage',
         guard: 'hasProfileImage'
       }, {
-        target: 'noProfileImage'
+        target: 'showForm',
+        reenter: true
       }]
     },
+
     showImage: {
       initial: 'imageSet',
       states: {
@@ -100,7 +105,7 @@ export const machine = setup({
             src: 'removeImage',
             input: ({ context }) => ({ id: context.userId! }),
             onDone: {
-              target: '#userProfileImage.noProfileImage',
+              target: '#userProfileImage.showForm',
               reenter: true,
               description: 'Remove profile image url from context',
               actions: assign({ objectName: undefined })
@@ -118,33 +123,40 @@ export const machine = setup({
         }
       }
     },
-    noProfileImage: {
-      on: {
-        ADD_IMAGE: {
-          target: '#userProfileImage.uploadImage'
-        }
-      }
-    },
-    uploadImage: {
-      invoke: {
-        input: ({ event, context }) => {
-          assertEvent(event, 'ADD_IMAGE')
-          return { id: context.userId!, file: event.file }
-        },
-        onDone: {
-          target: 'getInitialState',
-          reenter: true
-        },
-        onError: {
-          target: '#userProfileImage.noProfileImage',
-          actions: {
-            type: 'showToast',
-            params: {
-              message: 'Profilbild konnte nicht hochgeladen werden'
+
+    showForm: {
+      initial: 'noProfileImage',
+      states: {
+        noProfileImage: {
+          on: {
+            ADD_IMAGE: {
+              target: '#userProfileImage.showForm.uploadImage'
             }
           }
         },
-        src: 'uploadImage'
+
+        uploadImage: {
+          invoke: {
+            input: ({ event, context }) => {
+              assertEvent(event, 'ADD_IMAGE')
+              return { id: context.userId!, file: event.file }
+            },
+            onDone: {
+              target: '#userProfileImage.getInitialState',
+              reenter: true
+            },
+            onError: {
+              target: '#userProfileImage.showForm.noProfileImage',
+              actions: {
+                type: 'showToast',
+                params: {
+                  message: 'Profilbild konnte nicht hochgeladen werden'
+                }
+              }
+            },
+            src: 'uploadImage'
+          }
+        }
       }
     }
   }
