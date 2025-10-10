@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
+import { useMachine } from '@xstate/vue'
+import { machine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
 
 defineProps<{
   collapsed?: boolean
@@ -9,6 +11,12 @@ const { user: authUser, clear } = useUserSession()
 
 const user = ref({
   name: authUser.value?.name
+})
+
+const { snapshot } = useMachine(machine, {
+  input: {
+    userId: authUser.value!.sub!
+  }
 })
 
 const items = computed<DropdownMenuItem[][]>(() => ([[
@@ -40,8 +48,9 @@ const items = computed<DropdownMenuItem[][]>(() => ([[
         trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
       }"
       :avatar="{
-        class: 'bg-gradient-to-b from-primary-400 to-primary-600 text-on-primary',
-        size: 'md'
+        class: snapshot.matches('showForm') ? 'bg-gradient-to-b from-primary-400 to-primary-600 text-on-primary' : undefined,
+        size: 'md',
+        src: snapshot.context.objectName
       }"
       color="neutral"
       variant="ghost"

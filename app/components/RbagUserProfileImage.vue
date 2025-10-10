@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMachine } from '@xstate/vue'
-import { createBrowserInspector } from '@statelyai/inspect'
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { machine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
@@ -62,14 +61,11 @@ const state = reactive<Partial<Schema>>({
   profilbild: undefined
 })
 
-const { inspect } = createBrowserInspector()
-
 const props = defineProps<{
   userId: string
 }>()
 
 const { snapshot, send } = useMachine(machine, {
-  inspect,
   input: {
     userId: props.userId
   }
