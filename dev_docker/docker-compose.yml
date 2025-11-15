@@ -22,6 +22,7 @@ services:
     image: ghcr.io/zitadel/zitadel:latest
     command: start-from-init --masterkey "${ZITADEL_MASTERKEY}"
     environment:
+      ZITADEL_SYSTEMDEFAULTS_PASSWORDHASHER_VERIFIERS: drupal7
       # See "What's next" to learn about how to serve Zitadel on a different domain or IP.
       ZITADEL_EXTERNALDOMAIN: localhost
 
