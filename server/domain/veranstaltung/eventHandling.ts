@@ -22,8 +22,8 @@ export type VeranstaltungErstellt = DomainEvent<
   VeranstaltungSubject
 >
 
-export type VeranstaltungEvents =
-  | VeranstaltungErstellt
+export type VeranstaltungEvents
+  = | VeranstaltungErstellt
 
 // =============================================================================
 // Evolve

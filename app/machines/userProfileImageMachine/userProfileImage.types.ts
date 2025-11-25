@@ -7,8 +7,8 @@ export type MachineInput = {
   userId: string
 }
 
-export type MachineEvents =
-  | {
+export type MachineEvents
+  = | {
     type: 'ADD_IMAGE'
     file: File
   }

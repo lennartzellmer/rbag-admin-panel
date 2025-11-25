@@ -6,9 +6,9 @@ export type FetchDataFunction<T> = ({ paginationParams }: { paginationParams: Pa
 
 type SpawnedPaginationMachine = ActorRefFrom<typeof paginationMachine>
 
-export type MachineEvents =
-  | { type: 'RETRY' }
-  | { type: 'PAGE_UPDATED', pagination: PaginatedRequestParams }
+export type MachineEvents
+  = | { type: 'RETRY' }
+    | { type: 'PAGE_UPDATED', pagination: PaginatedRequestParams }
 
 export type MachineContext<T> = {
   data: T[]

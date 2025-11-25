@@ -38,10 +38,10 @@ export type KategorieVoreinstellungenAktualisiert = DomainEvent<
   VeranstaltungKategorieSubject
 >
 
-export type VeranstaltungKategorieEvent =
-  | VeranstaltungsKategorieErstellt
-  | VeranstaltungsKategorieAktualisiert
-  | KategorieVoreinstellungenAktualisiert
+export type VeranstaltungKategorieEvent
+  = | VeranstaltungsKategorieErstellt
+    | VeranstaltungsKategorieAktualisiert
+    | KategorieVoreinstellungenAktualisiert
 
 export const initialState = () => null
 

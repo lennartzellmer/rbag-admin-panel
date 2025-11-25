@@ -8,8 +8,8 @@ export type MachineContext = {
   totalPages?: number
 }
 
-export type MachineEvents =
-  | {
+export type MachineEvents
+  = | {
     type: 'UPDATE_TOTAL_COUNT'
     totalCount: number
   }

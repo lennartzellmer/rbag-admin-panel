@@ -1,20 +1,20 @@
-export type InboundMachineEvents<TFilterConfig extends FilterConfig<string>> =
-  {
+export type InboundMachineEvents<TFilterConfig extends FilterConfig<string>>
+  = {
     type: 'SET_FILTER_DEBOUNCED'
     payload: TFilterConfig
-  } |
-  { type: 'CONFIRM' } |
-  {
+  }
+  | { type: 'CONFIRM' }
+  | {
     type: 'SET_FILTER'
     payload: TFilterConfig | null
   }
 
-export type OutboundMachineEvents<TFilterConfig extends FilterConfig<string>> =
-  {
+export type OutboundMachineEvents<TFilterConfig extends FilterConfig<string>>
+  = {
     type: 'FILTER_UPDATED'
     filter: TFilterConfig
-  } |
-  {
+  }
+  | {
     type: 'FILTER_RESET'
     filterParamsKey: TFilterConfig['filterParamsKey']
   }
