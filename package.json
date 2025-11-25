@@ -46,13 +46,13 @@
   "devDependencies": {
     "@nuxt/test-utils": "3.20.1",
     "@statelyai/inspect": "0.4.0",
-    "@vitest/coverage-v8": "4.0.13",
+    "@vitest/coverage-v8": "4.0.14",
     "@vue/test-utils": "2.4.6",
     "eslint-plugin-unused-imports": "4.3.0",
     "happy-dom": "20.0.10",
     "jsdom": "27.2.0",
-    "playwright-core": "1.56.1",
-    "vitest": "4.0.13",
+    "playwright-core": "1.57.0",
+    "vitest": "4.0.14",
     "vitest-mock-extended": "3.1.0",
     "vue-tsc": "3.1.5"
   }
