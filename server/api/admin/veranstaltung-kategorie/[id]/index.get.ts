@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { z } from 'h3-zod'
+import { z } from 'zod'
 import { getVeranstaltungKategorieById } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { useValidatedParams } from '~~/server/utils/useValidated'
 

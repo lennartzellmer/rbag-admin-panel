@@ -1,6 +1,5 @@
 import type z from 'zod'
 import type { H3Event } from 'h3'
-import { useSafeValidatedParams } from 'h3-zod'
 
 export async function useValidatedBody<T extends z.ZodTypeAny>(
   event: H3Event,
@@ -51,7 +50,7 @@ export async function useValidatedParams<T extends z.ZodTypeAny>(
     success: isValidParams,
     data: validatedParams,
     error: validationErrorParams
-  } = await useSafeValidatedParams(event, schema)
+  } = await getValidatedRouterParams(event, body => schema.safeParse(body))
 
   if (!isValidParams) {
     throw createError({

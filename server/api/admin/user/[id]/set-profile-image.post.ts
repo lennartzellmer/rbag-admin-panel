@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { z } from 'h3-zod'
+import { z } from 'zod'
 import { createCommand, handleCommand } from 'vorfall'
 import { attachProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'

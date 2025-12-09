@@ -1,5 +1,5 @@
 import { createCommand, handleCommand } from 'vorfall'
-import { z } from 'h3-zod'
+import { z } from 'zod'
 import { removeProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 import type { RemoveProfileImage } from '~~/server/domain/user/commandHandling'

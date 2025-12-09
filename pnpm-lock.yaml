@@ -47,9 +47,6 @@ importers:
       eslint:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
-      h3-zod:
-        specifier: ^0.5.3
-        version: 0.5.3(h3@1.15.4)(zod@4.1.13)
       jose:
         specifier: 6.1.2
         version: 6.1.2
@@ -4169,12 +4166,6 @@ packages:
   gzip-size@7.0.0:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  h3-zod@0.5.3:
-    resolution: {integrity: sha512-wqlRd/d5d9sNYxmNglnL63J4v5HiZZrcXdLIiU2cBsy5gTwxrSH1AqtNrVkuUleshgNOAQldbuO06phdUIxuKA==}
-    peerDependencies:
-      h3: ^1.6.0
-      zod: ^3.21.0
 
   h3@1.15.4:
     resolution: {integrity: sha512-z5cFQWDffyOe4vQ9xIqNfCZdV4p//vy6fBnr8Q1AWnVZ0teurKMG66rLj++TKwKPUP3u7iMUvrvKaEUiQw2QWQ==}
@@ -11609,11 +11600,6 @@ snapshots:
   gzip-size@7.0.0:
     dependencies:
       duplexer: 0.1.2
-
-  h3-zod@0.5.3(h3@1.15.4)(zod@4.1.13):
-    dependencies:
-      h3: 1.15.4
-      zod: 4.1.13
 
   h3@1.15.4:
     dependencies:
