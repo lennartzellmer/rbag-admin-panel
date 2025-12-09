@@ -87,6 +87,9 @@ You need to initialize the replica set:
 # Connect to MongoDB container
 docker exec -it mongodb mongosh
 
+# Use admin database
+use admin
+
 # Promote to root (with password from .env)
 db.auth("root", "root")
 
