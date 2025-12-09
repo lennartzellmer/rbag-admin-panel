@@ -1,6 +1,6 @@
 import type z from 'zod'
 import type { H3Event } from 'h3'
-import { useSafeValidatedBody, useSafeValidatedParams, useSafeValidatedQuery } from 'h3-zod'
+import { useSafeValidatedParams } from 'h3-zod'
 
 export async function useValidatedBody<T extends z.ZodTypeAny>(
   event: H3Event,
@@ -10,10 +10,7 @@ export async function useValidatedBody<T extends z.ZodTypeAny>(
     success: isValidBody,
     data: validatedBody,
     error: validationError
-  } = await useSafeValidatedBody(
-    event,
-    schema
-  )
+  } = await readValidatedBody(event, body => schema.safeParse(body))
 
   if (!isValidBody) {
     throw createError({
@@ -33,12 +30,12 @@ export async function useValidatedQuery<T extends z.ZodTypeAny>(
     success: isValidQuery,
     data: validatedQuery,
     error: validationErrorQuery
-  } = await useSafeValidatedQuery(event, schema)
+  } = await getValidatedQuery(event, body => schema.safeParse(body))
 
   if (!isValidQuery) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid event data',
+      statusMessage: 'Invalid query data',
       statusText: validationErrorQuery?.message
     })
   }

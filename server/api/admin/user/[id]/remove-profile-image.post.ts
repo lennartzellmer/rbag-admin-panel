@@ -17,10 +17,7 @@ export default defineEventHandler(async (event) => {
   // Parse and validate
   // =============================================================================
 
-  const removeProfileImageSchema = z.object({
-    userId: z.string()
-  })
-
+  const removeProfileImageSchema = z.object({ userId: z.string() })
   const body = await useValidatedBody(event, removeProfileImageSchema)
 
   // =============================================================================

@@ -1,7 +1,5 @@
-import type { User } from '~~/server/domain/user/validation'
-
 export const updateProfileImage = async (userId: string, file: File) => {
-  const { uploadUrl, key, contentType } = await useRequestFetch()('/api/admin/media/init-upload', {
+  const uploadData = await $fetch('/api/admin/media/init-upload', {
     method: 'POST',
     body: {
       filename: file.name,
@@ -10,38 +8,32 @@ export const updateProfileImage = async (userId: string, file: File) => {
     }
   })
 
-  await useRequestFetch()(uploadUrl, {
+  await $fetch(uploadData.uploadUrl, {
     method: 'PUT',
     body: file,
-    headers: { 'Content-Type': contentType }
+    headers: { 'Content-Type': uploadData.contentType }
   })
 
-  const response = await useRequestFetch()<User>('/api/admin/user/:id/set-profile-image'.replace(':id', userId), {
+  await $fetch(`/api/admin/user/${userId}/set-profile-image`, {
     method: 'POST',
     body: {
       userId,
-      uploadedFileKey: key
+      uploadedFileKey: uploadData.key
     }
   })
-
-  return response
 }
 
 export const removeProfileImage = async (userId: string) => {
-  const response = await useRequestFetch()('/api/admin/user/:id/remove-profile-image'.replace(':id', userId), {
+  return await $fetch(`/api/admin/user/${userId}/remove-profile-image`, {
     method: 'POST',
     body: {
       userId
     }
   })
-
-  return response
 }
 
-export const getUserById = async (id: string): Promise<User> => {
-  const response = await useRequestFetch()<User>('/api/admin/user/:id'.replace(':id', id), {
+export const getUserById = async (id: string) => {
+  return await $fetch(`/api/admin/user/${id}`, {
     method: 'GET'
   })
-
-  return response || null
 }

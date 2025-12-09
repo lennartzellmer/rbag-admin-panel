@@ -32,8 +32,8 @@ export const machine = setup({
     ),
     getUserProfileImageObjectName: fromPromise<string | undefined, { id: string }>(
       async ({ input }) => {
-        const user = await getUserById(input.id)
-        return user.media?.profileImage.objectName || undefined
+        const response = await getUserById(input.id)
+        return response?.media?.profileImage.objectName || undefined
       }
     )
   },

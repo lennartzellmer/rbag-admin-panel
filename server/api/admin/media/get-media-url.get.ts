@@ -1,5 +1,5 @@
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedQuery, z } from 'h3-zod'
+import z from 'zod'
 import { getMediaByKey, MediaProjectionName } from '~~/server/domain/media/eventHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 import { useMinio } from '~~/server/utils/useMinio'
@@ -13,19 +13,7 @@ export default defineEventHandler(async (event) => {
     key: z.string().min(1)
   })
 
-  const {
-    success: isValidQuery,
-    data: validatedQuery,
-    error: validationError
-  } = await useSafeValidatedQuery(event, getMediaQuerySchema)
-
-  if (!isValidQuery) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid query parameters',
-      statusText: validationError?.message
-    })
-  }
+  const validatedQuery = await useValidatedQuery(event, getMediaQuerySchema)
 
   const eventStore = event.context.eventStore
 
