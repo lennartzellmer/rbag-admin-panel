@@ -84,7 +84,7 @@ const onSubmit = (event: FormSubmitEvent<Schema>) => {
     :ui="{ body: 'flex gap-8 items-center' }"
   >
     <span
-      class="rounded-full size-32 relative bg-gradient-to-b from-primary-400 to-primary-600"
+      class="rounded-full size-32 relative bg-linear-to-b from-primary-400 to-primary-600"
     >
       <NuxtImg
         v-if="snapshot.matches('showImage')"

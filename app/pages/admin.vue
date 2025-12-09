@@ -15,7 +15,7 @@ const links = [[
   {
     label: 'Events',
     icon: 'i-lucide-ticket',
-    to: '/events',
+    to: '/admin/events',
     onSelect: () => {
       open.value = false
     }
@@ -23,7 +23,7 @@ const links = [[
   {
     label: 'Mitglieder',
     icon: 'i-lucide-users-round',
-    to: '/events',
+    to: '/admin/users',
     onSelect: () => {
       open.value = false
     }

@@ -21,6 +21,10 @@ export default defineNuxtConfig({
         scope: ['openid', 'profile', 'email']
       }
     },
+    zitadel: {
+      url: process.env.NUXT_ZITADEL_URL ?? '',
+      personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? ''
+    },
     mongodb: {
       eventStoreUri: process.env.NUXT_MONGODB_URL ?? '',
       user: process.env.NUXT_MONGODB_USER ?? '',

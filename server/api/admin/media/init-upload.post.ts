@@ -1,6 +1,5 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
-import { useSafeValidatedBody } from 'h3-zod'
 import { initUploadSchema } from '~~/server/domain/media/validation'
 import { useMinio } from '~~/server/utils/useMinio'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
@@ -16,22 +15,7 @@ export default defineEventHandler(async (event) => {
   // Parse and validate request body
   // =============================================================================
 
-  const {
-    success: isValidParams,
-    data: validatedData,
-    error: validationError
-  } = await useSafeValidatedBody(
-    event,
-    initUploadSchema
-  )
-
-  if (!isValidParams) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Invalid event data',
-      statusText: validationError?.message
-    })
-  }
+  const validatedData = await useValidatedBody(event, initUploadSchema)
 
   // =============================================================================
   // Validate file size and type
