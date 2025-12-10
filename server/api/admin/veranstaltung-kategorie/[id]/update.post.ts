@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   // =============================================================================
 
   const query = await useValidatedParams(event, z.object({
-    id: z.string().uuid()
+    id: z.string().min(1)
   }))
 
   const body = await useValidatedBody(event, veranstaltungsKategorieSchema.partial())

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { AdressSchema } from './addressSchema'
 
-export const AngebotsSchema = z.strictObject({
+export const angebotsSchema = z.strictObject({
   name: z.string().min(1),
   beschreibung: z.string().optional(),
   felder: z.array(z.object({
@@ -13,18 +13,18 @@ export const AngebotsSchema = z.strictObject({
   leitung: z.array(z.string()).optional()
 })
 
-export const ProgrammSchema = z.strictObject({
+export const programmSchema = z.strictObject({
   name: z.string().min(1),
   beschreibung: z.string().optional(),
   anzeigebild: z.string().url().optional(),
-  angebote: z.array(AngebotsSchema).optional()
+  angebote: z.array(angebotsSchema).optional()
 })
 
 export const ortsSchema = AdressSchema.partial().extend({
   name: z.string().min(1)
 })
 
-export const TeilnahmeBeitragsSchema = z.strictObject({
+export const teilnahmeBeitragsSchema = z.strictObject({
   teilnahmegruppen: z.array(z.strictObject({
     name: z.string().min(1),
     minAlter: z.number().int().min(0),
@@ -41,8 +41,8 @@ export const voreinstellungenSchema = z.strictObject({
   ort: ortsSchema.optional(),
   anzeigebild: z.string().url().optional(),
   leitung: z.array(z.string()).optional(),
-  programm: z.array(ProgrammSchema).optional(),
-  teilnahmebeitraege: TeilnahmeBeitragsSchema.optional()
+  programm: z.array(programmSchema).optional(),
+  teilnahmebeitraege: teilnahmeBeitragsSchema.optional()
 })
 
 export const veranstaltungsKategorieSchema = z.object({
