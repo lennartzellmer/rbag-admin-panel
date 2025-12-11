@@ -17,7 +17,6 @@ export const updateProfileImage = async (userId: string, file: File) => {
   await $fetch(`/api/admin/user/${userId}/set-profile-image`, {
     method: 'POST',
     body: {
-      userId,
       uploadedFileKey: uploadData.key
     }
   })

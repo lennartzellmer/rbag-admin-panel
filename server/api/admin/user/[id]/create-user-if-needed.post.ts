@@ -18,21 +18,19 @@ export default defineEventHandler(async (event) => {
   // =============================================================================
   // Parse and validate
   // =============================================================================
-  const setProfileImageSchema = z.object({
-    uploadedFileKey: z.string()
-  })
 
-  const params = await useValidatedParams(event, z.object({ id: z.string() }))
-  const body = await useValidatedBody(event, setProfileImageSchema)
+  const body = await useValidatedBody(event, z.object({
+    userId: z.string()
+  }))
 
   // =============================================================================
   // Remove old profile image if exists
   // =============================================================================
 
-  await event.$fetch('/api/admin/user/:id/remove-profile-image'.replace(':id', params.id), {
+  await event.$fetch('/api/admin/user/:id/remove-profile-image'.replace(':id', body.userId), {
     method: 'POST',
     body: {
-      userId: params.id
+      userId: body.userId
     }
   }).catch((error) => {
     console.error('Error removing old profile image:', error)
@@ -67,7 +65,7 @@ export default defineEventHandler(async (event) => {
   const command: AttachProfileImage = createCommand({
     type: 'AttachProfileImage',
     data: {
-      userId: params.id,
+      userId: body.userId,
       profileImageObjectName: destinationKey
     },
     metadata: {
@@ -85,7 +83,7 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getUserStreamSubjectById(params.id)
+        streamSubject: getUserStreamSubjectById(body.userId)
       }],
       commandHandlerFunction: attachProfileImage,
       command: command
