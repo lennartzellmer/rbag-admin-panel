@@ -39,7 +39,7 @@ export const voreinstellungenSchema = z.strictObject({
   zielgruppe: z.string().min(1),
   beschreibung: z.string().min(1),
   ort: ortsSchema.optional(),
-  anzeigebild: z.string().url().optional(),
+  anzeigebild: z.url().optional(),
   leitung: z.array(z.string()).optional(),
   programm: z.array(programmSchema).optional(),
   teilnahmebeitraege: teilnahmeBeitragsSchema.optional()
@@ -48,7 +48,14 @@ export const voreinstellungenSchema = z.strictObject({
 export const veranstaltungsKategorieSchema = z.object({
   id: z.uuid(),
   name: z.string().min(1),
+  beschreibung: z.string().min(1),
   voreinstellungen: voreinstellungenSchema.optional()
 })
 
+export const veranstaltungsKategorieUpdateSchema
+  = veranstaltungsKategorieSchema
+    .omit({ id: true })
+    .partial()
+
 export type VeranstaltungsKategorieSchema = z.infer<typeof veranstaltungsKategorieSchema>
+export type VeranstaltungsKategorieUpdateSchema = z.infer<typeof veranstaltungsKategorieUpdateSchema>

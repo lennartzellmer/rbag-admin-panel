@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
   const existingUser = await getUserById(eventStore, validUser.sub)
 
   if (existingUser) {
-    return sendRedirect(event, '/admin')
+    return sendNoContent(event, 204)
   }
 
   await handleCommand({
@@ -59,5 +59,5 @@ export default defineEventHandler(async (event) => {
     command: command
   })
 
-  return sendRedirect(event, '/admin')
+  return sendNoContent(event, 204)
 })

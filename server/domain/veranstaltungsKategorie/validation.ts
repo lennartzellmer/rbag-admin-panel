@@ -6,7 +6,8 @@ import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltun
 // =============================================================================
 
 export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.pick({
-  name: true
+  name: true,
+  beschreibung: true
 })
 
 export const aktualisiereVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.partial()
@@ -20,7 +21,8 @@ export type AktualisiereVeranstaltungKategorieSchema = z.infer<typeof aktualisie
 
 export const veranstaltungKategorieErstelltSchema = veranstaltungsKategorieSchema.pick({
   id: true,
-  name: true
+  name: true,
+  beschreibung: true
 })
 
 export const veranstaltungKategorieAktualisiertSchema = veranstaltungsKategorieSchema.partial()

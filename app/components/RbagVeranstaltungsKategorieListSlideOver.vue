@@ -3,6 +3,11 @@ import { useOffsetPagination } from '@vueuse/core'
 import { getVeranstaltungsKategorienPaginated } from '~/service/veranstaltung-kategorie'
 
 const kategorien = ref<Awaited<ReturnType<typeof getVeranstaltungsKategorienPaginated>>['data']>([])
+const selectedCategoryId = ref<string | null>(null)
+
+const selectedCategory = computed(() => {
+  return kategorien.value.find(kategorie => kategorie.id === selectedCategoryId.value) || null
+})
 
 const fetchData = async ({ currentPage, currentPageSize }: { currentPage: number, currentPageSize: number }) => {
   const response = await getVeranstaltungsKategorienPaginated({
@@ -42,20 +47,31 @@ fetchData({ currentPage: currentPage.value, currentPageSize: currentPageSize.val
       <div
         class="gap-3 grid grid-cols-1"
       >
-        <RbagKategorieCard
+        <template
           v-for="kategorie in kategorien"
-          :key="kategorie.name"
-          title="kategorien.name"
-          description="Beschreibung der Kategorie"
+          :key="kategorie.id"
+        >
+          <RbagKategorieCard
+            :title="kategorie.name"
+            :description="kategorie.beschreibung"
+            @edit="selectedCategoryId = kategorie.id"
+          />
+        </template>
+      </div>
+      <div v-if="selectedCategory">
+        <RbagKategorieForm :category="selectedCategory" />
+      </div>
+      <div
+        v-if="pageCount > 1"
+        class="mt-8"
+      >
+        <UPagination
+          :items-per-page="pageCount"
+          :default-page="1"
+          :sibling-count="1"
+          @update:page="currentPage = $event"
         />
       </div>
-      <UPagination
-        :items-per-page="pageCount"
-        :default-page="1"
-        :sibling-count="1"
-        @update:page="currentPage = $event"
-      />
-      <pre>data:  {{ kategorien }}</pre>
     </template>
 
     <template #footer>

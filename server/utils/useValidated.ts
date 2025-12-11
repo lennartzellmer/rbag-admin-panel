@@ -9,12 +9,14 @@ export async function useValidatedBody<T extends z.ZodTypeAny>(
     success: isValidBody,
     data: validatedBody,
     error: validationError
-  } = await readValidatedBody(event, body => schema.safeParse(body))
+  } = await readValidatedBody(event, data => schema.safeParse(data))
+
+  console.log('Validated Body:', validationError)
 
   if (!isValidBody) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid event data',
+      statusMessage: 'Invalid request body',
       statusText: validationError?.message
     })
   }
@@ -29,12 +31,12 @@ export async function useValidatedQuery<T extends z.ZodTypeAny>(
     success: isValidQuery,
     data: validatedQuery,
     error: validationErrorQuery
-  } = await getValidatedQuery(event, body => schema.safeParse(body))
+  } = await getValidatedQuery(event, data => schema.safeParse(data))
 
   if (!isValidQuery) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid query data',
+      statusMessage: 'Invalid request query',
       statusText: validationErrorQuery?.message
     })
   }
@@ -50,12 +52,12 @@ export async function useValidatedParams<T extends z.ZodTypeAny>(
     success: isValidParams,
     data: validatedParams,
     error: validationErrorParams
-  } = await getValidatedRouterParams(event, body => schema.safeParse(body))
+  } = await getValidatedRouterParams(event, data => schema.safeParse(data))
 
   if (!isValidParams) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid event data',
+      statusMessage: 'Invalid request params',
       statusText: validationErrorParams?.message
     })
   }

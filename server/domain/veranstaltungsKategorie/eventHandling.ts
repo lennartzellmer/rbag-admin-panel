@@ -49,8 +49,7 @@ export const evolve = (
   switch (type) {
     case 'VeranstaltungsKategorie.Erstellt': {
       return {
-        ...data,
-        id: 'asdas'
+        ...data
       }
     }
     case 'VeranstaltungsKategorie.Aktualisiert': {

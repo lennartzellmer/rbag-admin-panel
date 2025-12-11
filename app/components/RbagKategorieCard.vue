@@ -10,7 +10,7 @@ defineEmits(['edit'])
 
 <template>
   <div
-    class="bg-coffee-100 p-6 rounded-lg flex justify-between"
+    class="bg-coffee-100 p-6 rounded-lg flex justify-between gap-6"
   >
     <div>
       <h3 class="font-semibold text-base text-coffee-600">
