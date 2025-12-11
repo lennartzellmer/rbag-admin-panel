@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { defineEventHandler, createError } from 'h3'
 import { createCommand, handleCommand } from 'vorfall'
-import { createVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { erstelleVeranstaltungsKategorie, type ErstelleVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
 import { erstelleVeranstaltungKategorieSchema } from '~~/server/domain/veranstaltungsKategorie/validation'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
         initialState,
         streamSubject: getVeranstaltungsKategorieStreamSubjectById(randomUUID())
       }],
-      commandHandlerFunction: createVeranstaltungsKategorie,
+      commandHandlerFunction: erstelleVeranstaltungsKategorie,
       command: command
     })
 

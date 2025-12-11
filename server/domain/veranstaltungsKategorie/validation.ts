@@ -1,5 +1,9 @@
 import type { z } from 'zod'
-import { veranstaltungsKategorieSchema, voreinstellungenSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
+import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
+
+// =============================================================================
+// Schemas commands
+// =============================================================================
 
 export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.pick({
   name: true
@@ -7,8 +11,19 @@ export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchem
 
 export const aktualisiereVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.partial()
 
-export const aktualisiereVoreinstellungenSchema = voreinstellungenSchema
-
 export type ErstelleVeranstaltungKategorieSchema = z.infer<typeof erstelleVeranstaltungKategorieSchema>
 export type AktualisiereVeranstaltungKategorieSchema = z.infer<typeof aktualisiereVeranstaltungKategorieSchema>
-export type AktualisiereVoreinstellungenSchema = z.infer<typeof aktualisiereVoreinstellungenSchema>
+
+// =============================================================================
+// Schemas events
+// =============================================================================
+
+export const veranstaltungKategorieErstelltSchema = veranstaltungsKategorieSchema.pick({
+  id: true,
+  name: true
+})
+
+export const veranstaltungKategorieAktualisiertSchema = veranstaltungsKategorieSchema.partial()
+
+export type VeranstaltungKategorieErstelltSchema = z.infer<typeof veranstaltungKategorieErstelltSchema>
+export type VeranstaltungKategorieAktualisiertSchema = z.infer<typeof veranstaltungKategorieAktualisiertSchema>

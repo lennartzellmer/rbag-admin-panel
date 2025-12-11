@@ -26,3 +26,7 @@
   --color-violet-900: #30031c;
   --color-violet-950: #230213;
 }
+
+:root {
+  --ui-bg: var(--color-coffee-50);
+}

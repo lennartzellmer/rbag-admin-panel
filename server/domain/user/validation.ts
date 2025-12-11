@@ -13,13 +13,13 @@ export const federatedUserSchema = z.object({
 })
 
 export const userSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   media: z.object({
     profileImage: mediaSchema
   }).optional()
 })
 
-export const CreateUserSchema = userSchema.omit({ id: true })
+export const CreateUserSchema = userSchema.pick({ id: true })
 
 export const attachProfileImageSchema = z.object({
   profileImageObjectName: z.string()
@@ -34,6 +34,6 @@ export const removeProfileImageSchema = z.object({
 // =============================================================================
 
 export type User = z.infer<typeof userSchema>
-export type CreateUserSchema = z.infer<typeof userSchema>
+export type CreateUserSchema = z.infer<typeof CreateUserSchema>
 export type AttachProfileImageSchema = z.infer<typeof attachProfileImageSchema>
 export type RemoveProfileImageSchema = z.infer<typeof removeProfileImageSchema>

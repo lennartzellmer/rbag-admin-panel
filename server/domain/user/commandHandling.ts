@@ -46,18 +46,16 @@ export type RemoveProfileImage = Command<
 // Command Handlers
 // =============================================================================
 
-export const createUser = async (
+export const createUser = (
   { command }: { command: CreateUser }
-): Promise<UserCreated> => {
+): UserCreated => {
   const { data, metadata } = command
-
-  const userId = data.id ?? randomUUID()
 
   return createDomainEvent({
     type: 'UserCreated',
-    subject: getUserStreamSubjectById(userId),
+    subject: getUserStreamSubjectById(data.id),
     data: {
-      id: userId
+      id: data.id
     },
     metadata: metadata
   })

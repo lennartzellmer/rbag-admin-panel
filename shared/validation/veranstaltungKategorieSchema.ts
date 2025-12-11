@@ -46,6 +46,7 @@ export const voreinstellungenSchema = z.strictObject({
 })
 
 export const veranstaltungsKategorieSchema = z.object({
+  id: z.uuid(),
   name: z.string().min(1),
   voreinstellungen: voreinstellungenSchema.optional()
 })
