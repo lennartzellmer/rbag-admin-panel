@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
-import { LazyRbagVeranstaltungsKategorieListSlideOver } from '#components'
+import { LazyRbagVeranstaltungsKategorieSlideOverList } from '#components'
 
 const overlay = useOverlay()
 
-const slideover = overlay.create(LazyRbagVeranstaltungsKategorieListSlideOver)
+const slideover = overlay.create(LazyRbagVeranstaltungsKategorieSlideOverList)
 
 const items = ref<DropdownMenuItem[]>([
   {

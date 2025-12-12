@@ -29,4 +29,5 @@
 
 :root {
   --ui-bg: var(--color-coffee-50);
+  --ui-text: var(--color-coffee-600);
 }

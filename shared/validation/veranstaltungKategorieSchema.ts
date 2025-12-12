@@ -57,5 +57,12 @@ export const veranstaltungsKategorieUpdateSchema
     .omit({ id: true })
     .partial()
 
+export const veranstaltungsKategorieCreateSchema
+  = veranstaltungsKategorieSchema.pick({
+    name: true,
+    beschreibung: true
+  })
+
 export type VeranstaltungsKategorieSchema = z.infer<typeof veranstaltungsKategorieSchema>
+export type VeranstaltungsKategorieCreateSchema = z.infer<typeof veranstaltungsKategorieCreateSchema>
 export type VeranstaltungsKategorieUpdateSchema = z.infer<typeof veranstaltungsKategorieUpdateSchema>

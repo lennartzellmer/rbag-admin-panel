@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   modules: ['nuxt-auth-utils', '@nuxt/eslint', '@nuxt/test-utils/module', '@nuxt/ui', '@nuxt/image'],
   ssr: false,
-  devtools: { enabled: false },
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true
+    }
+  },
   css: ['~/assets/css/main.css'],
   ui: {
     colorMode: false
