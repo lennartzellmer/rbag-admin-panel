@@ -50,7 +50,7 @@ const items = ref<DropdownMenuItem[]>([
 
     <template #body>
       <div class="flex flex-col gap-4 p-8 rounded-2xl">
-        dhjkashska
+        Demo
       </div>
     </template>
   </UDashboardPanel>

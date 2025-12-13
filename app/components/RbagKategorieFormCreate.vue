@@ -40,9 +40,5 @@ const emit = defineEmits<{
         :ui="{ root: 'w-full' }"
       />
     </UFormField>
-
-    <UButton type="submit">
-      Speichern
-    </UButton>
   </UForm>
 </template>

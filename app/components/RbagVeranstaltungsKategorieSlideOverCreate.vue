@@ -1,21 +1,29 @@
 <script setup lang="ts">
-import { useSelector } from '@xstate/vue'
 import type { ActorRefFromLogic } from 'xstate'
 import type { categoryCreateMachine } from '~/machines/categoryMachine/categoryCreate.machine'
+import { veranstaltungsKategorieCreateSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
+import type { z } from 'zod'
+
+const form = useTemplateRef('form')
+
+type Schema = z.output<typeof veranstaltungsKategorieCreateSchema>
+
+const formState = reactive<Schema>({
+  name: '',
+  beschreibung: ''
+})
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const props = defineProps<{
+defineProps<{
   categoryCreateActorRef?: ActorRefFromLogic<typeof categoryCreateMachine>
   open: boolean
 }>()
 
-const state = useSelector(props.categoryCreateActorRef, state => state)
-
 const onClose = (event: boolean) => {
-  if (!event) {
+  if (event === false) {
     emit('close')
   }
 }
@@ -28,9 +36,33 @@ const onClose = (event: boolean) => {
     @update:open="onClose"
   >
     <template #body>
-      <RbagKategorieFormCreate
-        @submit="categoryCreateActorRef?.send({ type: 'SAVE', category: $event })"
-      />
+      <UForm
+        ref="form"
+        :schema="veranstaltungsKategorieCreateSchema"
+        :state="formState"
+        class="space-y-4 mt-8"
+        @submit="categoryCreateActorRef?.send({ type: 'SAVE', category: formState })"
+      >
+        <UFormField
+          label="Name"
+          name="name"
+        >
+          <UInput
+            v-model="formState.name"
+            :ui="{ root: 'w-full' }"
+          />
+        </UFormField>
+
+        <UFormField
+          label="Beschreibung"
+          name="beschreibung"
+        >
+          <UTextarea
+            v-model="formState.beschreibung"
+            :ui="{ root: 'w-full' }"
+          />
+        </UFormField>
+      </UForm>
     </template>
 
     <template #footer>
@@ -38,7 +70,8 @@ const onClose = (event: boolean) => {
         <UButton
           color="primary"
           icon="i-lucide-plus"
-          label="Hinzufügen"
+          label="Kategorie hinzufügen"
+          @click="form?.submit()"
         />
       </div>
     </template>
