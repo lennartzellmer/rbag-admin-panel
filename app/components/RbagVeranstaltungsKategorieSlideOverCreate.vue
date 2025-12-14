@@ -34,7 +34,6 @@ const handleSubmit = (state: VeranstaltungsKategorieCreateSchema) => {
     <template #body>
       <RbagVeranstaltungsKategorieForm
         ref="form"
-        class="mt-8"
         @submit="handleSubmit"
       />
     </template>

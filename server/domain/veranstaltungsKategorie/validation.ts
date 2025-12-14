@@ -5,9 +5,8 @@ import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltun
 // Schemas commands
 // =============================================================================
 
-export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.pick({
-  name: true,
-  beschreibung: true
+export const erstelleVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.omit({
+  id: true
 })
 
 export const aktualisiereVeranstaltungKategorieSchema = veranstaltungsKategorieSchema.partial()
@@ -19,11 +18,7 @@ export type AktualisiereVeranstaltungKategorieSchema = z.infer<typeof aktualisie
 // Schemas events
 // =============================================================================
 
-export const veranstaltungKategorieErstelltSchema = veranstaltungsKategorieSchema.pick({
-  id: true,
-  name: true,
-  beschreibung: true
-})
+export const veranstaltungKategorieErstelltSchema = veranstaltungsKategorieSchema
 
 export const veranstaltungKategorieAktualisiertSchema = veranstaltungsKategorieSchema.partial()
 
