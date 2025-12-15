@@ -17,13 +17,31 @@ export default defineEventHandler(async (event) => {
   try {
     const eventStore = event.context.eventStore
 
-    const [Users, total] = await Promise.all([
+    const [users, total] = await Promise.all([
       getUsersPaginated(eventStore, offset, limit),
       getUserCount(eventStore)
     ])
 
+    const userIds = users.map(user => user.id)
+
+    const idpClient = event.context.idpClient
+    const userDetails = await idpClient.listUsers(
+      {
+        queries: [{
+          inUserIdsQuery: { userIds: userIds }
+        }]
+      })
+
+    const mergedUsers = users.map((user) => {
+      const details = userDetails.result.find(userDetail => userDetail.id === user.id)
+      return {
+        ...details,
+        profileImage: user.media?.profileImage
+      }
+    })
+
     return {
-      data: Users,
+      data: mergedUsers,
       meta: {
         total,
         offset,
@@ -31,6 +49,7 @@ export default defineEventHandler(async (event) => {
       }
     }
   }
+
   catch (error) {
     console.error('Failed to get events', error)
     throw createError({

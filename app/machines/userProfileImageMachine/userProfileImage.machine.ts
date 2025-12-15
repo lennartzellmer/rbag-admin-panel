@@ -2,7 +2,7 @@ import { assertEvent, fromPromise, setup, assign } from 'xstate'
 import type { MachineContext, MachineEvents, MachineInput } from './userProfileImage.types'
 import { getUserById, removeProfileImage, updateProfileImage } from '~/service/user'
 
-export const machine = setup({
+export const userProfileImageMachine = setup({
   types: {
     context: {} as MachineContext,
     events: {} as MachineEvents,

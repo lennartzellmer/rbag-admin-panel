@@ -75,7 +75,6 @@ const open = ref(false)
         <RbagUserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-
     <NuxtPage />
   </UDashboardGroup>
 </template>

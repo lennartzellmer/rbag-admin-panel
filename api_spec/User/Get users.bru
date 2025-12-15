@@ -1,0 +1,21 @@
+meta {
+  name: Get users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/api/user/profile-upload-url?contentType=image/jpeg&fileExtension=jpeg
+  body: none
+  auth: inherit
+}
+
+params:query {
+  contentType: image/jpeg
+  fileExtension: jpeg
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

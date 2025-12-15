@@ -16,6 +16,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.939.0",
     "@aws-sdk/s3-request-presigner": "3.939.0",
+    "@bufbuild/protobuf": "2.10.2",
     "@iconify-json/lucide": "1.2.75",
     "@internationalized/date": "^3.10.0",
     "@nuxt/eslint": "1.10.0",
@@ -24,7 +25,7 @@
     "@types/geojson": "7946.0.16",
     "@vee-validate/zod": "4.15.1",
     "@xstate/vue": "5.0.0",
-    "@zitadel/zitadel-node": "4.1.0-beta.5",
+    "@zitadel/node": "3.0.28",
     "cloudevents": "^10.0.0",
     "eslint": "9.39.1",
     "jose": "6.1.2",
