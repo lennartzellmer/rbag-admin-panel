@@ -22,7 +22,7 @@ type UserTableRow = {
   }
 }
 
-const UAvatar = resolveComponent('UAvatar')
+const UUser = resolveComponent('UUser')
 const UBadge = resolveComponent('UBadge')
 
 const { snapshot } = useMachine(createFetchPaginatedMachine<UserTableRow>({
@@ -40,20 +40,20 @@ const isLoading = computed(() =>
 const columns: TableColumn<UserTableRow>[] = [
   {
     accessorKey: 'givenName',
-    header: 'Mitglied',
+    header: 'Name',
     cell: ({ row }) => {
       const fullName = `${row.original.givenName} ${row.original.familyName}`
 
       return h('div', { class: 'flex items-center gap-3' }, [
-        h(UAvatar, {
-          src: row.original.profileImage?.objectName,
-          alt: fullName,
-          size: 'lg'
-        }),
-        h('div', { class: 'flex flex-col' }, [
-          h('p', { class: 'font-medium text-gray-900' }, fullName),
-          h('p', { class: 'text-sm text-gray-500' }, row.original.email.email)
-        ])
+        h(UUser, {
+          name: fullName,
+          size: 'lg',
+          description: row.original.email.email,
+          avatar: {
+            src: row.original.profileImage?.objectName,
+            alt: fullName
+          }
+        })
       ])
     }
   },
@@ -64,32 +64,49 @@ const columns: TableColumn<UserTableRow>[] = [
       return h(UBadge, {
         label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
         color: row.original.email.isVerified ? 'primary' : 'neutral',
-        variant: 'soft',
+        variant: 'subtle',
         size: 'md'
       })
     }
   },
   {
     accessorKey: 'userId',
-    header: 'User ID'
+    header: 'User ID',
+    cell: ({ row }) => {
+      return h(UBadge, {
+        label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
+        color: row.original.email.isVerified ? 'primary' : 'neutral',
+        variant: 'subtle',
+        size: 'md'
+      })
+    }
   }
 ]
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold text-gray-900">
-        Mitglieder
-      </h1>
-    </div>
+  <UDashboardPanel id="home">
+    <template #header>
+      <UDashboardNavbar
+        title="Mitglieder"
+        :ui="{ right: 'gap-3' }"
+      >
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+      </UDashboardNavbar>
+    </template>
 
-    <UTable
-      :data="tableData"
-      :columns="columns"
-      :loading="isLoading"
-      empty="Keine Mitglieder gefunden"
-      class="flex-1"
-    />
-  </div>
+    <template #body>
+      <div class="flex flex-col gap-6">
+        <UTable
+          :data="tableData"
+          :columns="columns"
+          :loading="isLoading"
+          empty="Keine Mitglieder gefunden"
+          class="flex-1"
+        />
+      </div>
+    </template>
+  </UDashboardPanel>
 </template>
