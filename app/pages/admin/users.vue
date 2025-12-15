@@ -1,41 +1,95 @@
 <script setup lang="ts">
+import { computed, h, resolveComponent } from 'vue'
+import type { TableColumn } from '@nuxt/ui'
 import { useMachine } from '@xstate/vue'
 import { createFetchPaginatedMachine } from '~/machines/fetchPaginated/fetchPaginated.machine'
 import { getUsersPaginated } from '~/service/user'
 
-const { snapshot } = useMachine(createFetchPaginatedMachine({
+// =============================================================================
+// Types
+// =============================================================================
+type UserTableRow = {
+  userId: string
+  givenName: string
+  familyName: string
+  email: {
+    email: string
+    isVerified: boolean
+  }
+  profileImage?: {
+    objectName: string
+    type: 'image' | 'video' | 'audio'
+  }
+}
+
+const UAvatar = resolveComponent('UAvatar')
+const UBadge = resolveComponent('UBadge')
+
+const { snapshot } = useMachine(createFetchPaginatedMachine<UserTableRow>({
   fetchDataFunction: getUsersPaginated
 }))
+
+const tableData = computed<UserTableRow[]>(() => snapshot.value.context.data ?? [])
+const isLoading = computed(() =>
+  snapshot.value.matches('fetching') || snapshot.value.matches('waitForInitialPagination')
+)
+
+// =============================================================================
+// Table columns
+// =============================================================================
+const columns: TableColumn<UserTableRow>[] = [
+  {
+    accessorKey: 'givenName',
+    header: 'Mitglied',
+    cell: ({ row }) => {
+      const fullName = `${row.original.givenName} ${row.original.familyName}`
+
+      return h('div', { class: 'flex items-center gap-3' }, [
+        h(UAvatar, {
+          src: row.original.profileImage?.objectName,
+          alt: fullName,
+          size: 'lg'
+        }),
+        h('div', { class: 'flex flex-col' }, [
+          h('p', { class: 'font-medium text-gray-900' }, fullName),
+          h('p', { class: 'text-sm text-gray-500' }, row.original.email.email)
+        ])
+      ])
+    }
+  },
+  {
+    id: 'verification',
+    header: 'Verifizierung',
+    cell: ({ row }) => {
+      return h(UBadge, {
+        label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
+        color: row.original.email.isVerified ? 'primary' : 'neutral',
+        variant: 'soft',
+        size: 'md'
+      })
+    }
+  },
+  {
+    accessorKey: 'userId',
+    header: 'User ID'
+  }
+]
 </script>
 
 <template>
-  <div>
-    <p>
-      Mitglieder Page
-    </p>
-    <template v-if="snapshot.context.data">
-      <div
-        v-for="user in snapshot.context.data"
-        :key="user.userId"
-      >
-        <p>{{ user.givenName }} {{ user.familyName }}</p>
-        <p>{{ user.email.email }}</p>
-        <UAvatar
-          :src="user.profileImage?.objectName"
-          size="3xl"
-          :alt="`${user.givenName} ${user.familyName}`"
-          class="rounded-none squircle"
-        />
-      </div>
-    </template>
+  <div class="flex flex-col gap-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-semibold text-gray-900">
+        Mitglieder
+      </h1>
+    </div>
+
+    <UTable
+      :data="tableData"
+      :columns="columns"
+      :loading="isLoading"
+      empty="Keine Mitglieder gefunden"
+      class="flex-1"
+    />
   </div>
 </template>
-
-<style scoped>
-.squircle {
-  mask-image: url("data:image/svg+xml,%3csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M100 0C20 0 0 20 0 100s20 100 100 100 100-20 100-100S180 0 100 0Z'/%3e%3c/svg%3e");
-  mask-size: contain;
-  mask-position: center;
-  mask-repeat: no-repeat;
-}
-</style>
