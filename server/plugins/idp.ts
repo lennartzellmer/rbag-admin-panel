@@ -1,22 +1,23 @@
-import { createAccessTokenInterceptor, createManagementClient } from '@zitadel/node/dist/api/index.js'
+import Zitadel from '@zitadel/zitadel-node/dist/index.js'
 
 const runtimeConfig = useRuntimeConfig()
 
 const apiEndpoint = runtimeConfig.zitadel.url
 const personalAccessToken = runtimeConfig.zitadel.personalAccessToken
 
-console.log(apiEndpoint, personalAccessToken)
-
 if (!apiEndpoint || !personalAccessToken) {
   throw new Error('Zitadel URL and Personal Access Token must be provided through env variables')
 }
 
-const client = createManagementClient(apiEndpoint, createAccessTokenInterceptor(personalAccessToken))
+const zitadelClient = Zitadel.withAccessToken(
+  apiEndpoint,
+  personalAccessToken
+)
 
 // Extend the H3EventContext interface to include the idpClient type
 declare module 'h3' {
   interface H3EventContext {
-    idpClient: typeof client
+    idpClient: Zitadel
   }
 }
 
@@ -25,6 +26,6 @@ declare module 'h3' {
 // like this: const idpClient = event.context.idpClient
 export default defineNitroPlugin(async (nitroApp) => {
   nitroApp.hooks.hook('request', (event) => {
-    event.context.idpClient = client
+    event.context.idpClient = zitadelClient
   })
 })

@@ -1,4 +1,6 @@
-export const updateProfileImage = async (userId: string, file: File) => {
+import type { PaginatedRequestParams } from '~/types/base.types'
+
+export async function updateProfileImage(userId: string, file: File) {
   const uploadData = await $fetch('/api/admin/media/init-upload', {
     method: 'POST',
     body: {
@@ -22,7 +24,7 @@ export const updateProfileImage = async (userId: string, file: File) => {
   })
 }
 
-export const removeProfileImage = async (userId: string) => {
+export async function removeProfileImage(userId: string) {
   return await $fetch(`/api/admin/user/${userId}/remove-profile-image`, {
     method: 'POST',
     body: {
@@ -31,8 +33,18 @@ export const removeProfileImage = async (userId: string) => {
   })
 }
 
-export const getUserById = async (id: string) => {
+export async function getUserById(id: string) {
   return await $fetch(`/api/admin/user/${id}`, {
     method: 'GET'
+  })
+}
+
+export async function getUsersPaginated({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
+  return await $fetch('/api/admin/user', {
+    method: 'GET',
+    params: {
+      offset: paginationParams.offset,
+      limit: paginationParams.limit
+    }
   })
 }

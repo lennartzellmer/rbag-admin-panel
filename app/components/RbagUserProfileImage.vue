@@ -92,7 +92,7 @@ const onSubmit = (event: FormSubmitEvent<Schema>) => {
         width="400"
         height="400"
         class="rounded-full absolute inset-0"
-        :src="snapshot.context.objectName!"
+        :src="snapshot.context.objectName"
       />
     </span>
     <UForm
