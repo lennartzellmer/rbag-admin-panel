@@ -28,7 +28,8 @@ export default defineNuxtConfig({
     },
     zitadel: {
       url: process.env.NUXT_ZITADEL_URL ?? '',
-      personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? ''
+      personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? '',
+      projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? ''
     },
     mongodb: {
       eventStoreUri: process.env.NUXT_MONGODB_URL ?? '',

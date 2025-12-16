@@ -1,0 +1,37 @@
+diff --git a/dist/models/beta-authorization-service-authorizations-search-filter.d.ts b/dist/models/beta-authorization-service-authorizations-search-filter.d.ts
+index 9de8df2db87aa6ab63cb574f7a01164818726601..b143c9e3b545af3ab08a16751e8f138dd10b1747 100644
+--- a/dist/models/beta-authorization-service-authorizations-search-filter.d.ts
++++ b/dist/models/beta-authorization-service-authorizations-search-filter.d.ts
+@@ -22,6 +22,12 @@ import type { BetaAuthorizationServiceRoleKeyQuery } from './beta-authorization-
+  * @interface BetaAuthorizationServiceAuthorizationsSearchFilter
+  */
+ export interface BetaAuthorizationServiceAuthorizationsSearchFilter {
++    /** 
++     *
++     * @type {BetaAuthorizationServiceInIDsFilter}
++     * @memberof BetaAuthorizationServiceAuthorizationsSearchFilter
++     */
++    inUserIds?: BetaAuthorizationServiceInIDsFilter;
+     /**
+      *
+      * @type {BetaAuthorizationServiceInIDsFilter}
+diff --git a/dist/models/beta-authorization-service-authorizations-search-filter.js b/dist/models/beta-authorization-service-authorizations-search-filter.js
+index eb5dc990a7116b9d07f80ef73840a843d800eefa..7f5e3bdd3c9d0e00bf98ec2a765b3875617d5d8d 100644
+--- a/dist/models/beta-authorization-service-authorizations-search-filter.js
++++ b/dist/models/beta-authorization-service-authorizations-search-filter.js
+@@ -33,6 +33,7 @@ export function BetaAuthorizationServiceAuthorizationsSearchFilterFromJSONTyped(
+     }
+     return {
+         'authorizationIds': json['authorizationIds'] == null ? undefined : BetaAuthorizationServiceInIDsFilterFromJSON(json['authorizationIds']),
++        'inUserIds': json['inUserIds'] == null ? undefined : BetaAuthorizationServiceInIDsFilterFromJSON(json['inUserIds']),
+         'organizationId': json['organizationId'] == null ? undefined : BetaAuthorizationServiceIDFilterFromJSON(json['organizationId']),
+         'projectGrantId': json['projectGrantId'] == null ? undefined : BetaAuthorizationServiceIDFilterFromJSON(json['projectGrantId']),
+         'projectId': json['projectId'] == null ? undefined : BetaAuthorizationServiceIDFilterFromJSON(json['projectId']),
+@@ -54,6 +55,7 @@ export function BetaAuthorizationServiceAuthorizationsSearchFilterToJSONTyped(va
+     }
+     return {
+         'authorizationIds': BetaAuthorizationServiceInIDsFilterToJSON(value['authorizationIds']),
++        'inUserIds': BetaAuthorizationServiceInIDsFilterToJSON(value['inUserIds']),
+         'organizationId': BetaAuthorizationServiceIDFilterToJSON(value['organizationId']),
+         'projectGrantId': BetaAuthorizationServiceIDFilterToJSON(value['projectGrantId']),
+         'projectId': BetaAuthorizationServiceIDFilterToJSON(value['projectId']),

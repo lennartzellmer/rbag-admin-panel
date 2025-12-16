@@ -9,7 +9,7 @@ import { getUsersPaginated } from '~/service/user'
 // Types
 // =============================================================================
 type UserTableRow = {
-  userId: string
+  id: string
   givenName: string
   familyName: string
   email: {
@@ -98,6 +98,7 @@ const columns: TableColumn<UserTableRow>[] = [
     </template>
 
     <template #body>
+      <pre>{{ snapshot.context.data }}</pre>
       <div class="flex flex-col gap-6">
         <UTable
           :data="tableData"
