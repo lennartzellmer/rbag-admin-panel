@@ -5,7 +5,9 @@ This directory contains the Docker Compose configuration for the development env
 ### Files
 
 - **`docker-compose.yml`** - Docker Compose configuration for all development services
-- **`Dockerfile`** - Custom MongoDB Docker image with replica set configuration
+- **`mongo/Dockerfile`** - Custom MongoDB Docker image with replica set configuration
+- **`zitadel/pat-admin.pat`** - Zitadel admin personal access token output file
+- **`zitadel/pat-login-client.pat`** - Zitadel login client personal access token output file
 
 ### Services
 

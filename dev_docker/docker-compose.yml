@@ -1,7 +1,7 @@
 services:
   mongodb:
     build:
-      context: .
+      context: ./mongo
       dockerfile: Dockerfile
     container_name: mongodb
     hostname: mongodb
@@ -89,7 +89,7 @@ services:
       start_period: 10s
     user: "0"
     volumes:
-      - .:/current-dir:delegated
+      - ./zitadel:/current-dir:delegated
     ports:
       - 8080:8080
       - 3000:3000
@@ -110,7 +110,7 @@ services:
     network_mode: service:zitadel
     user: "0"
     volumes:
-      - .:/current-dir:ro
+      - ./zitadel:/current-dir:ro
     depends_on:
       zitadel:
         condition: service_healthy
