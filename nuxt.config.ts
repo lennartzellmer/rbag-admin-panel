@@ -57,6 +57,16 @@ export default defineNuxtConfig({
   nitro: {
     ignore: ['**/*.spec.ts', '**/__test__/**']
   },
+  vite: {
+    server: {
+      allowedHosts: ['mechanics-involved-fill-interactions.trycloudflare.com'],
+      hmr: {
+        protocol: 'wss',
+        host: 'mechanics-involved-fill-interactions.trycloudflare.com',
+        clientPort: 443
+      }
+    }
+  },
   eslint: {
     config: {
       stylistic: {

@@ -58,8 +58,8 @@ const columns: TableColumn<UserTableRow>[] = [
     }
   },
   {
-    id: 'verification',
-    header: 'Verifizierung',
+    id: 'rechte',
+    header: 'Rechte',
     cell: ({ row }) => {
       return h(UBadge, {
         label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
@@ -98,7 +98,6 @@ const columns: TableColumn<UserTableRow>[] = [
     </template>
 
     <template #body>
-      <pre>{{ snapshot.context.data }}</pre>
       <div class="flex flex-col gap-6">
         <UTable
           :data="tableData"

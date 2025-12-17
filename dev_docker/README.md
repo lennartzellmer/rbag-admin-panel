@@ -113,6 +113,12 @@ Log in to zitadel via http://localhost:8080/ui/console?login_hint=zitadel-admin@
 - **API**: http://localhost:9000
 - **Credentials**: see .env file
 
+### Zitadel access
+
+- **Console**: http://localhost:8080/ui/console/
+- **Username**: admin@rbag.localhost
+- **Password**: Password1!
+
 ## Development Workflow
 
 1. Copy `.env.example` to `.env` in the project root
