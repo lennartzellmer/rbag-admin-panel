@@ -128,9 +128,9 @@ resource "zitadel_smtp_config" "default" {
   sender_address   = "sender@example.com"
   sender_name      = "no-reply"
   tls              = false
-  host             = "127.0.0.1:1025"
+  host             = "mailhog:1025"
   reply_to_address = "replyto@example.com"
-  user             = ""
-  password         = ""
+  user             = " "
+  password         = " "
   set_active       = true
 }
