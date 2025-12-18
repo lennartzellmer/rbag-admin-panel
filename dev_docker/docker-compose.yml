@@ -1,18 +1,14 @@
 services:
   mongodb:
-    build:
-      context: ./mongo
-      dockerfile: Dockerfile
-    container_name: mongodb
-    hostname: mongodb
-    restart: always
+    image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${NUXT_MONGODB_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${NUXT_MONGODB_PASSWORD}
-    command: mongod --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all --port 27017
+      NODE_OPTIONS: --max_old_space_size=8196
+      MONGO_INITDB_DATABASE: db_name
+    command: mongod --replSet rs0
     ports:
       - "27017:27017"
     volumes:
+      - ./init-replica.js:/docker-entrypoint-initdb.d/init-replica.js:ro
       - mongo-data:/data/db
       - mongo-config:/data/configdb
 

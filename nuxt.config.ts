@@ -32,9 +32,7 @@ export default defineNuxtConfig({
       projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? ''
     },
     mongodb: {
-      eventStoreUri: process.env.NUXT_MONGODB_URL ?? '',
-      user: process.env.NUXT_MONGODB_USER ?? '',
-      password: process.env.NUXT_MONGODB_PASSWORD ?? ''
+      connectionString: process.env.NUXT_MONGODB_CONNECTION_STRING ?? ''
     },
     storage: {
       s3: {
