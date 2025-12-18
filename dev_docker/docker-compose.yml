@@ -60,12 +60,10 @@ services:
       ZITADEL_OIDC_DEFAULTLOGOUTURLV2: http://localhost:3000/ui/v2/login/logout?post_logout_redirect=
       ZITADEL_SAML_DEFAULTLOGINURLV2: http://localhost:3000/ui/v2/login/login?samlRequest=
 
-      # By configuring a machine, the setup job creates a user of type machine with the role IAM_OWNER.
-      # It writes a personal access token (PAT) to the path specified in ZITADEL_FIRSTINSTANCE_PATPATH.
-      # The PAT can be used to provision resources with [Terraform](/docs/guides/manage/terraform-provider), for example.
-      ZITADEL_FIRSTINSTANCE_PATPATH: /current-dir/pat-admin.pat
       ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINE_USERNAME: admin
       ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINE_NAME: Automatically Initialized IAM_OWNER
+      ZITADEL_FIRSTINSTANCE_MACHINEKEYPATH: /current-dir/key-service-user.json
+      ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINEKEY_TYPE: 1
       
       # To change the initial human admin users username and password, uncomment the following lines.
       # The first login name is formatted like this: <username>@<org_name>.<external_domain>
@@ -162,6 +160,13 @@ services:
       timeout: 20s
       retries: 3
 
+  mailhog:
+    container_name: mailhog
+    restart: on-failure:10
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 networks:
   zitadel:

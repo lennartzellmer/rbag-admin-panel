@@ -109,6 +109,25 @@ docker-compose logs -f zitadel
 
 Log in to zitadel via http://localhost:8080/ui/console?login_hint=zitadel-admin@zitadel.localhost and enter `Password1!` to log in.
 
+### Terraform Provisioning (Zitadel)
+
+The Terraform config lives in `dev_docker/terraform/main.tf` and expects a ZITADEL service account JSON at `dev_docker/zitadel/terraform-admin.json`.
+
+1. Start the stack and wait until ZITADEL is ready.
+2. Log in to the console at http://localhost:8080/ui/console/.
+3. Open the RBAG organization, go to Users, select the `admin` machine user, create a key, and download the JSON.
+4. Save the JSON as `dev_docker/zitadel/terraform-admin.json`.
+
+```bash
+# From the project root
+docker-compose --env-file .env -f dev_docker/docker-compose.yml up -d
+
+# Apply the Terraform config
+cd dev_docker/terraform
+terraform init
+terraform apply
+```
+
 ### MinIO Access
 
 - **Console**: http://localhost:9001
