@@ -15,11 +15,10 @@ resource "zitadel_machine_user" "this" {
   with_secret = false
 }
 
-resource "zitadel_project_member" "owner" {
+resource "zitadel_org_member" "user_manager" {
   org_id     = var.org_id
-  project_id = var.project_id
   user_id    = zitadel_machine_user.this.id
-  roles      = ["PROJECT_OWNER"]
+  roles      = ["ORG_USER_MANAGER"]
 }
 
 resource "zitadel_personal_access_token" "this" {

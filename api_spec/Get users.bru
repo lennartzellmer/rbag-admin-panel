@@ -1,0 +1,40 @@
+meta {
+  name: Get users
+  type: http
+  seq: 10
+}
+
+post {
+  url: http://localhost:8080/v2/users
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+  Authorization: Bearer 123
+}
+
+auth:bearer {
+  token: By6GIyppNEYkHvRynNeo-7-vNXH-eFqtUDpAB9dPGggqjg9UHFLvamqDMl6eLirceODDflQ
+}
+
+body:json {
+  {
+    "queries": [
+      {
+        "inUserIdsQuery": {
+          "userIds": [
+            "351784389908103173"
+          ]
+        }
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

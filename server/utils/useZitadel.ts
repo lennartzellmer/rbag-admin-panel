@@ -29,8 +29,8 @@ export const enrichWithUserDetails = async <T extends { id: string }>(
 ): Promise<Array<T & EnrichedUserDetailFields>> => {
   const userIds = users.map(user => user.id)
 
-  const userDetails = await idpClient.users.listUsers({
-    userServiceListUsersRequest: {
+  const userDetails = await idpClient.betaUsers.listUsers({
+    betaUserServiceListUsersRequest: {
       queries: [{
         inUserIdsQuery: { userIds }
       }]
