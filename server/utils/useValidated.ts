@@ -11,8 +11,6 @@ export async function useValidatedBody<T extends z.ZodTypeAny>(
     error: validationError
   } = await readValidatedBody(event, data => schema.safeParse(data))
 
-  console.log('Validated Body:', validationError)
-
   if (!isValidBody) {
     throw createError({
       statusCode: 400,
