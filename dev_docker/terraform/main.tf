@@ -18,7 +18,7 @@ resource "zitadel_org" "default" {
   name = "Hauptorganisation"
 }
 
-resource "zitadel_project" "default" {
+resource "zitadel_project" "anmeldesystem" {
   name                   = "Anmeldesystem"
   org_id                 = zitadel_org.default.id
   project_role_assertion = true
@@ -27,7 +27,7 @@ resource "zitadel_project" "default" {
 }
 
 resource "zitadel_application_oidc" "default" {
-  project_id                  = zitadel_project.default.id
+  project_id                  = zitadel_project.anmeldesystem.id
   org_id                      = zitadel_org.default.id
   name                        = "Webapp"
   redirect_uris               = ["http://localhost:3001/api/auth/zitadel"]
@@ -48,7 +48,7 @@ resource "zitadel_application_oidc" "default" {
 
 resource "zitadel_project_role" "user" {
   org_id       = zitadel_org.default.id
-  project_id   = zitadel_project.default.id
+  project_id   = zitadel_project.anmeldesystem.id
   role_key     = "user"
   display_name = "User"
   group        = "user"
@@ -56,13 +56,13 @@ resource "zitadel_project_role" "user" {
 
 resource "zitadel_project_role" "admin" {
   org_id       = zitadel_org.default.id
-  project_id   = zitadel_project.default.id
+  project_id   = zitadel_project.anmeldesystem.id
   role_key     = "admin"
   display_name = "Admin"
   group        = "admin"
 }
 
-resource "zitadel_machine_user" "default" {
+resource "zitadel_machine_user" "anmeldesystem-backend" {
   org_id      = zitadel_org.default.id
   user_name   = "anmeldesystem-backend"
   name        = "Anmeldesystem Backend"
@@ -70,9 +70,16 @@ resource "zitadel_machine_user" "default" {
   with_secret = false
 }
 
+resource "zitadel_project_member" "default" {
+  org_id     = zitadel_org.default.id
+  project_id = zitadel_project.anmeldesystem.id
+  user_id    = zitadel_machine_user.anmeldesystem-backend.id
+  roles      = ["PROJECT_OWNER"]
+}
+
 resource "zitadel_personal_access_token" "default" {
   org_id  = zitadel_org.default.id
-  user_id = zitadel_machine_user.default.id
+  user_id = zitadel_machine_user.anmeldesystem-backend.id
 }
 
 output "zitadel_backend_pat" {
@@ -84,20 +91,6 @@ resource "zitadel_action" "flat_roles" {
   org_id          = zitadel_org.default.id
   name            = "flatRoles"
   script          = <<-EOT
-function flatRoles(ctx, api) {
-  if (ctx.v1.user.grants == undefined || ctx.v1.user.grants.count == 0) {
-    return;
-  }
-
-  const roleSet = new Set();
-  ctx.v1.user.grants.grants.forEach(claim => {
-    claim.roles.forEach(role => {
-      roleSet.add(role);
-    });
-  });
-
-  api.v1.claims.setClaim('roles', Array.from(roleSet));
-}
 function flatRoles(ctx, api) {
   if (ctx.v1.user.grants == undefined || ctx.v1.user.grants.count == 0) {
     return;
