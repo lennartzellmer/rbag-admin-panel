@@ -11,7 +11,7 @@ resource "zitadel_project" "this" {
   name                   = var.project_name
   org_id                 = var.org_id
   project_role_assertion = true
-  project_role_check     = false
+  project_role_check     = true
   has_project_check      = false
 }
 
