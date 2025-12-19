@@ -12,6 +12,7 @@ export default defineOAuthZitadelEventHandler({
     // =============================================================================
     // Create or update user in event store
     // =============================================================================
+
     const { user: sessionUser } = await setUserSession(event, { user })
 
     const { success: isValidUser, data: validUser, error } = federatedUserSchema.safeParse(sessionUser)

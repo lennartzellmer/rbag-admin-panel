@@ -5,11 +5,15 @@ import { mediaSchema } from '~~/shared/validation/mediaSchema'
 // Schemas
 // =============================================================================
 
+export const rolesScopeSchema = z.record(
+  z.string(), // e.g. "admin", "user", or any other key
+  z.record(z.string(), z.string()) // inner map: id -> hostname/domain
+)
+
 export const federatedUserSchema = z.object({
   sub: z.string(),
   name: z.string().min(2).max(100),
-  email: z.string().email().min(5).max(255),
-  roles: z.array(z.string())
+  email: z.email().min(5).max(255)
 })
 
 export const userSchema = z.object({
@@ -37,3 +41,4 @@ export type User = z.infer<typeof userSchema>
 export type CreateUserSchema = z.infer<typeof CreateUserSchema>
 export type AttachProfileImageSchema = z.infer<typeof attachProfileImageSchema>
 export type RemoveProfileImageSchema = z.infer<typeof removeProfileImageSchema>
+export type RolesScopeSchema = z.infer<typeof rolesScopeSchema>

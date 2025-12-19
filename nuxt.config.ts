@@ -23,13 +23,20 @@ export default defineNuxtConfig({
     },
     oauth: {
       zitadel: {
-        scope: ['openid', 'profile', 'email']
+        scope: [
+          'openid',
+          'profile',
+          'email',
+          'urn:zitadel:iam:org:projects:roles',
+          `urn:zitadel:iam:org:id:${process.env.NUXT_ZITADEL_ORG_ID}`
+        ]
       }
     },
     zitadel: {
       url: process.env.NUXT_ZITADEL_URL ?? '',
       personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? '',
-      projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? ''
+      projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? '',
+      orgId: process.env.NUXT_ZITADEL_ORG_ID ?? ''
     },
     mongodb: {
       connectionString: process.env.NUXT_MONGODB_CONNECTION_STRING ?? ''

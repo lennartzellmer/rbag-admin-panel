@@ -48,3 +48,4 @@ resource "zitadel_project_role" "this" {
 
 output "project_id" { value = zitadel_project.this.id }
 output "app_id"     { value = zitadel_application_oidc.this.id }
+output "client_id"     { value = zitadel_application_oidc.this.client_id }
