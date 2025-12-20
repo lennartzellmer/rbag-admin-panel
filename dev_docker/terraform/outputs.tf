@@ -15,3 +15,8 @@ output "zitadel_client_id" {
 output "zitadel_project_id" {
   value = module.project_oidc.project_id
 }
+
+output "zitadel_create_user_target_signing_key" {
+  value = module.token_action_flat_roles.create_user_target_signing_key
+  sensitive = true
+}

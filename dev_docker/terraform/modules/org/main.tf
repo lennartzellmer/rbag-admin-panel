@@ -14,7 +14,7 @@ resource "zitadel_org" "this" {
 }
 
 resource "zitadel_default_login_policy" "this" {
-  allow_register                = false
+  allow_register                = true
   allow_external_idp            = false
   default_redirect_uri          = "http://localhost:3001"
   force_mfa                     = false
