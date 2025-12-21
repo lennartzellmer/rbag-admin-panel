@@ -2,6 +2,7 @@ import { defineEventHandler } from 'h3'
 import { getUserCount, getUsersPaginated } from '~~/server/domain/user/eventHandling'
 import { useValidatedQuery } from '~~/server/utils/useValidated'
 import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
+import { enrichWithUserDetails, enrichWithUserGrants } from '~~/server/utils/useZitadel'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -17,13 +18,19 @@ export default defineEventHandler(async (event) => {
   try {
     const eventStore = event.context.eventStore
 
-    const [Users, total] = await Promise.all([
+    const [users, total] = await Promise.all([
       getUsersPaginated(eventStore, offset, limit),
       getUserCount(eventStore)
     ])
 
+    const idpClient = event.context.idpClient
+
+    const usersWithDetails = await enrichWithUserDetails(idpClient, users)
+
+    const userWithDetailsAndGrants = await enrichWithUserGrants(idpClient, usersWithDetails)
+
     return {
-      data: Users,
+      data: userWithDetailsAndGrants,
       meta: {
         total,
         offset,
@@ -31,6 +38,7 @@ export default defineEventHandler(async (event) => {
       }
     }
   }
+
   catch (error) {
     console.error('Failed to get events', error)
     throw createError({

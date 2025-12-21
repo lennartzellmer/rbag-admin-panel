@@ -17,13 +17,13 @@ export default defineEventHandler(async (event) => {
   try {
     const eventStore = event.context.eventStore
 
-    const [VeranstaltungsKategorien, total] = await Promise.all([
+    const [veranstaltungsKategorien, total] = await Promise.all([
       getVeranstaltungsKategorienPaginated(eventStore, offset, limit),
       getVeranstaltungKategorieCount(eventStore)
     ])
 
     return {
-      data: VeranstaltungsKategorien,
+      data: veranstaltungsKategorien,
       meta: {
         total,
         offset,

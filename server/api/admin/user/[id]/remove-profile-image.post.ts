@@ -4,7 +4,6 @@ import { removeProfileImage } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserById, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 import type { RemoveProfileImage } from '~~/server/domain/user/commandHandling'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
-import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -17,14 +16,14 @@ export default defineEventHandler(async (event) => {
   // Parse and validate
   // =============================================================================
 
-  const removeProfileImageSchema = z.object({ userId: z.string() })
-  const body = await useValidatedBody(event, removeProfileImageSchema)
+  const removeProfileImageSchema = z.object({ id: z.string() })
+  const params = await useValidatedParams(event, removeProfileImageSchema)
 
   // =============================================================================
   // Get profile image from user
   // =============================================================================
 
-  const rbagUser = await getUserById(event.context.eventStore, body.userId)
+  const rbagUser = await getUserById(event.context.eventStore, params.id)
   const profileImage = rbagUser?.projections.User.media?.profileImage.objectName
 
   if (!profileImage) {
@@ -39,7 +38,7 @@ export default defineEventHandler(async (event) => {
   const command: RemoveProfileImage = createCommand({
     type: 'RemoveProfileImage',
     data: {
-      userId: body.userId,
+      userId: params.id,
       profileImageObjectName: profileImage
     },
     metadata: {
@@ -56,7 +55,7 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getUserStreamSubjectById(body.userId)
+        streamSubject: getUserStreamSubjectById(params.id)
       }],
       commandHandlerFunction: removeProfileImage,
       command: command

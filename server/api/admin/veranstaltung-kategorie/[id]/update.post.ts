@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import { defineEventHandler, createError } from 'h3'
 import { createCommand, handleCommand } from 'vorfall'
-import { updateRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
+import { aktualisiereRbagVeranstaltungKategorie, type AktualisiereVeranstaltungKategorie } from '~~/server/domain/veranstaltungsKategorie/commandHandling'
 import { evolve, getVeranstaltungsKategorieStreamSubjectById, initialState } from '~~/server/domain/veranstaltungsKategorie/eventHandling'
-import { veranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
+import { veranstaltungsKategorieUpdateSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 import { useAuthenticatedUser } from '~~/server/utils/useAuthenticatedUser'
 import { useValidatedBody, useValidatedParams } from '~~/server/utils/useValidated'
 
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     id: z.string().min(1)
   }))
 
-  const body = await useValidatedBody(event, veranstaltungsKategorieSchema.partial())
+  const body = await useValidatedBody(event, veranstaltungsKategorieUpdateSchema)
 
   // =============================================================================
   // Handle command
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
         initialState,
         streamSubject: getVeranstaltungsKategorieStreamSubjectById(query.id)
       }],
-      commandHandlerFunction: updateRbagVeranstaltungKategorie,
+      commandHandlerFunction: aktualisiereRbagVeranstaltungKategorie,
       command: command
     })
 

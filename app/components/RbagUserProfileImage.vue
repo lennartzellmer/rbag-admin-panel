@@ -2,7 +2,7 @@
 import { useMachine } from '@xstate/vue'
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { machine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
+import { userProfileImageMachine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
 
 const form = useTemplateRef('form')
 
@@ -65,7 +65,7 @@ const props = defineProps<{
   userId: string
 }>()
 
-const { snapshot, send } = useMachine(machine, {
+const { snapshot, send } = useMachine(userProfileImageMachine, {
   input: {
     userId: props.userId
   }
@@ -92,7 +92,7 @@ const onSubmit = (event: FormSubmitEvent<Schema>) => {
         width="400"
         height="400"
         class="rounded-full absolute inset-0"
-        :src="snapshot.context.objectName!"
+        :src="snapshot.context.objectName"
       />
     </span>
     <UForm

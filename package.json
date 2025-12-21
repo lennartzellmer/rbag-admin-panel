@@ -31,7 +31,7 @@
     "minio": "8.0.6",
     "mongodb-memory-server": "10.3.0",
     "nuxt": "^4.2.1",
-    "nuxt-auth-utils": "0.5.25",
+    "nuxt-auth-utils": "0.5.26",
     "nuxt-server-utils": "0.0.7",
     "typescript": "^5.9.3",
     "uuid": "13.0.0",
@@ -55,5 +55,10 @@
     "vitest": "4.0.13",
     "vitest-mock-extended": "3.1.0",
     "vue-tsc": "3.1.5"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@zitadel/zitadel-node@4.1.0-beta.5": "patches/@zitadel__zitadel-node@4.1.0-beta.5.patch"
+    }
   }
 }

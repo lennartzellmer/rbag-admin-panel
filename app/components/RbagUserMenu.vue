@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { useMachine } from '@xstate/vue'
-import { machine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
+import { userProfileImageMachine } from '~/machines/userProfileImageMachine/userProfileImage.machine'
 
 defineProps<{
   collapsed?: boolean
@@ -13,7 +13,7 @@ const user = ref({
   name: authUser.value?.name
 })
 
-const { snapshot } = useMachine(machine, {
+const { snapshot } = useMachine(userProfileImageMachine, {
   input: {
     userId: authUser.value!.sub!
   }

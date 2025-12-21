@@ -2,13 +2,11 @@
 import { useUserSession } from '#imports'
 
 const { loggedIn, user } = useUserSession()
-
-const isAdmin = computed(() => !!user.value?.roles.includes('admin'))
 </script>
 
 <template>
   <div>
-    <template v-if="loggedIn && isAdmin">
+    <template v-if="loggedIn">
       <NuxtPage />
     </template>
     <template v-else>

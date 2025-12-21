@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { createDomainEvent } from 'vorfall'
 import type { Command } from 'vorfall'
-import type { AktualisiereVeranstaltungKategorieSchema, AktualisiereVoreinstellungenSchema, ErstelleVeranstaltungKategorieSchema } from './validation'
-import { type VeranstaltungsKategorieErstellt, type VeranstaltungsKategorieAktualisiert, type KategorieVoreinstellungenAktualisiert, getVeranstaltungsKategorieStreamSubjectById } from './eventHandling'
+import type { AktualisiereVeranstaltungKategorieSchema, ErstelleVeranstaltungKategorieSchema } from './validation'
+import { type VeranstaltungsKategorieErstellt, type VeranstaltungsKategorieAktualisiert, getVeranstaltungsKategorieStreamSubjectById } from './eventHandling'
 
 // =============================================================================
 // Commands
@@ -24,49 +24,35 @@ export type AktualisiereVeranstaltungKategorie = Command<
   EventCommandMetadata & { id: string }
 >
 
-export type AktualisiereKategorieVoreinstellungen = Command<
-  'UpdateVeranstaltungsKategorieVoreinstellungen',
-  AktualisiereVoreinstellungenSchema,
-  EventCommandMetadata & { id: string }
->
-
 // =============================================================================
 // Business Logic
 // =============================================================================
 
-export const createVeranstaltungsKategorie = (
+export const erstelleVeranstaltungsKategorie = (
   { command }: { command: ErstelleVeranstaltungKategorie }
 ): VeranstaltungsKategorieErstellt => {
   const { data, metadata } = command
 
+  const id = randomUUID()
+
   return createDomainEvent({
     type: 'VeranstaltungsKategorie.Erstellt',
-    subject: getVeranstaltungsKategorieStreamSubjectById(randomUUID()),
-    data: data,
+    subject: getVeranstaltungsKategorieStreamSubjectById(id),
+    data: {
+      id,
+      ...data
+    },
     metadata: { requestedBy: metadata.requestedBy }
   })
 }
 
-export const updateRbagVeranstaltungKategorie = (
+export const aktualisiereRbagVeranstaltungKategorie = (
   { command }: { command: AktualisiereVeranstaltungKategorie }
 ): VeranstaltungsKategorieAktualisiert => {
   const { data, metadata } = command
 
   return createDomainEvent({
     type: 'VeranstaltungsKategorie.Aktualisiert',
-    subject: getVeranstaltungsKategorieStreamSubjectById(metadata.id),
-    data: data,
-    metadata: { requestedBy: metadata.requestedBy }
-  })
-}
-
-export const updateRbagVeranstaltungKategorieVoreinstellungen = (
-  { command }: { command: AktualisiereKategorieVoreinstellungen }
-): KategorieVoreinstellungenAktualisiert => {
-  const { data, metadata } = command
-
-  return createDomainEvent({
-    type: 'VeranstaltungsKategorie.Voreinstellungen.Aktualisiert',
     subject: getVeranstaltungsKategorieStreamSubjectById(metadata.id),
     data: data,
     metadata: { requestedBy: metadata.requestedBy }

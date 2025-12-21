@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   modules: ['nuxt-auth-utils', '@nuxt/eslint', '@nuxt/test-utils/module', '@nuxt/ui', '@nuxt/image'],
   ssr: false,
-  devtools: { enabled: false },
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true
+    }
+  },
   css: ['~/assets/css/main.css'],
   ui: {
     colorMode: false
@@ -18,17 +23,23 @@ export default defineNuxtConfig({
     },
     oauth: {
       zitadel: {
-        scope: ['openid', 'profile', 'email']
+        scope: [
+          'openid',
+          'profile',
+          'email',
+          'urn:zitadel:iam:org:projects:roles',
+          `urn:zitadel:iam:org:id:${process.env.NUXT_ZITADEL_ORG_ID}`
+        ]
       }
     },
     zitadel: {
       url: process.env.NUXT_ZITADEL_URL ?? '',
-      personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? ''
+      personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? '',
+      projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? '',
+      orgId: process.env.NUXT_ZITADEL_ORG_ID ?? ''
     },
     mongodb: {
-      eventStoreUri: process.env.NUXT_MONGODB_URL ?? '',
-      user: process.env.NUXT_MONGODB_USER ?? '',
-      password: process.env.NUXT_MONGODB_PASSWORD ?? ''
+      connectionString: process.env.NUXT_MONGODB_CONNECTION_STRING ?? ''
     },
     storage: {
       s3: {
@@ -45,11 +56,22 @@ export default defineNuxtConfig({
     }
   },
   devServer: {
+    host: '0.0.0.0',
     port: 3001
   },
   compatibilityDate: '2025-09-17',
   nitro: {
     ignore: ['**/*.spec.ts', '**/__test__/**']
+  },
+  vite: {
+    server: {
+      allowedHosts: ['mechanics-involved-fill-interactions.trycloudflare.com'],
+      hmr: {
+        protocol: 'wss',
+        host: 'mechanics-involved-fill-interactions.trycloudflare.com',
+        clientPort: 443
+      }
+    }
   },
   eslint: {
     config: {

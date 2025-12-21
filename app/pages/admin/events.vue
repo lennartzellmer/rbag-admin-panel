@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { TabsItem } from '@nuxt/ui'
+import type { DropdownMenuItem } from '@nuxt/ui'
+import { LazyRbagVeranstaltungsKategorieSlideOverList } from '#components'
 
-const items = ref<TabsItem[]>([
+const overlay = useOverlay()
+
+const slideover = overlay.create(LazyRbagVeranstaltungsKategorieSlideOverList)
+
+const items = ref<DropdownMenuItem[]>([
   {
-    label: 'Veranstaltungen',
-    description: 'Alle Veranstaltungen verwalten',
-    icon: 'i-lucide-ticket-check',
-    slot: 'veranstaltungen' as const
-  },
-  {
-    label: 'Kategorien',
-    description: 'Alle Kategorien verwalten',
+    label: 'Veranstaltungskategorien',
     icon: 'i-lucide-tags',
-    slot: 'kategorien' as const
+    onSelect: () => {
+      slideover.open()
+    }
   }
 ])
 </script>
@@ -22,24 +22,35 @@ const items = ref<TabsItem[]>([
     <template #header>
       <UDashboardNavbar
         title="Veranstaltungen"
-        :ui="{ right: 'gap-3' }"
       >
         <template #leading>
           <UDashboardSidebarCollapse />
+        </template>
+        <template #right>
+          <UDropdownMenu
+            :items="items"
+            :content="{
+              align: 'start',
+              side: 'bottom',
+              sideOffset: 8
+            }"
+            :ui="{
+              content: 'w-56'
+            }"
+          >
+            <UButton
+              icon="i-lucide-ellipsis"
+              color="neutral"
+              variant="ghost"
+            />
+          </UDropdownMenu>
         </template>
       </UDashboardNavbar>
     </template>
 
     <template #body>
       <div class="flex flex-col gap-4 p-8 rounded-2xl">
-        <UTabs
-          color="neutral"
-          variant="link"
-          :content="false"
-          :items="items"
-          class="w-full"
-          :ui="{ trigger: 'grow' }"
-        />
+        Demo
       </div>
     </template>
   </UDashboardPanel>

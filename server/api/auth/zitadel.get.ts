@@ -12,6 +12,7 @@ export default defineOAuthZitadelEventHandler({
     // =============================================================================
     // Create or update user in event store
     // =============================================================================
+
     const { user: sessionUser } = await setUserSession(event, { user })
 
     const { success: isValidUser, data: validUser, error } = federatedUserSchema.safeParse(sessionUser)
@@ -22,6 +23,13 @@ export default defineOAuthZitadelEventHandler({
     }
 
     const eventStore = event.context.eventStore
+
+    const existingUser = await getUserById(eventStore, validUser.sub)
+
+    if (existingUser) {
+      return sendRedirect(event, '/admin')
+    }
+
     const command: CreateUser = createCommand({
       type: 'CreateUser',
       data: {
@@ -36,12 +44,6 @@ export default defineOAuthZitadelEventHandler({
         now: new Date()
       }
     })
-
-    const existingUser = await getUserById(eventStore, validUser.sub)
-
-    if (existingUser) {
-      return sendRedirect(event, '/admin')
-    }
 
     await handleCommand({
       eventStore,
