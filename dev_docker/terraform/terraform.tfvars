@@ -2,7 +2,7 @@ zitadel_domain   = "localhost"
 zitadel_insecure = true
 zitadel_port     = 8080
 
-create_user_action_endpoint = "http://host.docker.internal:3001/api/create-user"
+create_user_action_endpoint = "http://host.docker.internal:3001/api/webhooks-zitadel/create-user"
 
 org_name             = "Hauptorganisation"
 project_name         = "Anmeldesystem"

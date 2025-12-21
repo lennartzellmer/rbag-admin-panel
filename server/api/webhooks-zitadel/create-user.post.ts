@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
   try {
     const idpClient = event.context.idpClient
     const runtimeConfig = useRuntimeConfig()
-
     const body = await useValidatedBody(event, AddHumanUserLogSchema)
 
     const payload = {
@@ -38,8 +37,7 @@ export default defineEventHandler(async (event) => {
 
     sendNoContent(event, 204)
   }
-  catch (error) {
-    console.error('Failed to create user', error)
+  catch (e) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create user'

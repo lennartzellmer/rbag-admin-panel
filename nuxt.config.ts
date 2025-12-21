@@ -36,7 +36,8 @@ export default defineNuxtConfig({
       url: process.env.NUXT_ZITADEL_URL ?? '',
       personalAccessToken: process.env.NUXT_ZITADEL_PERSONAL_ACCESS_TOKEN ?? '',
       projectId: process.env.NUXT_ZITADEL_PROJECT_ID ?? '',
-      orgId: process.env.NUXT_ZITADEL_ORG_ID ?? ''
+      orgId: process.env.NUXT_ZITADEL_ORG_ID ?? '',
+      signingKey: process.env.NUXT_ZITADEL_CREATE_USER_ACTION_SIGNING_KEY ?? ''
     },
     mongodb: {
       connectionString: process.env.NUXT_MONGODB_CONNECTION_STRING ?? ''
