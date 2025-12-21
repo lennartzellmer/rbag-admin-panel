@@ -25,6 +25,11 @@ variable "app_name" {
   default = "Webapp"
 }
 
+variable "default_redirect_uri" {
+  type    = string
+  default = "http://localhost:3001"
+}
+
 variable "redirect_uris" {
   type = list(string)
 }

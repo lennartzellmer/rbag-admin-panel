@@ -1,6 +1,7 @@
 module "org" {
-  source   = "./modules/org"
-  org_name = var.org_name
+  source               = "./modules/org"
+  org_name             = var.org_name
+  default_redirect_uri = var.default_redirect_uri
 }
 
 module "project_oidc" {
@@ -20,7 +21,6 @@ module "project_oidc" {
 module "machine_user_pat" {
   source           = "./modules/machine_user_pat"
   org_id           = module.org.org_id
-  project_id       = module.project_oidc.project_id
   machine_user_name       = var.machine_user_name
   machine_user_human_name = var.machine_user_human_name
 }
