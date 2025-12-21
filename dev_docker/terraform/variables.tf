@@ -12,6 +12,11 @@ variable "zitadel_jwt_profile_file" {
   default = "../zitadel/key-service-user.json"
 }
 
+variable "create_user_action_endpoint" {
+  type    = string
+  default = "http://host.docker.internal:3001/api/create-user"
+}
+
 variable "org_name" {
   type    = string
   default = "Hauptorganisation"
@@ -23,6 +28,11 @@ variable "project_name" {
 variable "app_name" {
   type    = string
   default = "Webapp"
+}
+
+variable "default_redirect_uri" {
+  type    = string
+  default = "http://localhost:3001"
 }
 
 variable "redirect_uris" {

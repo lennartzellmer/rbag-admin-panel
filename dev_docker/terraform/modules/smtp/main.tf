@@ -1,19 +1,10 @@
 terraform {
   required_providers {
     zitadel = {
-      source  = "zitadel/zitadel"
-      version = "2.3.0"
+      source = "zitadel/zitadel"
     }
   }
 }
-
-variable "sender_address" { type = string }
-variable "sender_name" { type = string }
-variable "tls" { type = bool }
-variable "host" { type = string }
-variable "reply_to_address" { type = string }
-variable "user" { type = string }
-variable "password" { type = string }
 
 resource "zitadel_smtp_config" "this" {
   sender_address   = var.sender_address

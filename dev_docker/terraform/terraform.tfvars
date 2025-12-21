@@ -2,11 +2,14 @@ zitadel_domain           = "localhost"
 zitadel_insecure         = true
 zitadel_port             = 8080
 
+create_user_action_endpoint = "http://host.docker.internal:3001/api/create-user"
+
 org_name     = "Hauptorganisation"
 project_name = "Anmeldesystem"
 app_name     = "Webapp"
+default_redirect_uri = "http://0.0.0.0:3001"
 
-redirect_uris = ["http://localhost:3001/api/auth/zitadel"]
+redirect_uris = ["http://0.0.0.0:3001/api/auth/zitadel"]
 post_logout_redirect_uris = ["https://localhost:3001"]
 
 smtp_sender_address   = "sender@example.com"

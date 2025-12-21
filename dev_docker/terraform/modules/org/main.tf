@@ -1,13 +1,10 @@
 terraform {
   required_providers {
     zitadel = {
-      source  = "zitadel/zitadel"
-      version = "2.3.0"
+      source = "zitadel/zitadel"
     }
   }
 }
-
-variable "org_name" { type = string }
 
 resource "zitadel_org" "this" {
   name = var.org_name
@@ -16,7 +13,7 @@ resource "zitadel_org" "this" {
 resource "zitadel_default_login_policy" "this" {
   allow_register                = true
   allow_external_idp            = false
-  default_redirect_uri          = "http://localhost:3001"
+  default_redirect_uri          = var.default_redirect_uri
   force_mfa                     = false
   force_mfa_local_only          = false
   hide_password_reset           = false
