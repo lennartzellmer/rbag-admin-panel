@@ -38,19 +38,3 @@ resource "zitadel_trigger_actions" "flat_roles" {
   trigger_type = "TRIGGER_TYPE_PRE_USERINFO_CREATION"
   action_ids   = [zitadel_action.flat_roles.id]
 }
-
-resource "zitadel_action_target" "create_user" {
-  name = "createUser"
-  endpoint = "http://host.docker.internal:3001/api/create-user"
-  target_type = "REST_WEBHOOK"
-  interrupt_on_error = false
-  timeout = "10s"
-}
-
-output "create_user_target_signing_key" {
-  value = zitadel_action_target.create_user.signing_key
-}
-
-output "create_user_target_id" {
-  value = zitadel_action_target.create_user.id
-}

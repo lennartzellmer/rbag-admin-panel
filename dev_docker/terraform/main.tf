@@ -30,6 +30,10 @@ module "token_action_flat_roles" {
   org_id = module.org.org_id
 }
 
+module "create_user_action_target" {
+  source = "./modules/create_user_action_target"
+}
+
 module "smtp" {
   source           = "./modules/smtp"
   sender_address   = var.smtp_sender_address
@@ -44,7 +48,7 @@ module "smtp" {
 resource "null_resource" "action_execution" {
   triggers = {
     response_method = "/zitadel.user.v2.UserService/AddHumanUser"
-    targets         = module.token_action_flat_roles.create_user_target_id
+    targets         = module.create_user_action_target.create_user_target_id
   }
 
   provisioner "local-exec" {
@@ -61,5 +65,6 @@ resource "null_resource" "action_execution" {
 
   depends_on = [
     module.token_action_flat_roles,
+    module.create_user_action_target,
   ]
 }
