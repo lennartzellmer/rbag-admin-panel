@@ -21,6 +21,15 @@ It also contains the Terraform configuration for the IdP, Zitadel.
 
 ---
 
+## Preconditions
+
+Before getting startet you need:
+
+- Terraform:  
+   Install via `brew install terraform`
+- Node version 24
+- Docker compose
+
 ## Services
 
 The development environment needs the following services:
