@@ -25,8 +25,8 @@ module "machine_user_pat" {
   machine_user_human_name = var.machine_user_human_name
 }
 
-module "token_action_flat_roles" {
-  source = "./modules/token_action_flat_roles"
+module "action_flat_roles" {
+  source = "./modules/action_flat_roles"
   org_id = module.org.org_id
 }
 
@@ -64,7 +64,7 @@ resource "null_resource" "action_execution" {
   }
 
   depends_on = [
-    module.token_action_flat_roles,
+    module.action_flat_roles,
     module.create_user_action_target,
   ]
 }
