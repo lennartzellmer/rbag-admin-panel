@@ -28,14 +28,10 @@ const main = async () => {
   const port = requiredEnv('ZITADEL_PORT')
   const insecure = parseBoolean(process.env.ZITADEL_INSECURE)
   const accessToken = requiredEnv('ZITADEL_PAT')
-  const responseMethod
-    = process.env.ZITADEL_ACTION_EXECUTION_RESPONSE_METHOD
-      ?? 'zitadel.user.v2.UserService/AddHumanUser'
+  const responseMethod = requiredEnv('ZITADEL_ACTION_EXECUTION_RESPONSE_METHOD')
   const targets = parseTargets(process.env.ZITADEL_ACTION_EXECUTION_TARGET_IDS)
-  const executionPath
-    = process.env.ZITADEL_ACTION_EXECUTION_PATH ?? '/v2/actions/executions'
-  const requestMethod
-    = process.env.ZITADEL_ACTION_EXECUTION_METHOD ?? 'PUT'
+  const executionPath = '/v2/actions/executions'
+  const requestMethod = 'PUT'
 
   const scheme = insecure ? 'http' : 'https'
   const baseUrl = `${scheme}://${domain}:${port}`

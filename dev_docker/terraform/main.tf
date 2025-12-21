@@ -32,6 +32,12 @@ module "action_flat_roles" {
 
 module "action_v2_create_user" {
   source = "./modules/action_v2_create_user"
+
+  zitadel_domain   = var.zitadel_domain
+  zitadel_port     = var.zitadel_port
+  zitadel_insecure = var.zitadel_insecure
+
+  depends_on = [module.action_flat_roles]
 }
 
 module "smtp" {
@@ -43,28 +49,4 @@ module "smtp" {
   reply_to_address = var.smtp_reply_to_address
   user             = var.smtp_user
   password         = var.smtp_password
-}
-
-resource "null_resource" "action_execution" {
-  triggers = {
-    response_method = "/zitadel.user.v2.UserService/AddHumanUser"
-    targets         = module.action_v2_create_user.create_user_target_id
-  }
-
-  provisioner "local-exec" {
-    command = "npx --yes tsx ${path.module}/scripts/create_action_execution.ts"
-    environment = {
-      ZITADEL_DOMAIN                        = var.zitadel_domain
-      ZITADEL_PORT                          = tostring(var.zitadel_port)
-      ZITADEL_INSECURE                      = tostring(var.zitadel_insecure)
-      ZITADEL_PAT                           = trimspace(file("${path.module}/../zitadel/pat-admin.pat"))
-      ZITADEL_ACTION_EXECUTION_RESPONSE_METHOD = self.triggers.response_method
-      ZITADEL_ACTION_EXECUTION_TARGET_IDS      = self.triggers.targets
-    }
-  }
-
-  depends_on = [
-    module.action_flat_roles,
-    module.action_v2_create_user,
-  ]
 }
