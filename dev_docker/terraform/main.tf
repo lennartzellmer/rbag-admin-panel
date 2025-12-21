@@ -60,7 +60,6 @@ resource "null_resource" "action_execution" {
   }
 
   depends_on = [
-    module.machine_user_pat,
     module.token_action_flat_roles,
   ]
 }
