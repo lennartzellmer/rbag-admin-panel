@@ -33,9 +33,10 @@ module "action_flat_roles" {
 module "action_v2_create_user" {
   source = "./modules/action_v2_create_user"
 
-  zitadel_domain   = var.zitadel_domain
-  zitadel_port     = var.zitadel_port
-  zitadel_insecure = var.zitadel_insecure
+  zitadel_domain                = var.zitadel_domain
+  zitadel_port                  = var.zitadel_port
+  zitadel_insecure              = var.zitadel_insecure
+  create_user_action_endpoint   = var.create_user_action_endpoint
 
   depends_on = [module.action_flat_roles]
 }

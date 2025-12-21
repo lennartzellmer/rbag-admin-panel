@@ -11,7 +11,7 @@ terraform {
 
 resource "zitadel_action_target" "create_user" {
   name               = "createUser"
-  endpoint           = "http://host.docker.internal:3001/api/create-user"
+  endpoint           = var.create_user_action_endpoint
   target_type        = "REST_WEBHOOK"
   interrupt_on_error = false
   timeout            = "10s"
