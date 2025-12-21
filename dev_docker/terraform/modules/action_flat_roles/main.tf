@@ -6,8 +6,6 @@ terraform {
   }
 }
 
-variable "org_id" { type = string }
-
 resource "zitadel_action" "flat_roles" {
   org_id  = var.org_id
   name    = "flatRoles"
