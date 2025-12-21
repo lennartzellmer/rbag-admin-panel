@@ -50,3 +50,7 @@ resource "zitadel_action_target" "create_user" {
 output "create_user_target_signing_key" {
   value = zitadel_action_target.create_user.signing_key
 }
+
+output "create_user_target_id" {
+  value = zitadel_action_target.create_user.id
+}

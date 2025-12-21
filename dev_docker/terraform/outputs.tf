@@ -20,3 +20,7 @@ output "zitadel_create_user_target_signing_key" {
   value = module.token_action_flat_roles.create_user_target_signing_key
   sensitive = true
 }
+
+output "zitadel_create_user_target_id" {
+  value = module.token_action_flat_roles.create_user_target_id
+}
