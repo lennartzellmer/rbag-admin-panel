@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const providers = ref<Array<any>>([
   {
-    label: 'Zitadel',
+    label: 'Login',
     icon: 'i-lucide-lock',
     color: 'neutral',
     variant: 'subtle',
