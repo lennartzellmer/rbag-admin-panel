@@ -17,10 +17,10 @@ output "zitadel_project_id" {
 }
 
 output "zitadel_create_user_target_signing_key" {
-  value     = module.create_user_action_target.create_user_target_signing_key
+  value     = module.action_v2_create_user.create_user_target_signing_key
   sensitive = true
 }
 
 output "zitadel_create_user_target_id" {
-  value = module.create_user_action_target.create_user_target_id
+  value = module.action_v2_create_user.create_user_target_id
 }
