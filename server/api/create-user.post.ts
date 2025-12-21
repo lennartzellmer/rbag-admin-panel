@@ -5,7 +5,7 @@ export const AddHumanUserLogSchema = z.object({
   fullMethod: z.string(), // or z.literal("/zitadel.user.v2.UserService/AddHumanUser")
   instanceID: z.string(),
   orgID: z.string(),
-  projectID: z.string(),
+  projectID: z.string().optional(),
   userID: z.string(),
   request: z.record(z.string(), z.unknown()),
   response: z.object({

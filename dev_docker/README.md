@@ -8,9 +8,9 @@ It also contains the Terraform configuration for the IDP provider Zitadel
 
 1. Copy `.env.example` to `.env` in the project root with
    `cp .env.example .env`
-2. From the project root run
+2. From the project root run:
    `docker-compose --env-file .env -f dev_docker/docker-compose.yml up -d`
-3. Run the terraform config for zitadel 
+3. Run the terraform config for zitadel:
    `cd dev_docker/terraform && terraform init && terraform apply && terraform output -json`
 4. Take the output from the previous terraform step and add it to the .env file
 5. From the project root install the dependencies:
