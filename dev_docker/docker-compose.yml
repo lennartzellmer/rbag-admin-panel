@@ -60,6 +60,8 @@ services:
       ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINE_NAME: Automatically Initialized IAM_OWNER
       ZITADEL_FIRSTINSTANCE_MACHINEKEYPATH: /current-dir/key-service-user.json
       ZITADEL_FIRSTINSTANCE_ORG_MACHINE_MACHINEKEY_TYPE: 1
+      ZITADEL_FIRSTINSTANCE_PATPATH: /current-dir/pat-admin.pat
+      ZITADEL_FIRSTINSTANCE_ORG_MACHINE_PAT_EXPIRATIONDATE: '2099-01-01T00:00:00Z'
       
       # To change the initial human admin users username and password, uncomment the following lines.
       # The first login name is formatted like this: <username>@<org_name>.<external_domain>

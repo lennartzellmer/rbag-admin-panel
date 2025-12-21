@@ -43,7 +43,7 @@ module "smtp" {
 
 resource "null_resource" "action_execution" {
   triggers = {
-    response_method = "zitadel.user.v2.UserService/AddHumanUser"
+    response_method = "/zitadel.user.v2.UserService/AddHumanUser"
     targets         = module.token_action_flat_roles.create_user_target_id
   }
 
@@ -53,7 +53,7 @@ resource "null_resource" "action_execution" {
       ZITADEL_DOMAIN                        = var.zitadel_domain
       ZITADEL_PORT                          = tostring(var.zitadel_port)
       ZITADEL_INSECURE                      = tostring(var.zitadel_insecure)
-      ZITADEL_PAT                           = module.machine_user_pat.pat
+      ZITADEL_PAT                           = trimspace(file("${path.module}/../zitadel/pat-admin.pat"))
       ZITADEL_ACTION_EXECUTION_RESPONSE_METHOD = self.triggers.response_method
       ZITADEL_ACTION_EXECUTION_TARGET_IDS      = self.triggers.targets
     }
