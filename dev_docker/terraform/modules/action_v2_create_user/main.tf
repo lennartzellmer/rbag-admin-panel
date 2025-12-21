@@ -9,19 +9,6 @@ terraform {
   }
 }
 
-variable "zitadel_domain" { type = string }
-variable "zitadel_insecure" { type = bool }
-variable "zitadel_port" { type = number }
-variable "admin_pat_file" {
-  type    = string
-  default = "../zitadel/pat-admin.pat"
-  sensitive = true
-}
-
-locals {
-  admin_pat = trimspace(file("${path.root}/${var.admin_pat_file}"))
-}
-
 resource "zitadel_action_target" "create_user" {
   name               = "createUser"
   endpoint           = "http://host.docker.internal:3001/api/create-user"

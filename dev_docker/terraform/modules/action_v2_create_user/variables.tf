@@ -4,6 +4,7 @@ variable "zitadel_port" { type = number }
 variable "admin_pat_file" {
   type    = string
   default = "../zitadel/pat-admin.pat"
+  sensitive = true
 }
 
 locals {
