@@ -27,6 +27,20 @@ resource "zitadel_default_login_policy" "this" {
   user_login                    = true
 }
 
+resource "zitadel_default_label_policy" "this" {
+  background_color       = "#f1efee"
+  primary_color          = "#9f1b68"
+  warn_color             = "#cd3d56"
+  font_color             = "#1f071d"
+  background_color_dark  = "#15110F"
+  primary_color_dark     = "#b81d74"
+  warn_color_dark        = "#ff3b5b"
+  font_color_dark        = "#e8e4e3"
+  hide_login_name_suffix = true
+  disable_watermark      = true
+  set_active             = true
+}
+
 output "org_id" {
   value = zitadel_org.this.id
 }
