@@ -30,9 +30,6 @@ const { snapshot } = useMachine(createFetchPaginatedMachine<UserTableRow>({
 }))
 
 const tableData = computed<UserTableRow[]>(() => snapshot.value.context.data ?? [])
-const isLoading = computed(() =>
-  snapshot.value.matches('fetching') || snapshot.value.matches('waitForInitialPagination')
-)
 
 // =============================================================================
 // Table columns
@@ -62,7 +59,7 @@ const columns: TableColumn<UserTableRow>[] = [
     header: 'Rechte',
     cell: ({ row }) => {
       return h(UBadge, {
-        label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
+        label: row.original. ? 'Verifiziert' : 'Nicht verifiziert',
         color: row.original.email.isVerified ? 'primary' : 'neutral',
         variant: 'subtle',
         size: 'md'
@@ -98,11 +95,12 @@ const columns: TableColumn<UserTableRow>[] = [
     </template>
 
     <template #body>
+      <pre>{{ snapshot.context.data }}</pre>
       <div class="flex flex-col gap-6">
         <UTable
           :data="tableData"
           :columns="columns"
-          :loading="isLoading"
+          :loading="snapshot.matches('fetching')"
           empty="Keine Mitglieder gefunden"
           class="flex-1"
         />
