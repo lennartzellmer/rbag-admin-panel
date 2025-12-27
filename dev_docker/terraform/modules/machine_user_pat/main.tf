@@ -27,7 +27,6 @@ resource "zitadel_personal_access_token" "this" {
   lifecycle {
     // keep initial PAT stable across subsequent applies
     ignore_changes  = [token]
-    prevent_destroy = true
   }
 }
 
