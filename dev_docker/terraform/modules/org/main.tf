@@ -8,6 +8,7 @@ terraform {
 
 resource "zitadel_org" "this" {
   name = var.org_name
+  is_default = true
 }
 
 resource "zitadel_default_login_policy" "this" {
@@ -25,6 +26,23 @@ resource "zitadel_default_login_policy" "this" {
   second_factor_check_lifetime  = "24h0m0s"
   passwordless_type             = "PASSWORDLESS_TYPE_ALLOWED"
   user_login                    = true
+}
+
+resource "zitadel_default_password_complexity_policy" "default" {
+  min_length    = "8"
+  has_uppercase = false
+  has_lowercase = false
+  has_number    = false
+  has_symbol    = false
+}
+
+resource "zitadel_password_complexity_policy" "default" {
+  org_id        = zitadel_org.this.id
+  min_length    = "8"
+  has_uppercase = false
+  has_lowercase = false
+  has_number    = false
+  has_symbol    = false
 }
 
 resource "zitadel_default_label_policy" "this" {
