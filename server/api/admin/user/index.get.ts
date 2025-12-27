@@ -2,7 +2,7 @@ import { defineEventHandler } from 'h3'
 import { getUserCount, getUsersPaginated } from '~~/server/domain/user/eventHandling'
 import { useValidatedQuery } from '~~/server/utils/useValidated'
 import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
-import { enrichWithUserDetails, enrichWithUserGrants } from '~~/server/utils/useZitadel'
+import { enrichWithUserDetails, enrichWithUserRoles } from '~~/server/utils/useZitadel'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -27,10 +27,10 @@ export default defineEventHandler(async (event) => {
 
     const usersWithDetails = await enrichWithUserDetails(idpClient, users)
 
-    const userWithDetailsAndGrants = await enrichWithUserGrants(idpClient, usersWithDetails)
+    const usersWithDetailsAndRoles = await enrichWithUserRoles(idpClient, usersWithDetails)
 
     return {
-      data: userWithDetailsAndGrants,
+      data: usersWithDetailsAndRoles,
       meta: {
         total,
         offset,

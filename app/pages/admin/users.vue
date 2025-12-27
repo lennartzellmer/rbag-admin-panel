@@ -1,37 +1,28 @@
 <script setup lang="ts">
 import { computed, h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { useMachine } from '@xstate/vue'
+import { useMachine, useSelector } from '@xstate/vue'
 import { createFetchPaginatedMachine } from '~/machines/fetchPaginated/fetchPaginated.machine'
 import { getUsersPaginated } from '~/service/user'
+import RbagPagination from '~/components/RbagPagination.vue'
 
 // =============================================================================
 // Types
 // =============================================================================
-type UserTableRow = {
-  id: string
-  givenName: string
-  familyName: string
-  email: {
-    email: string
-    isVerified: boolean
-  }
-  profileImage?: {
-    objectName: string
-    type: 'image' | 'video' | 'audio'
-  }
-}
+type UserTableRow = Awaited<ReturnType<typeof getUsersPaginated>>['data'][number]
 
 const UUser = resolveComponent('UUser')
 const UBadge = resolveComponent('UBadge')
 
-const { snapshot } = useMachine(createFetchPaginatedMachine<UserTableRow>({
+const { snapshot, actorRef } = useMachine(createFetchPaginatedMachine<UserTableRow>({
   fetchDataFunction: getUsersPaginated
 }))
 
 const tableData = computed<UserTableRow[]>(() => snapshot.value.context.data ?? [])
-const isLoading = computed(() =>
-  snapshot.value.matches('fetching') || snapshot.value.matches('waitForInitialPagination')
+
+const paginationMachineRef = useSelector(
+  actorRef,
+  state => state.context.paginationMachineRef
 )
 
 // =============================================================================
@@ -50,7 +41,7 @@ const columns: TableColumn<UserTableRow>[] = [
           size: 'lg',
           description: row.original.email.email,
           avatar: {
-            src: row.original.profileImage?.objectName,
+            src: row.original.media?.profileImage.objectName,
             alt: fullName
           }
         })
@@ -61,12 +52,15 @@ const columns: TableColumn<UserTableRow>[] = [
     id: 'rechte',
     header: 'Rechte',
     cell: ({ row }) => {
-      return h(UBadge, {
-        label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
-        color: row.original.email.isVerified ? 'primary' : 'neutral',
-        variant: 'subtle',
-        size: 'md'
-      })
+      return h('div', { class: 'flex gap-2' }, row.original.roles.map((v, i) => {
+        return h(UBadge, {
+          key: i,
+          label: v,
+          color: row.original.email.isVerified ? 'primary' : 'neutral',
+          variant: 'subtle',
+          size: 'md'
+        }, () => v)
+      }))
     }
   },
   {
@@ -78,7 +72,7 @@ const columns: TableColumn<UserTableRow>[] = [
         color: row.original.email.isVerified ? 'primary' : 'neutral',
         variant: 'subtle',
         size: 'md'
-      })
+      }, () => row.original.id)
     }
   }
 ]
@@ -102,9 +96,13 @@ const columns: TableColumn<UserTableRow>[] = [
         <UTable
           :data="tableData"
           :columns="columns"
-          :loading="isLoading"
+          :loading="snapshot.matches('fetching')"
           empty="Keine Mitglieder gefunden"
           class="flex-1"
+        />
+        <RbagPagination
+          v-if="paginationMachineRef"
+          :pagination-actor-ref="paginationMachineRef"
         />
       </div>
     </template>

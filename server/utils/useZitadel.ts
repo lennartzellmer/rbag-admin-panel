@@ -15,9 +15,13 @@ export type EnrichedUserDetailFields = {
   }
 }
 
-export type EnrichedUserGrantFields = {
-  grants: Array<string>
+export type EnrichedUserRoleFields = {
+  roles: Array<string>
 }
+
+type EnrichedUsersWithRoles<T extends { id: string }> = Array<
+  { [Key in keyof T]: T[Key] } & EnrichedUserRoleFields
+>
 
 type HumanUser = UserServiceUser & { human: UserServiceHumanUser }
 
@@ -57,10 +61,10 @@ export const enrichWithUserDetails = async <T extends { id: string }>(
   })
 }
 
-export const enrichWithUserGrants = async <T extends { id: string }>(
+export const enrichWithUserRoles = async <T extends { id: string }>(
   idpClient: Zitadel,
   users: T[]
-): Promise<Array<T & EnrichedUserGrantFields>> => {
+): Promise<EnrichedUsersWithRoles<T>> => {
   const userIds = users.map(user => user.id)
 
   const runtimeConfig = useRuntimeConfig()
@@ -81,11 +85,13 @@ export const enrichWithUserGrants = async <T extends { id: string }>(
   })
 
   return users.map((user) => {
-    const grants = userAuths.authorizations?.filter(auth => auth.user?.id === user.id).map(auth => auth.roles ?? []).flat(1) ?? []
+    const roles = userAuths.authorizations
+      ?.filter(auth => auth.user?.id === user.id)
+      .flatMap(auth => auth.roles ?? []) ?? []
 
     return {
       ...user,
-      grants
+      roles
     }
   })
 }
