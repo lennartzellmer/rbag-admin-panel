@@ -23,6 +23,12 @@ resource "zitadel_org_member" "user_manager" {
 resource "zitadel_personal_access_token" "this" {
   org_id  = var.org_id
   user_id = zitadel_machine_user.this.id
+
+  lifecycle {
+    // keep initial PAT stable across subsequent applies
+    ignore_changes  = [token]
+    prevent_destroy = true
+  }
 }
 
 output "user_id" { value = zitadel_machine_user.this.id }
