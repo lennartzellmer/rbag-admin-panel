@@ -51,3 +51,16 @@ module "smtp" {
   user             = var.smtp_user
   password         = var.smtp_password
 }
+
+resource "zitadel_verify_email_message_text" "default" {
+  org_id   = module.org.org_id
+  language = "de"
+
+  title       = "Music&AL - Email bestätigen"
+  pre_header  = "Music&AL - Email bestätigen"
+  subject     = "Music&AL - Email bestätigen"
+  greeting    = "Hallo {{.DisplayName}},"
+  text        = "Bitte verwende den untenstehenden Button um diese Email zu verifizieren. Falls du nach einem Code gefragt wirst nutze disen hier:</br></br><strong>{{.Code}}</strong></br>"
+  button_text = "Email bestätigen"
+  footer_text = ""
+}
