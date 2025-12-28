@@ -24,11 +24,6 @@ resource "zitadel_personal_access_token" "this" {
   org_id  = var.org_id
   user_id = zitadel_machine_user.this.id
   expiration_date = "9999-12-31T23:59:59Z"
-
-  lifecycle {
-    // keep initial PAT stable across subsequent applies
-    ignore_changes  = [token]
-  }
 }
 
 output "user_id" { value = zitadel_machine_user.this.id }
