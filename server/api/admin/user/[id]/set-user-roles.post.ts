@@ -1,7 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import { useValidatedBody } from '~~/server/utils/useValidated'
-import { useFetch } from 'nuxt/app'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
@@ -44,7 +43,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const updatedUser = await useFetch(`/api/admin/user/${id}`, {
+  const updatedUser = await $fetch(`/api/admin/user/${id}`, {
     method: 'GET',
     params: { id }
   })

@@ -10,12 +10,14 @@ It also contains the Terraform configuration for the IdP, Zitadel.
 2. From the project root, run:  
    `docker-compose --env-file .env -f dev_docker/docker-compose.yml up -d`
 3. Run the Terraform config for Zitadel:  
+   In case you have already a terraform config appied first run:  
+   `rm dev_docker/terraform/terraform.tfstate && rm dev_docker/terraform/terraform.tfstate.backup`
    `cd dev_docker/terraform && terraform init && terraform apply && terraform output -json`
 4. Take the output from the previous Terraform step and add it to the `.env` file.
 5. From the project root, install the dependencies:  
    `pnpm install`
 6. From the project root, start the Nuxt application:  
-   `pnpm dev`
+   `pnpm dev`****
 7. Access the application at:  
    <http://0.0.0.0:3001>
 
