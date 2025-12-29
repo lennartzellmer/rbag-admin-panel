@@ -35,6 +35,13 @@ export default defineEventHandler(async (event) => {
     await idpClient.betaAuthorizations.createAuthorization({
       betaAuthorizationServiceCreateAuthorizationRequest: payload
     })
+
+    const updatedUser = await $fetch(`/api/admin/user/${id}`, {
+      method: 'GET',
+      params: { id }
+    })
+
+    return updatedUser
   }
   catch (e) {
     throw createError({
@@ -42,18 +49,4 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Failed to create user'
     })
   }
-
-  const updatedUser = await $fetch(`/api/admin/user/${id}`, {
-    method: 'GET',
-    params: { id }
-  })
-
-  if (!updatedUser.error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Failed to fetch updated user'
-    })
-  }
-
-  return updatedUser.data
 })

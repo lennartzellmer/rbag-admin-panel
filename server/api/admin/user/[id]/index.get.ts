@@ -2,8 +2,10 @@ import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import { getUserById } from '~~/server/domain/user/eventHandling'
 import { useValidatedParams } from '~~/server/utils/useValidated'
+import { enrichUsers } from '~~/server/utils/useZitadel'
+import type { User } from '~~/shared/validation/userSchema'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<User> => {
   // =============================================================================
   // Parse and validate
   // =============================================================================
@@ -21,7 +23,18 @@ export default defineEventHandler(async (event) => {
 
     const user = await getUserById(eventStore, validatedParams.id)
 
-    return user?.projections.User
+    if (!user?.projections.User) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'User not found'
+      })
+    }
+
+    const idpClient = event.context.idpClient
+
+    const [userWithDetailsAndRoles] = await enrichUsers(idpClient, [user?.projections.User])
+
+    return userWithDetailsAndRoles
   }
   catch (error) {
     console.error('Failed to get events', error)

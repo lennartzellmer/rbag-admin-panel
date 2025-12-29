@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{base_url}}/api/admin/user
+  url: {{base_url}}/api/admin/user?offset=0&limit=10
   body: none
   auth: inherit
+}
+
+params:query {
+  offset: 0
+  limit: 10
 }
 
 settings {
