@@ -50,13 +50,13 @@ const columns: TableColumn<UserTableRow>[] = [
   },
   {
     id: 'rechte',
-    header: 'Rechte',
+    header: 'Rollen',
     cell: ({ row }) => {
       return h('div', { class: 'flex gap-2' }, row.original.roles.map((v, i) => {
         return h(UBadge, {
           key: i,
           label: v,
-          color: row.original.email.isVerified ? 'primary' : 'neutral',
+          color: 'neutral',
           variant: 'subtle',
           size: 'md'
         }, () => v)
@@ -64,15 +64,16 @@ const columns: TableColumn<UserTableRow>[] = [
     }
   },
   {
-    accessorKey: 'userId',
-    header: 'User ID',
+    accessorKey: 'verifiedEmail',
+    header: 'Email Bestätigt',
     cell: ({ row }) => {
       return h(UBadge, {
         label: row.original.email.isVerified ? 'Verifiziert' : 'Nicht verifiziert',
-        color: row.original.email.isVerified ? 'primary' : 'neutral',
+        color: row.original.email.isVerified ? 'success' : 'neutral',
+        icon: row.original.email.isVerified ? 'i-lucide-check' : 'i-lucide-x',
         variant: 'subtle',
         size: 'md'
-      }, () => row.original.id)
+      })
     }
   }
 ]

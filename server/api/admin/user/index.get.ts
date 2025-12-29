@@ -1,10 +1,12 @@
 import { defineEventHandler } from 'h3'
 import { getUserCount, getUsersPaginated } from '~~/server/domain/user/eventHandling'
 import { useValidatedQuery } from '~~/server/utils/useValidated'
+import type { PaginationResponseSchema } from '~~/shared/validation/paginationQuerySchema'
 import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
 import { enrichWithUserDetails, enrichWithUserRoles } from '~~/server/utils/useZitadel'
+import type { User } from '~~/shared/validation/userSchema'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<PaginationResponseSchema<User>> => {
   // =============================================================================
   // Parse and validate
   // =============================================================================
