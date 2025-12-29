@@ -17,9 +17,9 @@ auth:oauth2 {
   authorization_url: http://localhost:8080/oauth/v2/authorize
   access_token_url: http://localhost:8080/oauth/v2/token
   refresh_token_url: http://localhost:8080/oauth/v2/token
-  client_id: 351716928655523845
+  client_id: {{NUXT_OAUTH_ZITADEL_CLIENT_ID}}
   client_secret: 
-  scope: openid profile email offline_access roles urn:zitadel:iam:org:projects:roles urn:zitadel:iam:org:id:351716928521306117
+  scope: openid profile email offline_access roles urn:zitadel:iam:org:projects:roles urn:zitadel:iam:org:id:{{NUXT_ZITADEL_ORG_ID}}
   state: 
   pkce: true
   credentials_placement: body
