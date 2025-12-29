@@ -1,13 +1,22 @@
 import { defineEventHandler } from 'h3'
 import { z } from 'zod'
+import { ZITADEL_ROLES } from '~~/constants'
 import { useValidatedBody } from '~~/server/utils/useValidated'
 
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Parse and validate
   // =============================================================================
+
+  const ZitadelRoleSchema = z.enum(
+    Object.values(ZITADEL_ROLES) as [
+    typeof ZITADEL_ROLES[keyof typeof ZITADEL_ROLES],
+    ...Array<typeof ZITADEL_ROLES[keyof typeof ZITADEL_ROLES]>
+    ]
+  )
+
   const setUserRolesSchema = z.object({
-    roles: z.array(z.string())
+    roles: z.array(ZitadelRoleSchema)
   })
 
   const { id } = await useValidatedParams(event, z.object({ id: z.string() }))
@@ -21,8 +30,8 @@ export default defineEventHandler(async (event) => {
     const runtimeConfig = useRuntimeConfig()
 
     // ensure the role 'user' is always assigned
-    if (!roles.includes('user')) {
-      roles.push('user')
+    if (!roles.includes(ZITADEL_ROLES.USER)) {
+      roles.push(ZITADEL_ROLES.USER)
     }
 
     const payload = {
@@ -36,12 +45,7 @@ export default defineEventHandler(async (event) => {
       betaAuthorizationServiceCreateAuthorizationRequest: payload
     })
 
-    const updatedUser = await $fetch(`/api/admin/user/${id}`, {
-      method: 'GET',
-      params: { id }
-    })
-
-    return updatedUser
+    return sendNoContent(event)
   }
   catch (e) {
     throw createError({

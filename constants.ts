@@ -6,4 +6,4 @@ export const ZITADEL_ROLES = {
   USER: 'user',
   ADMIN: 'admin',
   REFERENT: 'referent'
-}
+} as const

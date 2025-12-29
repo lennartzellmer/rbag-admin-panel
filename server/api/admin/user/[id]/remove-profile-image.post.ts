@@ -66,9 +66,7 @@ export default defineEventHandler(async (event) => {
     minioClient.removeObject(bucket, profileImage).catch((removeError) => {
       console.error('Error removing object:', removeError)
     })
-    return {
-      ...result
-    }
+    return sendNoContent(event)
   }
   catch (error) {
     console.error(error)
