@@ -7,7 +7,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const availableRoleDetails: SelectMenuItem[] = [
+const availableRoleDetails = [
   {
     label: 'User',
     value: 'user',
@@ -26,23 +26,18 @@ const availableRoleDetails: SelectMenuItem[] = [
     disabled: false,
     description: 'Leitet einen Workshop und kann seine Workshops verwalten.'
   }
-]
+] satisfies SelectMenuItem[]
 
-const enrichedRoles = computed<SelectMenuItem[]>(() => {
-  return props.roles.map((role) => {
-    const foundRole = availableRoleDetails.find((r) => {
-      if (!r) return false
-      if (typeof r !== 'object') return false
-      if (!Object.hasOwn(r, 'value')) return false
-      return r.value === role
-    })
+const enrichedRoles = computed<SelectMenuItem[]>(() =>
+  props.roles.map((role) => {
+    const foundRole = availableRoleDetails.find(r => r.value === role)
     if (!foundRole) throw new Error(`Role "${role}" not found in availableRoles`)
     return foundRole
   })
-})
+)
 
 const onUpdateModelValue = (r: SelectMenuItem[]) => {
-  console.log('Selected roles:', r)
+  console.log(r)
 }
 </script>
 
