@@ -44,8 +44,6 @@ export default defineEventHandler(async (event) => {
     const runtimeConfig = useRuntimeConfig()
     const body = await useValidatedBody(event, AddHumanUserLogSchema)
 
-    console.log(body)
-
     const userRoleKeys = [ZITADEL_ROLES.ADMIN, ZITADEL_ROLES.USER]
 
     const payload = {
