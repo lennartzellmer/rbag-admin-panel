@@ -13,7 +13,7 @@ resource "zitadel_action_target" "create_user" {
   name               = "createUser"
   endpoint           = var.create_user_action_endpoint
   target_type        = "REST_WEBHOOK"
-  interrupt_on_error = false
+  interrupt_on_error = true
   timeout            = "10s"
 }
 
