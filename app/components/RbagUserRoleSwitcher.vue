@@ -1,56 +1,77 @@
 <script setup lang="ts">
 import type { SelectMenuItem } from '@nuxt/ui'
+import { useMachine } from '@xstate/vue'
+import { userRolesMachine } from '~/machines/userRoles/userRoles.machine'
 
-interface Props {
-  roles: string[]
-}
+const props = defineProps<
+  { roles: string[], userId: string }
+>()
 
-const props = defineProps<Props>()
+const { snapshot, send } = useMachine(userRolesMachine, {
+  input: {
+    userId: props.userId,
+    storedRoles: props.roles
+  } })
 
 const availableRoleDetails = [
   {
     label: 'User',
     value: 'user',
     disabled: true,
-    description: 'Standardrolle für alle Benutzer. Kann nicht entfernt werden.'
+    description: 'Standardrolle. Kann nicht entfernt werden.'
   },
   {
     label: 'Admin',
     value: 'admin',
     disabled: false,
-    description: 'Hat Zugriff auf das Admin-Dashboard und kann Benutzer verwalten.'
+    description: 'Hat Zugriff auf alles.'
   },
   {
     label: 'Referent',
     value: 'referent',
     disabled: false,
-    description: 'Leitet einen Workshop und kann seine Workshops verwalten.'
+    description: 'Leitet workshops und Veranstaltungen.'
   }
-] satisfies SelectMenuItem[]
+] as const satisfies SelectMenuItem[]
 
-const enrichedRoles = computed<SelectMenuItem[]>(() =>
-  props.roles.map((role) => {
-    const foundRole = availableRoleDetails.find(r => r.value === role)
-    if (!foundRole) throw new Error(`Role "${role}" not found in availableRoles`)
-    return foundRole
-  })
-)
-
-const onUpdateModelValue = (r: SelectMenuItem[]) => {
-  console.log(r)
-}
+const enrichedRoles = computed({
+  get() {
+    return snapshot.value.context.localRoles.map((role) => {
+      const foundRole = availableRoleDetails.find(r => r.value === role)
+      if (!foundRole) throw new Error(`Role "${role}" not found in availableRoles`)
+      return foundRole
+    })
+  },
+  set(newValues: typeof availableRoleDetails) {
+    send({ type: 'setRoles', roles: newValues.map(r => r.value) })
+  }
+})
 </script>
 
 <template>
   <div>
     <USelectMenu
+      v-model="enrichedRoles"
+      :loading="snapshot.matches('assigningRoles')"
       multiple
       :items="availableRoleDetails"
       icon="i-lucide-user"
       placeholder="Select user"
-      class="w-48"
-      :model-value="enrichedRoles"
-      @update:model-value="onUpdateModelValue"
-    />
+      class="w-80"
+    >
+      <template #default="{ modelValue }">
+        <div
+          v-for="value in modelValue"
+          :key="value.value"
+          class="gap-1"
+        >
+          <UBadge
+            color="neutral"
+            variant="subtle"
+            :label="value.label"
+          />
+        </div>
+      </template>
+    </USelectMenu>
   </div>
 </template>

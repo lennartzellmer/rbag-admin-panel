@@ -15,6 +15,7 @@ module "project_oidc" {
   roles = [
     { key = "user",  display_name = "User",  group = "user"  },
     { key = "admin", display_name = "Admin", group = "admin" },
+    { key = "referent", display_name = "Referent", group = "referent" },
   ]
 }
 

@@ -34,23 +34,46 @@ export default defineEventHandler(async (event) => {
       roles.push(ZITADEL_ROLES.USER)
     }
 
+    const { authorizations } = await idpClient.betaAuthorizations.listAuthorizations({
+      betaAuthorizationServiceListAuthorizationsRequest: {
+        filters: [
+          {
+            inUserIds: { ids: [id] }
+          },
+          {
+            projectId: {
+              id: runtimeConfig.zitadel.projectId
+            }
+          }
+        ]
+      }
+    })
+
+    const authorization = authorizations?.[0]
+
+    if (!authorization || !authorization.id) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'No existing authorization found for user'
+      })
+    }
+
     const payload = {
-      userId: id,
-      organizationId: runtimeConfig.zitadel.orgId,
-      projectId: runtimeConfig.zitadel.projectId,
+      id: authorization.id,
       roleKeys: roles
     }
 
-    await idpClient.betaAuthorizations.createAuthorization({
-      betaAuthorizationServiceCreateAuthorizationRequest: payload
+    await idpClient.betaAuthorizations.updateAuthorization ({
+      betaAuthorizationServiceUpdateAuthorizationRequest: payload
     })
 
     return sendNoContent(event)
   }
   catch (e) {
+    console.error('Error setting user roles:', e)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Failed to create user'
+      statusMessage: 'Failed to set user roles'
     })
   }
 })
