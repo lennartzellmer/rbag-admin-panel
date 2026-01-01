@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@zitadel/zitadel-node@4.1.0-beta.5':
-    hash: i5l4konfmqcr5ja6fzaj6e727a
+    hash: 82f27b7ca7384eca8921246942d5ae4fce2ba2091df8a6377e53f5837d7ee65b
     path: patches/@zitadel__zitadel-node@4.1.0-beta.5.patch
 
 importers:
@@ -45,7 +45,7 @@ importers:
         version: 5.0.0(vue@3.5.25(typescript@5.9.3))(xstate@5.24.0)
       '@zitadel/zitadel-node':
         specifier: 4.1.0-beta.5
-        version: 4.1.0-beta.5(patch_hash=i5l4konfmqcr5ja6fzaj6e727a)
+        version: 4.1.0-beta.5(patch_hash=82f27b7ca7384eca8921246942d5ae4fce2ba2091df8a6377e53f5837d7ee65b)
       cloudevents:
         specifier: ^10.0.0
         version: 10.0.0
@@ -10284,7 +10284,7 @@ snapshots:
     optionalDependencies:
       xstate: 5.24.0
 
-  '@zitadel/zitadel-node@4.1.0-beta.5(patch_hash=i5l4konfmqcr5ja6fzaj6e727a)':
+  '@zitadel/zitadel-node@4.1.0-beta.5(patch_hash=82f27b7ca7384eca8921246942d5ae4fce2ba2091df8a6377e53f5837d7ee65b)':
     dependencies:
       '@jest/globals': 30.2.0
       jose: 6.1.2
