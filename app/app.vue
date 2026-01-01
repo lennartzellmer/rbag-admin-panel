@@ -1,9 +1,9 @@
 <script setup lang="ts">
-
+const toaster = { expand: false }
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="toaster">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
