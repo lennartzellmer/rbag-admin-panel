@@ -1,4 +1,4 @@
-import { assertEvent, assign, fromPromise, setup } from 'xstate'
+import { assertEvent, assign, fromPromise, setup, type ErrorActorEvent } from 'xstate'
 import { showToast } from '../actions/toast'
 import { setUserRoles } from '~/service/user'
 
@@ -68,11 +68,22 @@ export const userRolesMachine = setup({
           target: 'idle',
           actions: [{
             type: 'showToast',
-            params: {
-              title: 'Fehler bei Rollenzuweisung',
-              description: 'Die Rollen konnten nicht erstellt werden',
-              color: 'error',
-              icon: 'i-lucide-alert-circle'
+            params: ({ event }) => {
+              const err = event as ErrorActorEvent<{ data: { statusCode: number } }, 'setUserRoles'>
+              if (err.error.data.statusCode === 409) {
+                return {
+                  title: 'Eine Rolle kann nicht entfernt werden',
+                  description: 'Es muss mindestens ein Admin-Nutzer existieren.',
+                  color: 'error',
+                  icon: 'i-lucide-alert-circle'
+                }
+              }
+              return {
+                title: 'Fehler bei Rollenzuweisung',
+                description: 'Die Rollen konnten nicht erstellt werden',
+                color: 'error',
+                icon: 'i-lucide-alert-circle'
+              }
             }
           },
           'resetRoles'

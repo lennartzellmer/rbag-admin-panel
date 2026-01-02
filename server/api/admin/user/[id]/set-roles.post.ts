@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
   if (!adminAuthorizations || adminAuthorizations.length <= 1) {
     if (adminAuthorizations?.[0].user?.id === id && !roles.includes(ZITADEL_ROLES.ADMIN)) {
       throw createError({
-        statusCode: 400,
+        statusCode: 409,
         statusMessage: 'At least one admin must exist in the project'
       })
     }
