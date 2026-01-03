@@ -72,7 +72,7 @@ export const userRolesMachine = setup({
               const err = event as ErrorActorEvent<{ data: { statusCode: number } }, 'setUserRoles'>
               if (err.error.data.statusCode === 409) {
                 return {
-                  title: 'Eine Rolle kann nicht entfernt werden',
+                  title: 'Diese Rolle kann nicht entfernt werden',
                   description: 'Es muss mindestens ein Admin-Nutzer existieren.',
                   color: 'error',
                   icon: 'i-lucide-alert-circle'

@@ -15,7 +15,7 @@ const { snapshot, send } = useMachine(userRolesMachine, {
 
 const availableRoleDetails = [
   {
-    label: 'User',
+    label: 'Nutzer',
     value: 'user',
     disabled: true,
     description: 'Standardrolle. Kann nicht entfernt werden.'
@@ -52,12 +52,13 @@ const enrichedRoles = computed({
   <div>
     <USelectMenu
       v-model="enrichedRoles"
+      variant="soft"
       :loading="snapshot.matches('assigningRoles')"
       multiple
       :items="availableRoleDetails"
-      icon="i-lucide-user"
       placeholder="Select user"
       class="w-80"
+      icon="i-lucide-shield-check"
     >
       <template #default="{ modelValue }">
         <div
@@ -66,9 +67,9 @@ const enrichedRoles = computed({
           class="gap-1"
         >
           <UBadge
-            color="neutral"
-            variant="subtle"
+            variant="soft"
             :label="value.label"
+            :ui="{ label: 'font-mono' }"
           />
         </div>
       </template>
