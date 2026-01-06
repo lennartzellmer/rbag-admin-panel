@@ -26,11 +26,6 @@ module "machine_user_pat" {
   machine_user_human_name = var.machine_user_human_name
 }
 
-module "action_flat_roles" {
-  source = "./modules/action_flat_roles"
-  org_id = module.org.org_id
-}
-
 module "action_v2_create_user" {
   source = "./modules/action_v2_create_user"
 
@@ -38,8 +33,6 @@ module "action_v2_create_user" {
   zitadel_port                  = var.zitadel_port
   zitadel_insecure              = var.zitadel_insecure
   create_user_action_endpoint   = var.create_user_action_endpoint
-
-  depends_on = [module.action_flat_roles]
 }
 
 module "smtp" {

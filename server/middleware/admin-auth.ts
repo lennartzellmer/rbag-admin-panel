@@ -5,7 +5,9 @@ export default defineEventHandler(async (event) => {
     return
 
   const { user } = await requireUserSession(event)
-  if (!user.roles.includes(ZITADEL_ROLES.ADMIN)) {
+  const roleKeys = Object.keys(user['urn:zitadel:iam:org:project:roles'] || [])
+  console.log('User roles:', roleKeys)
+  if (!roleKeys.includes(ZITADEL_ROLES.ADMIN)) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden'

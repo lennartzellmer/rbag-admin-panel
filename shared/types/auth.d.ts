@@ -7,7 +7,6 @@ declare module '#auth-utils' {
     'locale': string | null
     'name': string
     'preferred_username': string
-    'roles': string[]
     'sub': string
     'updated_at': number
     'urn:zitadel:iam:org:project:roles': {
