@@ -10,11 +10,6 @@ declare module '#auth-utils' {
     'roles': string[]
     'sub': string
     'updated_at': number
-    'urn:zitadel:iam:org:project:339543160659176242:roles': {
-      [role: string]: {
-        [orgId: string]: string
-      }
-    }
     'urn:zitadel:iam:org:project:roles': {
       [role: string]: {
         [orgId: string]: string
