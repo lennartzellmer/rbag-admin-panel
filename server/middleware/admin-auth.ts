@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
 
   const { user } = await requireUserSession(event)
   const roleKeys = Object.keys(user['urn:zitadel:iam:org:project:roles'] || [])
-  console.log('User roles:', roleKeys)
   if (!roleKeys.includes(ZITADEL_ROLES.ADMIN)) {
     throw createError({
       statusCode: 403,
