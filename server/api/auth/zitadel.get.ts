@@ -14,5 +14,7 @@ export default defineOAuthZitadelEventHandler({
       console.error('Invalid user data', error)
       throw createError({ statusCode: 400, statusMessage: 'Invalid user data', statusText: error?.message })
     }
+
+    return sendRedirect(event, '/')
   }
 })
