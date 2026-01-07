@@ -21,7 +21,7 @@ It also contains the Terraform configuration for the IdP, Zitadel.
 6. From the project root, install the dependencies:  
    `pnpm install`
 7. From the project root, start the Nuxt application:  
-   `pnpm dev`****
+   `pnpm dev`
 8. Access the application at:  
    <http://0.0.0.0:3001>
 
