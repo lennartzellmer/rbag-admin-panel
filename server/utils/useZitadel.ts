@@ -95,3 +95,13 @@ export const enrichWithUserRoles = async <T extends { id: string }>(
     }
   })
 }
+
+export const enrichUsers = async <T extends { id: string }>(
+  idpClient: Zitadel,
+  users: T[]
+): Promise<Array<T & EnrichedUserDetailFields & EnrichedUserRoleFields>> => {
+  const usersWithDetails = await enrichWithUserDetails(idpClient, users)
+  const usersWithDetailsAndRoles = await enrichWithUserRoles(idpClient, usersWithDetails)
+
+  return usersWithDetailsAndRoles
+}

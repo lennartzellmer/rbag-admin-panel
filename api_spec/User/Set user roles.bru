@@ -1,0 +1,26 @@
+meta {
+  name: Set user roles
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/api/admin/user/:id/set-user-roles
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "roles": ["admin", "user"]
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

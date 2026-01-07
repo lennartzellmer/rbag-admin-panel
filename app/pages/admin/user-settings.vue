@@ -24,23 +24,25 @@ const greeting = computed(() => {
     </template>
 
     <template #body>
-      <div class="flex flex-col gap-4 p-8 rounded-2xl">
+      <div
+        v-if="user"
+        class="flex flex-col gap-4 p-8 rounded-2xl"
+      >
         <div class="flex flex-col gap-1 pb-12">
           <h3 class="text-xl font-semibold text-slate-700 leading-5">
             {{ greeting }} <br>
             <span class="text-slate-950 text-6xl font-bold">
-              {{ user?.given_name }}
+              {{ user.given_name }}
             </span>
           </h3>
           <h3 class="text-md text-gray-500">
-            {{ user?.email }}
+            {{ user.email }}
           </h3>
         </div>
         <RbagUserProfileRoles
-          v-if="user?.roles"
-          :roles="user?.roles"
+          :roles="Object.keys(user['urn:zitadel:iam:org:project:roles'])"
         />
-        <RbagUserProfileImage :user-id="user!.sub" />
+        <RbagUserProfileImage :user-id="user.sub" />
       </div>
     </template>
   </UDashboardPanel>

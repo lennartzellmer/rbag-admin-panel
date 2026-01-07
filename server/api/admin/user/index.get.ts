@@ -3,7 +3,7 @@ import { getUserCount, getUsersPaginated } from '~~/server/domain/user/eventHand
 import { useValidatedQuery } from '~~/server/utils/useValidated'
 import type { PaginationResponseSchema } from '~~/shared/validation/paginationQuerySchema'
 import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
-import { enrichWithUserDetails, enrichWithUserRoles } from '~~/server/utils/useZitadel'
+import { enrichUsers } from '~~/server/utils/useZitadel'
 import type { User } from '~~/shared/validation/userSchema'
 
 export default defineEventHandler(async (event): Promise<PaginationResponseSchema<User>> => {
@@ -27,9 +27,7 @@ export default defineEventHandler(async (event): Promise<PaginationResponseSchem
 
     const idpClient = event.context.idpClient
 
-    const usersWithDetails = await enrichWithUserDetails(idpClient, users)
-
-    const usersWithDetailsAndRoles = await enrichWithUserRoles(idpClient, usersWithDetails)
+    const usersWithDetailsAndRoles = await enrichUsers(idpClient, users)
 
     return {
       data: usersWithDetailsAndRoles,

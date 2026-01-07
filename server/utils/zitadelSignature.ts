@@ -126,6 +126,7 @@ function parseSignatureHeader(header: string): SignedHeader {
 
     switch (key) {
       case signingTimestamp: {
+        if (!value) throw ErrInvalidHeader
         const ts = Number.parseInt(value, 10)
         if (!Number.isFinite(ts)) throw ErrInvalidHeader
         sh.timestamp = new Date(ts * 1000)

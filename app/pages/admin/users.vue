@@ -13,6 +13,7 @@ type UserTableRow = Awaited<ReturnType<typeof getUsersPaginated>>['data'][number
 
 const UUser = resolveComponent('UUser')
 const UBadge = resolveComponent('UBadge')
+const RbagUserRoleSwitcher = resolveComponent('RbagUserRoleSwitcher')
 
 const { snapshot, actorRef } = useMachine(createFetchPaginatedMachine<UserTableRow>({
   fetchDataFunction: getUsersPaginated
@@ -52,15 +53,10 @@ const columns: TableColumn<UserTableRow>[] = [
     id: 'rechte',
     header: 'Rollen',
     cell: ({ row }) => {
-      return h('div', { class: 'flex gap-2' }, row.original.roles.map((v, i) => {
-        return h(UBadge, {
-          key: i,
-          label: v,
-          color: 'neutral',
-          variant: 'subtle',
-          size: 'md'
-        }, () => v)
-      }))
+      return h(RbagUserRoleSwitcher, {
+        roles: row.original.roles,
+        userId: row.original.id
+      })
     }
   },
   {

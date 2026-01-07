@@ -27,9 +27,7 @@ export async function updateProfileImage(userId: string, file: File) {
 export async function removeProfileImage(userId: string) {
   return await $fetch(`/api/admin/user/${userId}/remove-profile-image`, {
     method: 'POST',
-    body: {
-      userId
-    }
+    body: { userId }
   })
 }
 
@@ -42,9 +40,13 @@ export async function getUserById(id: string) {
 export async function getUsersPaginated({ paginationParams }: { paginationParams: PaginatedRequestParams }) {
   return await $fetch('/api/admin/user', {
     method: 'GET',
-    params: {
-      offset: paginationParams.offset,
-      limit: paginationParams.limit
-    }
+    params: paginationParams
+  })
+}
+
+export async function setUserRoles(userId: string, roles: string[]) {
+  return await $fetch(`/api/admin/user/${userId}/set-roles`, {
+    method: 'POST',
+    body: { roles }
   })
 }
