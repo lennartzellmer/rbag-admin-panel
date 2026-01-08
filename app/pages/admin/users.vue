@@ -89,18 +89,21 @@ const columns: TableColumn<UserTableRow>[] = [
     </template>
 
     <template #body>
-      <div class="flex flex-col gap-6">
+      <div class="flex flex-col border border-coffee-100 overflow-hidden rounded-2xl bg-white">
         <UTable
           :data="tableData"
           :columns="columns"
           :loading="snapshot.matches('fetching')"
           empty="Keine Mitglieder gefunden"
           class="flex-1"
+          sticky
         />
-        <RbagPagination
-          v-if="paginationMachineRef"
-          :pagination-actor-ref="paginationMachineRef"
-        />
+        <div class="flex justify-end p-6 border-t border-default">
+          <RbagPagination
+            v-if="paginationMachineRef"
+            :pagination-actor-ref="paginationMachineRef"
+          />
+        </div>
       </div>
     </template>
   </UDashboardPanel>
