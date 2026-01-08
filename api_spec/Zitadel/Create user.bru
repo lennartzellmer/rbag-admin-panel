@@ -1,0 +1,42 @@
+meta {
+  name: Create user
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/v2/users/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: -ZDZg2DgF-joFHdf8VSRs6IQCR6tLKCfXR_pRzP6IauCp-BiKzNsXNpFy3JpuQJO34geT-g
+}
+
+body:json {
+  {
+    "organizationId": "354549106527436805",
+    "human": {
+      "email": {
+        "email": "10@test.com",
+        "isVerified": true
+      },
+      "profile": {
+        "givenName": "Tim",
+        "familyName": "Test",
+        "preferredLanguage": "de"
+      },
+      "password": {
+        "password": "aaaaaaaa"
+      },
+      "passwordChangeRequired": false,
+      "requestPasswordlessRegistration": false
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
