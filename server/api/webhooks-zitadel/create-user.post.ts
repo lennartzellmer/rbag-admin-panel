@@ -5,8 +5,13 @@ import { ZITADEL_ROLES } from '~~/constants'
 import { createUser, type CreateUser } from '~~/server/domain/user/commandHandling'
 import { evolve, getUserStreamSubjectById, initialState } from '~~/server/domain/user/eventHandling'
 
+const ZITADEL_METHODS = {
+  AddHumanUser: '/zitadel.user.v2.UserService/AddHumanUser',
+  CreateUser: '/zitadel.user.v2.UserService/CreateUser'
+} as const
+
 export const AddHumanUserLogSchema = z.object({
-  fullMethod: z.string(), // or z.literal("/zitadel.user.v2.UserService/AddHumanUser")
+  fullMethod: z.literal(ZITADEL_METHODS.AddHumanUser),
   instanceID: z.string(),
   orgID: z.string(),
   projectID: z.string().optional(),
@@ -35,6 +40,39 @@ export const AddHumanUserLogSchema = z.object({
   headers: z.record(z.string(), z.unknown())
 })
 
+export const CreateUserLogSchema = z.object({
+  fullMethod: z.literal(ZITADEL_METHODS.CreateUser),
+  instanceID: z.string(),
+  orgID: z.string(),
+  userID: z.string(),
+
+  request: z.object({
+    organizationId: z.string(),
+    human: z.object({
+      profile: z.object({
+        givenName: z.string(),
+        familyName: z.string(),
+        preferredLanguage: z.string()
+      }),
+      email: z.object({
+        email: z.email(),
+        isVerified: z.boolean()
+      }),
+      password: z.object({
+        password: z.string()
+      })
+    })
+  }),
+
+  response: z.object({
+    id: z.string(),
+    creationDate: z.iso.datetime()
+  }),
+  headers: z.record(z.string(), z.unknown())
+})
+
+const requestSchemas = z.union([AddHumanUserLogSchema, CreateUserLogSchema])
+
 export default defineEventHandler(async (event) => {
   // =============================================================================
   // Create user in Zitadel
@@ -42,12 +80,20 @@ export default defineEventHandler(async (event) => {
   try {
     const idpClient = event.context.idpClient
     const runtimeConfig = useRuntimeConfig()
-    const body = await useValidatedBody(event, AddHumanUserLogSchema)
+    const body = await useValidatedBody(event, requestSchemas)
 
     const userRoleKeys = [ZITADEL_ROLES.ADMIN, ZITADEL_ROLES.USER]
 
+    const userId = body.fullMethod === ZITADEL_METHODS.AddHumanUser
+      ? body.response.userId
+      : body.response.id
+
+    const userEmail = body.fullMethod === ZITADEL_METHODS.AddHumanUser
+      ? body.request.email.email
+      : body.request.human.email.email
+
     const payload = {
-      userId: body.response.userId,
+      userId: userId,
       organizationId: runtimeConfig.zitadel.orgId,
       projectId: runtimeConfig.zitadel.projectId,
       roleKeys: userRoleKeys
@@ -62,12 +108,12 @@ export default defineEventHandler(async (event) => {
     const command: CreateUser = createCommand({
       type: 'CreateUser',
       data: {
-        id: body.response.userId
+        id: userId
       },
       metadata: {
         requestedBy: {
           userId: body.userID,
-          email: body.request.email.email
+          email: userEmail
         },
         now: new Date()
       }
@@ -78,7 +124,7 @@ export default defineEventHandler(async (event) => {
       streams: [{
         evolve,
         initialState,
-        streamSubject: getUserStreamSubjectById(body.response.userId)
+        streamSubject: getUserStreamSubjectById(userId)
       }],
       commandHandlerFunction: createUser,
       command: command
@@ -87,6 +133,7 @@ export default defineEventHandler(async (event) => {
     sendNoContent(event, 204)
   }
   catch (e) {
+    console.error('Error creating user from Zitadel webhook:', e)
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to create user'
