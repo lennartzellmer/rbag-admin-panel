@@ -94,20 +94,16 @@ export const userProjectionDefinition = createProjectionDefinition({
   initialState
 })
 
-export const getUsersPaginated = (
+export const getUsers = (
   eventStore: RbagEventStoreInstance,
-  skip: number,
-  limit: number
+  paginationQuery: { skip: number, limit: number } | undefined
 ) => findMultipleProjections(
   eventStore,
   UserEntity,
   {
     projectionName: UserProjectionName
   },
-  {
-    skip,
-    limit
-  }
+  paginationQuery ? paginationQuery : {}
 )
 
 export const getUserCount = (eventStore: RbagEventStoreInstance) => countProjections(

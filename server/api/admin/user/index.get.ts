@@ -1,17 +1,23 @@
 import { defineEventHandler } from 'h3'
-import { getUserCount, getUsersPaginated } from '~~/server/domain/user/eventHandling'
+import { getUserCount, getUsers } from '~~/server/domain/user/eventHandling'
 import { useValidatedQuery } from '~~/server/utils/useValidated'
 import type { PaginationResponseSchema } from '~~/shared/validation/paginationQuerySchema'
 import { paginationQuerySchema } from '~~/shared/validation/paginationQuerySchema'
 import { enrichUsers } from '~~/server/utils/useZitadel'
 import type { User } from '~~/shared/validation/userSchema'
+import z from 'zod'
 
 export default defineEventHandler(async (event): Promise<PaginationResponseSchema<User>> => {
   // =============================================================================
   // Parse and validate
   // =============================================================================
 
-  const { offset, limit } = await useValidatedQuery(event, paginationQuerySchema)
+  const schema = z.union([
+    paginationQuerySchema,
+    z.object({})
+  ])
+
+  const query = await useValidatedQuery(event, schema)
 
   // =============================================================================
   // Get events
@@ -20,8 +26,10 @@ export default defineEventHandler(async (event): Promise<PaginationResponseSchem
   try {
     const eventStore = event.context.eventStore
 
+    console.log(query)
+
     const [users, total] = await Promise.all([
-      getUsersPaginated(eventStore, offset, limit),
+      getUsers(eventStore, query ? { skip: query.offset, limit: query.limit } : undefined),
       getUserCount(eventStore)
     ])
 
@@ -33,8 +41,8 @@ export default defineEventHandler(async (event): Promise<PaginationResponseSchem
       data: usersWithDetailsAndRoles,
       meta: {
         total,
-        offset,
-        limit
+        offset: query?.offset ?? 0,
+        limit: query?.limit ?? total
       }
     }
   }
