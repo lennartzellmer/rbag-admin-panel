@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
 
   await idpClient.betaAuthorizations.updateAuthorization ({
     betaAuthorizationServiceUpdateAuthorizationRequest: payload
-  }).catch((e) => {
+  }).catch((_) => {
     throw createError({
       statusCode: 500,
       statusMessage: 'Failed to set user roles'
