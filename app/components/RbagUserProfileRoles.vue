@@ -14,7 +14,7 @@ defineProps<{
       <div class="flex content-center items-center justify-between">
         <label
           class="block font-medium text-default"
-        >Rollen</label><!-- v-if -->
+        >Rollen</label>
       </div>
       <p
         class="text-muted text-sm"

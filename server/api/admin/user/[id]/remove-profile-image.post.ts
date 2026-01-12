@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
   })
 
   try {
-    const result = await handleCommand({
+    await handleCommand({
       eventStore,
       streams: [{
         evolve,

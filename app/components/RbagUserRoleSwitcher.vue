@@ -52,7 +52,7 @@ const enrichedRoles = computed({
   <div>
     <USelectMenu
       v-model="enrichedRoles"
-      variant="soft"
+      variant="outline"
       :loading="snapshot.matches('assigningRoles')"
       multiple
       :items="availableRoleDetails"

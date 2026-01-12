@@ -58,7 +58,7 @@ defineShortcuts({
       :ref="item.id"
     >
       <div
-        class="p-4 sm:px-6 text-sm cursor-pointer border-l-2 transition-colors"
+        class="p-4 sm:px-6 text-sm cursor-pointer border-l-2 transition-colors flex justify-between"
         :class="[
           selectedUser && selectedUser.id === item.id
             ? 'border-primary bg-primary/10'
@@ -68,13 +68,22 @@ defineShortcuts({
       >
         <UUser
           :name="`${item.givenName} ${item.familyName}`"
-          size="lg"
           :description="item.email.email"
           :avatar="{
             src: item.media?.profileImage.objectName,
             alt: `${item.givenName} ${item.familyName}`
           }"
         />
+        <div class="flex gap-1 grow-0 self-center">
+          <UBadge
+            v-for="role in item.roles.filter(r => r !== 'user')"
+            :key="role"
+            variant="soft"
+            size="sm"
+            :label="role.charAt(0).toUpperCase() + role.slice(1)"
+            :ui="{ label: 'font-mono' }"
+          />
+        </div>
       </div>
     </div>
   </UScrollArea>

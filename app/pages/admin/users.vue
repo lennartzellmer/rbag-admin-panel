@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { getUsers } from '~/service/user'
 import UserList from '~/components/users/UserList.vue'
+import UserDetails from '~/components/users/UserDetails.vue'
+import type { User } from '~~/shared/validation/userSchema'
 
 const { data } = await useAsyncData('admin-users', () => getUsers())
+
+const selectedUser = ref<User | null>()
 </script>
 
 <template>
@@ -20,7 +24,23 @@ const { data } = await useAsyncData('admin-users', () => getUsers())
     </UDashboardNavbar>
     <UserList
       v-if="data"
+      v-model="selectedUser"
       :users="data?.data"
     />
   </UDashboardPanel>
+  <UserDetails
+    v-if="selectedUser"
+    :user="selectedUser"
+    @close="selectedUser = null"
+  />
+  <div
+    v-else
+    class="flex items-center justify-center w-full"
+  >
+    <UEmpty
+      icon="i-lucide-user-check"
+      title="No user selected"
+      description="Select a user from the list to view their details."
+    />
+  </div>
 </template>
