@@ -20,7 +20,7 @@
     "@internationalized/date": "^3.10.0",
     "@nuxt/eslint": "1.10.0",
     "@nuxt/image": "v2.0.0",
-    "@nuxt/ui": "4.2.1",
+    "@nuxt/ui": "4.3.0",
     "@types/geojson": "7946.0.16",
     "@vee-validate/zod": "4.15.1",
     "@xstate/vue": "5.0.0",
