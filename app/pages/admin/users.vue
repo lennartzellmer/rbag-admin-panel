@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed, h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import { useMachine, useSelector } from '@xstate/vue'
-import { createFetchPaginatedMachine } from '~/machines/fetchPaginated/fetchPaginated.machine'
-import { getUsersPaginated } from '~/service/user'
-import RbagPagination from '~/components/RbagPagination.vue'
+import type { getUsersPaginated } from '~/service/user'
+import { getUsers } from '~/service/user'
 
 // =============================================================================
 // Types
@@ -15,16 +13,9 @@ const UUser = resolveComponent('UUser')
 const UBadge = resolveComponent('UBadge')
 const RbagUserRoleSwitcher = resolveComponent('RbagUserRoleSwitcher')
 
-const { snapshot, actorRef } = useMachine(createFetchPaginatedMachine<UserTableRow>({
-  fetchDataFunction: getUsersPaginated
-}))
+const { data, pending } = await useAsyncData('admin-users', () => getUsers())
 
-const tableData = computed<UserTableRow[]>(() => snapshot.value.context.data ?? [])
-
-const paginationMachineRef = useSelector(
-  actorRef,
-  state => state.context.paginationMachineRef
-)
+const tableData = computed<UserTableRow[]>(() => data.value?.data ?? [])
 
 // =============================================================================
 // Table columns
@@ -93,17 +84,11 @@ const columns: TableColumn<UserTableRow>[] = [
         <UTable
           :data="tableData"
           :columns="columns"
-          :loading="snapshot.matches('fetching')"
+          :loading="pending"
           empty="Keine Mitglieder gefunden"
           class="flex-1"
           sticky
         />
-        <div class="flex justify-end p-6 border-t border-default">
-          <RbagPagination
-            v-if="paginationMachineRef"
-            :pagination-actor-ref="paginationMachineRef"
-          />
-        </div>
       </div>
     </template>
   </UDashboardPanel>

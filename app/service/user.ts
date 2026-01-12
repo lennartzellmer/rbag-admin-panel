@@ -44,6 +44,12 @@ export async function getUsersPaginated({ paginationParams }: { paginationParams
   })
 }
 
+export async function getUsers() {
+  return await $fetch('/api/admin/user', {
+    method: 'GET'
+  })
+}
+
 export async function setUserRoles(userId: string, roles: string[]) {
   return await $fetch(`/api/admin/user/${userId}/set-roles`, {
     method: 'POST',
