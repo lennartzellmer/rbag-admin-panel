@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_EXAMPLE="${ROOT_DIR}/.env.example"
 ENV_FILE="${ROOT_DIR}/.env"
 TF_DIR="${ROOT_DIR}/dev_docker/terraform"
+ZITADEL_SECRETS_DIR="${ROOT_DIR}/dev_docker/zitadel"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
   cp "${ENV_EXAMPLE}" "${ENV_FILE}"
@@ -13,7 +14,40 @@ else
   echo "Found existing ${ENV_FILE}; leaving it unchanged."
 fi
 
+docker-compose --env-file "${ENV_FILE}" -f "${ROOT_DIR}/dev_docker/docker-compose.yml" down -v || true
 docker-compose --env-file "${ENV_FILE}" -f "${ROOT_DIR}/dev_docker/docker-compose.yml" up -d
+
+WAIT_TIMEOUT="${WAIT_TIMEOUT:-120}"
+WAIT_INTERVAL="${WAIT_INTERVAL:-2}"
+REQUIRED_FILES=(
+  "${ZITADEL_SECRETS_DIR}/key-service-user.json"
+  "${ZITADEL_SECRETS_DIR}/pat-admin.pat"
+  "${ZITADEL_SECRETS_DIR}/pat-login-client.pat"
+)
+
+echo "Waiting for Zitadel files to be created in ${ZITADEL_SECRETS_DIR}..."
+start_time="$(date +%s)"
+while true; do
+  missing=()
+  for file in "${REQUIRED_FILES[@]}"; do
+    if [[ ! -f "${file}" ]]; then
+      missing+=("${file}")
+    fi
+  done
+
+  if [[ ${#missing[@]} -eq 0 ]]; then
+    echo "All required Zitadel files are present."
+    break
+  fi
+
+  now="$(date +%s)"
+  if (( now - start_time >= WAIT_TIMEOUT )); then
+    echo "Timed out waiting for Zitadel files. Missing: ${missing[*]}" >&2
+    exit 1
+  fi
+
+  sleep "${WAIT_INTERVAL}"
+done
 
 if [[ -f "${TF_DIR}/terraform.tfstate" || -f "${TF_DIR}/terraform.tfstate.backup" ]]; then
   rm -f "${TF_DIR}/terraform.tfstate" "${TF_DIR}/terraform.tfstate.backup"
