@@ -15,6 +15,9 @@ declare module '#auth-utils' {
       }
     }
   }
+  interface SecureSessionData {
+    sessionId: string
+  }
 }
 
 export {}

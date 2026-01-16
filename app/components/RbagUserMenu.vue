@@ -7,7 +7,7 @@ defineProps<{
   collapsed?: boolean
 }>()
 
-const { user: authUser, clear } = useUserSession()
+const { user: authUser, clear, session } = useUserSession()
 
 const user = ref({
   name: authUser.value?.name
@@ -19,12 +19,19 @@ const { snapshot } = useMachine(userProfileImageMachine, {
   }
 })
 
+const logout = () => {
+  useFetch('/api/auth/zitadel-logout', {
+    method: 'GET'
+  })
+  clear()
+}
+
 const items = computed<DropdownMenuItem[][]>(() => ([[
   {
     label: 'Log out',
     icon: 'i-lucide-log-out',
     onClick: () => {
-      clear()
+      logout()
     }
   },
   {
