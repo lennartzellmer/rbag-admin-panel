@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getUsers } from '~/service/user'
 import type { VeranstaltungsKategorieSchema } from '~~/shared/validation/veranstaltungKategorieSchema'
 
 const voreinstellungen = defineModel<VeranstaltungsKategorieSchema['voreinstellungen']>({
@@ -10,6 +11,21 @@ const mediaTypeOptions = [
   { label: 'Video', value: 'video' },
   { label: 'Audio', value: 'audio' }
 ]
+
+const { data, pending } = await useAsyncData('admin-users', () => getUsers())
+
+const users = computed({
+  get: () => {
+    return data.value?.data.map(user => ({
+      label: `${user.givenName} ${user.familyName}`,
+      value: user.id,
+      email: user.email.email
+    }))
+  },
+  set: (event) => {
+    voreinstellungen.value.leitung.userIds = event ? event.map(item => item.value) : []
+  }
+})
 </script>
 
 <template>
@@ -142,11 +158,25 @@ const mediaTypeOptions = [
       name="voreinstellungen.leitung.userIds"
       description="Gib die User IDs der Leitung als Tags ein."
     >
-      <UInputTags
-        v-model="voreinstellungen.leitung.userIds"
-        class="w-full"
-        placeholder="User ID hinzufügen"
-      />
+      <USelectMenu
+        v-if="users"
+        :items="users"
+        icon="i-lucide-user"
+        placeholder="Nutzer auswählen"
+        :ui="{ content: 'min-w-fit' }"
+        class="w-48"
+        multiple
+        :loading="pending"
+        @update:model-value="(value) => { voreinstellungen.leitung.userIds = value.map(item => item.value) }"
+      >
+        <template #item-label="{ item }">
+          {{ item.label }}
+
+          <span class="text-muted">
+            {{ item.email }}
+          </span>
+        </template>
+      </USelectMenu>
     </UFormField>
   </div>
 </template>
