@@ -26,8 +26,6 @@ export default defineEventHandler(async (event): Promise<PaginationResponseSchem
   try {
     const eventStore = event.context.eventStore
 
-    console.log(query)
-
     const [users, total] = await Promise.all([
       getUsers(eventStore, query ? { skip: query.offset, limit: query.limit } : undefined),
       getUserCount(eventStore)
