@@ -38,7 +38,7 @@ resource "zitadel_default_password_complexity_policy" "default" {
 
 resource "zitadel_password_complexity_policy" "default" {
   org_id        = zitadel_org.this.id
-  min_length    = "8"
+  min_length    = "1"
   has_uppercase = false
   has_lowercase = false
   has_number    = false
