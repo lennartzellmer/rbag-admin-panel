@@ -29,6 +29,7 @@ const handleSubmit = (state: VeranstaltungsKategorieCreateSchema) => {
   <USlideover
     title="Kategorie Hinzufügen"
     :open="open"
+    :dismissible="false"
     @update:open="onClose"
   >
     <template #body>

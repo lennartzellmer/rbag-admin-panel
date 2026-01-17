@@ -19,7 +19,7 @@ const users = computed({
     return data.value?.data.map(user => ({
       label: `${user.givenName} ${user.familyName}`,
       value: user.id,
-      email: user.email.email
+      ...user
     }))
   },
   set: (event) => {
@@ -58,6 +58,15 @@ const users = computed({
         :ui="{ root: 'w-full' }"
       />
     </UFormField>
+
+    <USeparator />
+
+    <RbagUserSelector
+      v-if="users"
+      :users="users"
+      :loading="pending"
+      @update:model-value="(value) => { voreinstellungen.leitung.userIds = value.map(item => item.id) }"
+    />
 
     <USeparator />
 
@@ -152,31 +161,5 @@ const users = computed({
         />
       </UFormField>
     </div>
-
-    <UFormField
-      label="Leitung (User IDs)"
-      name="voreinstellungen.leitung.userIds"
-      description="Gib die User IDs der Leitung als Tags ein."
-    >
-      <USelectMenu
-        v-if="users"
-        :items="users"
-        icon="i-lucide-user"
-        placeholder="Nutzer auswählen"
-        :ui="{ content: 'min-w-fit' }"
-        class="w-48"
-        multiple
-        :loading="pending"
-        @update:model-value="(value) => { voreinstellungen.leitung.userIds = value.map(item => item.value) }"
-      >
-        <template #item-label="{ item }">
-          {{ item.label }}
-
-          <span class="text-muted">
-            {{ item.email }}
-          </span>
-        </template>
-      </USelectMenu>
-    </UFormField>
   </div>
 </template>
