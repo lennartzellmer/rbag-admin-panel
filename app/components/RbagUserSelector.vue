@@ -33,14 +33,14 @@ const removeUser = (userId: string) => {
       :items="users"
       variant="none"
       placeholder="Nutzer auswählen"
-      :ui="{ content: 'min-w-fit', base: 'p-0' }"
+      :ui="{ content: 'w-64', base: 'p-0', item: 'flex items-center' }"
       class="w-full mt-2"
       multiple
       :loading="loading"
       description-key:="email.email"
       :arrow="false"
       :trailing-icon="false"
-      :content="{ position: 'popper', side: 'left' }"
+      :content="{ position: 'popper', side: 'left', align: 'start' }"
     >
       <template #default>
         <UEmpty
@@ -77,7 +77,7 @@ const removeUser = (userId: string) => {
               size="md"
               variant="ghost"
               color="neutral"
-              @click.prevent="() => { removeUser(user.id) }"
+              @click.stop="() => { removeUser(user.id) }"
             />
           </div>
           <UButton
@@ -97,7 +97,7 @@ const removeUser = (userId: string) => {
             icon: 'i-lucide-user'
           }"
           :description="user.email.email"
-          size="xs"
+          size="sm"
         />
       </template>
       <template #content-bottom>
